@@ -1,0 +1,48 @@
+{
+  "caseId": "CASE_1786566594286_2akn",
+  "patientId": "PAT_DUAL_PANEL_01",
+  "assistantId": "ASSISTANT_DEFAULT",
+  "createdAt": "2026-08-12T20:29:54.286Z",
+  "status": "IN_CONSULTATION",
+  "caseType": "Emergency Laceration",
+  "textStatements": [
+    {
+      "id": "stmt_1786566594317",
+      "text": "Patient cut right forearm on sharp iron fence while working.",
+      "author": "Assistant Suman",
+      "createdAt": "2026-08-12T20:29:54.317Z"
+    }
+  ],
+  "imageUploads": [],
+  "videoUploads": [],
+  "doctorNotes": [
+    {
+      "noteId": "note_1786566594379",
+      "doctorId": "DOC_01",
+      "text": "Clean wound, apply sterile dressing & Tetanus Toxoid booster",
+      "createdAt": "2026-08-12T20:29:54.379Z"
+    }
+  ],
+  "assistantNotes": [],
+  "assignedDoctorId": "DOC_01",
+  "bedAssignment": {
+    "ward": "Trauma Ward",
+    "room": "Room 04",
+    "bed": "Bed A",
+    "assignedBy": "DOC_01",
+    "assignedAt": "2026-08-12T20:29:54.393Z",
+    "notes": "Admitted for observation"
+  },
+  "followUp": null,
+  "medications": [],
+  "approvedMedications": [
+    {
+      "name": "Tetanus Toxoid 0.5ml",
+      "dosage": "IM single dose",
+      "reason": "Wound tetanus prophylaxis",
+      "status": "DOCTOR_APPROVED",
+      "approvedBy": "DOC_01",
+      "approvedAt": "2026-08-12T20:29:54.379Z"
+    }
+  ]
+}

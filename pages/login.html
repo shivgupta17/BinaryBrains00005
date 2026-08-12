@@ -391,8 +391,8 @@ body {
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
       <!-- Tab switcher -->
       <div class="auth-tabs" style="margin-bottom:0;">
-        <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">Login</button>
-        <button class="auth-tab" id="tab-signup" onclick="switchTab('signup')">Sign Up</button>
+        <button class="auth-tab active" id="tab-login" onclick="location.href='login.html'">Login</button>
+        <button class="auth-tab" id="tab-signup" onclick="location.href='register.html'">Sign Up / Register</button>
       </div>
       <a href="../index.html" style="font-size:12.5px;color:var(--saffron);font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px;">
         ← Back to App
@@ -577,7 +577,7 @@ function clearErrors() {
 function isValidEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
 
 // ─── Login Handler ─────────────────────────────────
-function handleLogin() {
+async function handleLogin() {
   clearErrors();
   const email = document.getElementById('login-email').value.trim();
   const pass  = document.getElementById('login-pass').value;
@@ -595,24 +595,43 @@ function handleLogin() {
   }
   if (!valid) return;
 
-  // Simulate login — store session and redirect to main app
   const btn = document.querySelector('#login-form .auth-btn');
   btn.textContent = 'Signing in…';
   btn.style.opacity = '0.7';
   btn.disabled = true;
 
-  setTimeout(() => {
-    sessionStorage.setItem('gc_auth', JSON.stringify({
-      name: email.split('@')[0].replace(/[^a-z]/gi, ' '),
-      email: email,
-      role: 'health-worker',
-    }));
+  try {
+    const roleMapping = selectedRole === 'health-worker' ? 'assistant' : selectedRole;
+    const res = await fetch('http://localhost:5000/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password: pass, role: roleMapping })
+    });
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      alert(data.error || 'Login failed.');
+      btn.textContent = 'Sign In';
+      btn.style.opacity = '1';
+      btn.disabled = false;
+      return;
+    }
+
+    localStorage.setItem('gramcare_token', data.token);
+    localStorage.setItem('gramcare_user', JSON.stringify(data.user));
+    localStorage.setItem('gramcare_role', data.user.role);
+
     window.location.href = '../index.html';
-  }, 900);
+  } catch (err) {
+    alert('Network error: ' + err.message);
+    btn.textContent = 'Sign In';
+    btn.style.opacity = '1';
+    btn.disabled = false;
+  }
 }
 
 // ─── Signup Handler ────────────────────────────────
-function handleSignup() {
+async function handleSignup() {
   clearErrors();
   const fname   = document.getElementById('su-fname').value.trim();
   const lname   = document.getElementById('su-lname').value.trim();
@@ -631,14 +650,34 @@ function handleSignup() {
   btn.style.opacity = '0.7';
   btn.disabled = true;
 
-  setTimeout(() => {
-    sessionStorage.setItem('gc_auth', JSON.stringify({
-      name: `${fname} ${lname}`,
-      email: email,
-      role: selectedRole,
-    }));
+  try {
+    const roleMapping = selectedRole === 'health-worker' ? 'assistant' : selectedRole;
+    const res = await fetch('http://localhost:5000/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: `${fname} ${lname}`, email, password: pass, role: roleMapping })
+    });
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      alert(data.error || 'Registration failed.');
+      btn.textContent = 'Create Account';
+      btn.style.opacity = '1';
+      btn.disabled = false;
+      return;
+    }
+
+    localStorage.setItem('gramcare_token', data.token);
+    localStorage.setItem('gramcare_user', JSON.stringify(data.user));
+    localStorage.setItem('gramcare_role', data.user.role);
+
     window.location.href = '../index.html';
-  }, 1000);
+  } catch (err) {
+    alert('Network error: ' + err.message);
+    btn.textContent = 'Create Account';
+    btn.style.opacity = '1';
+    btn.disabled = false;
+  }
 }
 
 // ─── Google OAuth placeholder ──────────────────────

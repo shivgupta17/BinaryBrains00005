@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786566594381",
+  "recipientRole": "assistant",
+  "recipientId": "ASSISTANT_DEFAULT",
+  "patientId": "PAT_DUAL_PANEL_01",
+  "caseId": "CASE_1786566594286_2akn",
+  "type": "DOCTOR_MESSAGE",
+  "title": "💊 Medication Prescribed & Approved",
+  "message": "Doctor approved 1 medication(s) for patient PAT_DUAL_PANEL_01",
+  "createdAt": "2026-08-12T20:29:54.381Z",
+  "read": false,
+  "priority": "HIGH"
+}

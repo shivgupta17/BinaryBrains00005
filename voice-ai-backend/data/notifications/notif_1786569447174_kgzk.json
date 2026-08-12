@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786569447174_kgzk",
+  "recipientRole": "assistant",
+  "recipientId": "ASSISTANT_DEFAULT",
+  "patientId": "PAT_usr_patient1786569446693gramcareai",
+  "caseId": "CASE_1786569447043_p8sw",
+  "type": "REMINDER_REQUEST",
+  "title": "⏰ Patient Reminder Request: Dressing Assistance",
+  "message": "Patient Rohan Verma E2E (PAT_usr_patient1786569446693gramcareai) sent a reminder request: \"Need help changing wound dressing at 6 PM.\"",
+  "priority": "HIGH",
+  "read": false,
+  "createdAt": "2026-08-12T21:17:27.174Z"
+}

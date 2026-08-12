@@ -18,7 +18,7 @@ async function evaluateMedicineGateForPatient(patientId) {
     return {
       patientId,
       hasMedication: false,
-      message: 'No medication recommendation identified for this case.',
+      message: 'No medication suggestion can be safely generated from the available information.',
       medications: []
     };
   }

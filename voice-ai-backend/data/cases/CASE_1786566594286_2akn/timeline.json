@@ -1,0 +1,100 @@
+[
+  {
+    "eventId": "evt_1786566594287_myue",
+    "timestamp": "2026-08-12T20:29:54.287Z",
+    "type": "PATIENT_REGISTERED",
+    "title": "Encounter Case Created",
+    "description": "New clinical encounter CASE_1786566594286_2akn created for patient PAT_DUAL_PANEL_01",
+    "actor": "Clinic Assistant",
+    "actorRole": "assistant",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786566594297_722j",
+    "timestamp": "2026-08-12T20:29:54.297Z",
+    "type": "VITALS_ENTERED",
+    "title": "Vitals Recorded",
+    "description": "Temp: 99.2°F, BP: 128/84, Pulse: 88 bpm, SpO2: 98%",
+    "actor": "Clinic Assistant",
+    "actorRole": "assistant",
+    "data": {
+      "temp": "99.2°F",
+      "bp": "128/84",
+      "pulse": "88 bpm",
+      "spo2": "98%",
+      "weight": "Not recorded",
+      "respRate": "Not recorded",
+      "recordedAt": "2026-08-12T20:29:54.293Z"
+    }
+  },
+  {
+    "eventId": "evt_1786566594318_cbjk",
+    "timestamp": "2026-08-12T20:29:54.318Z",
+    "type": "TEXT_STATEMENT_ADDED",
+    "title": "Patient Statement Added",
+    "description": "\"Patient cut right forearm on sharp iron fence while working.\"",
+    "actor": "Assistant Suman",
+    "actorRole": "assistant",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786566594354_my3a",
+    "timestamp": "2026-08-12T20:29:54.354Z",
+    "type": "REFERRED_TO_DOCTOR",
+    "title": "Referred to Doctor",
+    "description": "Case referred to Dr. Aarav Sharma (Risk Level: HIGH)",
+    "actor": "ASSISTANT_01",
+    "actorRole": "assistant",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786566594366_l9sv",
+    "timestamp": "2026-08-12T20:29:54.366Z",
+    "type": "DOCTOR_ACCEPTED",
+    "title": "Doctor Accepted Referral",
+    "description": "Referral accepted by Dr. Aarav Sharma. Consultation initiated.",
+    "actor": "Dr. Aarav Sharma",
+    "actorRole": "doctor",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786566594381_8bs7",
+    "timestamp": "2026-08-12T20:29:54.381Z",
+    "type": "MEDICATION_APPROVED",
+    "title": "Doctor Approved Prescription",
+    "description": "Medications approved: Tetanus Toxoid 0.5ml",
+    "actor": "DOC_01",
+    "actorRole": "doctor",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786566594395_eka4",
+    "timestamp": "2026-08-12T20:29:54.395Z",
+    "type": "BED_ASSIGNED",
+    "title": "Patient Bed Assigned",
+    "description": "Trauma Ward · Room 04 · Bed A",
+    "actor": "DOC_01",
+    "actorRole": "doctor",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786566594409_msd1",
+    "timestamp": "2026-08-12T20:29:54.409Z",
+    "type": "MEDICATION_SCHEDULED",
+    "title": "Medication Schedule Created",
+    "description": "Povidone-Iodine Dressing (Topical) scheduled at 09:00, 18:00",
+    "actor": "DOC_01",
+    "actorRole": "doctor",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786567609676_2v4p",
+    "timestamp": "2026-08-12T20:46:49.676Z",
+    "type": "PATIENT_REMINDER_REQUESTED",
+    "title": "Patient Requested Reminder",
+    "description": "\"Can I take the prescribed iodine dressing at 9 PM instead of 6 PM?\"",
+    "actor": "Rohan Sharma",
+    "actorRole": "patient",
+    "data": {}
+  }
+]

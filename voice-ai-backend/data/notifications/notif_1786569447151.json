@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786569447151",
+  "recipientRole": "assistant",
+  "recipientId": "ASSISTANT_DEFAULT",
+  "patientId": "PAT_usr_patient1786569446693gramcareai",
+  "caseId": "CASE_1786569447043_p8sw",
+  "type": "BED_ASSIGNED",
+  "title": "🛏️ Bed Assigned",
+  "message": "Patient assigned to Surgical Ward, Room 08, Bed 02",
+  "createdAt": "2026-08-12T21:17:27.151Z",
+  "read": false,
+  "priority": "HIGH"
+}

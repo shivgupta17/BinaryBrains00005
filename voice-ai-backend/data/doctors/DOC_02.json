@@ -1,0 +1,10 @@
+{
+  "doctorId": "DOC_02",
+  "name": "Dr. Priya Verma",
+  "specialty": "Cardiology",
+  "subSpecialty": "Emergency Cardiac Support",
+  "onlineStatus": "ONLINE",
+  "hospital": "District Hospital",
+  "currentQueueCount": 0,
+  "email": "priya.verma@gramcare.ai"
+}

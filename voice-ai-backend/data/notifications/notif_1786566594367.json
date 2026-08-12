@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786566594367",
+  "recipientRole": "assistant",
+  "recipientId": "ASSISTANT_01",
+  "patientId": "PAT_DUAL_PANEL_01",
+  "caseId": "CASE_1786566594286_2akn",
+  "type": "PATIENT UPDATE",
+  "title": "✅ Referral Accepted",
+  "message": "Dr. Aarav Sharma has accepted referral for patient PAT_DUAL_PANEL_01",
+  "createdAt": "2026-08-12T20:29:54.367Z",
+  "read": false,
+  "priority": "MEDIUM"
+}

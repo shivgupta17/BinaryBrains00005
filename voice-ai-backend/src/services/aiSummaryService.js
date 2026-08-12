@@ -40,7 +40,7 @@ async function callGeminiApiWithRetry(apiKey, payload, preferredModel = 'gemini-
 }
 
 /**
- * Service to generate Unified AI Summary & Triage via Gemini API
+ * Service to generate Unified AI Clinical Report & Triage via Gemini API
  */
 async function generatePatientAiSummary(patientId) {
   const apiKey = process.env.GEMINI_API_KEY;
@@ -51,17 +51,16 @@ async function generatePatientAiSummary(patientId) {
 
   const patientContext = patientContextService.getPatientContext(patientId);
 
-  console.log(`[AISummaryService] Generating Unified AI Summary for Patient ID: ${patientId}`);
+  console.log(`[AISummaryService] Generating Unified AI Clinical Report for Patient ID: ${patientId}`);
 
-  const promptText = `You are an expert clinical decision support AI for a virtual village health clinic (GramCare AI).
+  const promptText = `You are an AI clinical intake assistant helping a qualified healthcare professional review a patient case at a rural health centre (GramCare AI).
 
-You are analyzing a real patient case.
-Use ONLY the patient information provided in this request.
-Do NOT invent symptoms, duration, medications, vitals, diagnoses, allergies, history, or other facts.
-If information is missing, explicitly state "Not recorded" or "Not available".
+Analyze ONLY the patient information supplied in the context below.
+Do NOT invent symptoms, duration, medications, vitals, diagnoses, allergies, history, age, gender, or lab values.
+If information is missing, explicitly mark it as "Not recorded" or "Unknown".
 
 Unified Patient Context:
-- Demographics: Name: "${patientContext.demographics?.name || 'Not provided'}", Age: ${patientContext.demographics?.age || 'Not provided'}, Sex: "${patientContext.demographics?.sex || 'Not provided'}", Language: "${patientContext.demographics?.language || 'Hindi'}"
+- Patient Demographics: Name: "${patientContext.demographics?.name || 'Not recorded'}", Age: ${patientContext.demographics?.age || 'Not recorded'}, Sex: "${patientContext.demographics?.sex || 'Not recorded'}", Language: "${patientContext.demographics?.language || 'Hindi'}"
 - Vitals: Temp: "${patientContext.vitals?.temp || 'Not recorded'}", BP: "${patientContext.vitals?.bp || 'Not recorded'}", Pulse: "${patientContext.vitals?.pulse || 'Not recorded'}", SpO2: "${patientContext.vitals?.spo2 || 'Not recorded'}"
 - Voice Intake Transcript (Original): "${patientContext.voiceIntake?.transcription?.original || 'None recorded'}"
 - Voice Intake Transcript (English): "${patientContext.voiceIntake?.transcription?.english || 'None recorded'}"
@@ -70,50 +69,60 @@ Unified Patient Context:
 - Document OCR Extracted Findings: ${JSON.stringify(patientContext.aggregatedFindings || {})}
 
 Tasks:
-1. Synthesize all patient information into a coherent, professional clinical summary.
-2. Distinguish clearly between patient-reported symptoms (voice intake) vs documented findings (OCR/reports).
-3. Classify clinical triage risk level:
-   - "routine" (GREEN): Mild/stable symptoms, appropriate for preliminary first-aid / OTC protocol.
-   - "amber" (AMBER): Moderate symptoms, elevated vitals, or medication review needed — escalate for doctor approval.
-   - "red" (RED): Severe/critical symptoms (e.g. chest pain, difficulty breathing, high fever with altered sensorium, severe laceration) — immediate hospital referral required.
-4. List missing clinical information (e.g. unconfirmed allergies, missing lab test).
+1. Identify the Primary Main Problem first (one clear, short sentence).
+2. List reported & documented symptoms as clean items.
+3. List important findings (Vitals, Medical History, Allergies, Lab Findings).
+4. Write a concise, readable clinical summary paragraph explaining the case without raw JSON or AI chain-of-thought.
+5. Provide practical "What can be done now" supportive actions.
+6. Identify warning signs / red flags (or state "No specific red flags identified from the available information.").
+7. Only suggest OTC medications if supported by the patient's actual condition and approved clinical guidelines. Do NOT invent medications. Every medication MUST require doctor approval.
+8. Specify one clear recommended next step.
+9. Classify clinical triage risk level: "routine" (GREEN), "amber" (AMBER), or "red" (RED).
 
 Return ONLY a JSON object with this exact schema:
 {
   "patientId": "${patientId}",
-  "summary": "Coherent synthesis of patient case based ONLY on actual provided data",
-  "reportedProblems": [
-    "Problem 1 reported by patient"
-  ],
-  "documentFindings": [
-    "Finding 1 from uploaded document"
-  ],
-  "medications": [
-    "Medication name and dosage from records/intake"
-  ],
-  "medicalHistory": [
-    "History item"
-  ],
-  "allergies": [
-    "Allergy item or 'Allergy status unconfirmed'"
+  "patient": {
+    "name": "${patientContext.demographics?.name || 'Not recorded'}",
+    "age": "${patientContext.demographics?.age || 'Not recorded'}",
+    "sex": "${patientContext.demographics?.sex || 'Not recorded'}",
+    "patientId": "${patientId}"
+  },
+  "mainProblem": {
+    "title": "Short primary problem title",
+    "summary": "One clear sentence describing primary complaint based strictly on patient context."
+  },
+  "reportedSymptoms": [
+    "Symptom 1"
   ],
   "importantFindings": [
-    "Key vital sign or clinical observation"
+    "Temperature: ...",
+    "Blood Pressure: ...",
+    "Allergies: ...",
+    "Medical History: ..."
   ],
-  "possibleConcerns": [
-    "Clinical concern"
+  "clinicalSummary": "Concise, easy-to-understand paragraph connecting available facts logically.",
+  "whatCanBeDoneNow": [
+    "Practical supportive action 1"
   ],
-  "recommendedNextSteps": [
-    "Recommended immediate next action"
+  "redFlags": [
+    "Warning sign 1 or 'No specific red flags identified from the available information.'"
   ],
+  "medicationSuggestions": [
+    {
+      "name": "Medication Name",
+      "reason": "Why relevant",
+      "sourceProtocol": "Approved MoHFW / ASHA Protocol",
+      "safetyConsiderations": "Allergy and age safety notes",
+      "doctorApprovalRequired": true
+    }
+  ],
+  "recommendedNextStep": "One concise patient-specific next action",
   "triage": {
     "level": "routine | amber | red",
-    "reason": "Detailed reason for triage risk level classification"
+    "reason": "Detailed clinical reason for risk level classification"
   },
-  "missingInformation": [
-    "Missing clinical detail"
-  ],
-  "confidence": 0.95
+  "disclaimer": "AI-generated clinical support. Doctor/qualified clinician review and approval is required before medication is taken or administered."
 }`;
 
   const payload = {
@@ -135,9 +144,14 @@ Return ONLY a JSON object with this exact schema:
   const cleanJson = candidateText.replace(/^```json\s*/i, '').replace(/```\s*$/i, '').trim();
   const summaryResult = JSON.parse(cleanJson);
 
+  // Backward compatibility aliases
+  if (!summaryResult.summary) summaryResult.summary = summaryResult.clinicalSummary || summaryResult.mainProblem?.summary;
+  if (!summaryResult.reportedProblems) summaryResult.reportedProblems = summaryResult.reportedSymptoms || [];
+  if (!summaryResult.recommendedNextSteps) summaryResult.recommendedNextSteps = summaryResult.whatCanBeDoneNow || [summaryResult.recommendedNextStep];
+
   // Save persistent summary JSON
   fileUtils.savePatientSummary(patientId, summaryResult);
-  console.log(`[AISummaryService] Generated AI Summary & Triage for ${patientId}. Risk Level: ${summaryResult.triage?.level}`);
+  console.log(`[AISummaryService] Generated Structured AI Clinical Report for ${patientId}. Triage Level: ${summaryResult.triage?.level}`);
 
   return summaryResult;
 }

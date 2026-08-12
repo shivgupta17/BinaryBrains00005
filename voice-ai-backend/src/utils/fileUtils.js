@@ -2,11 +2,17 @@ const fs = require('fs');
 const path = require('path');
 
 const CONVERSATIONS_DIR = path.join(__dirname, '../../data/conversations');
-const PATIENTS_DIR = path.join(__dirname, '../../data/patients');
-const UPLOADS_DIR = path.join(__dirname, '../../uploads');
+const PATIENTS_DIR      = path.join(__dirname, '../../data/patients');
+const CASES_DIR         = path.join(__dirname, '../../data/cases');
+const DOCTORS_DIR       = path.join(__dirname, '../../data/doctors');
+const REFERRALS_DIR     = path.join(__dirname, '../../data/referrals');
+const NOTIFICATIONS_DIR = path.join(__dirname, '../../data/notifications');
+const SCHEDULES_DIR     = path.join(__dirname, '../../data/schedules');
+const USERS_DIR         = path.join(__dirname, '../../data/users');
+const UPLOADS_DIR       = path.join(__dirname, '../../uploads');
 
 function ensureDirs() {
-  [CONVERSATIONS_DIR, PATIENTS_DIR, UPLOADS_DIR].forEach(dir => {
+  [CONVERSATIONS_DIR, PATIENTS_DIR, CASES_DIR, DOCTORS_DIR, REFERRALS_DIR, NOTIFICATIONS_DIR, SCHEDULES_DIR, USERS_DIR, UPLOADS_DIR].forEach(dir => {
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
@@ -21,7 +27,7 @@ function sanitizeId(id) {
   return clean.length > 0 ? clean : null;
 }
 
-// Conversation File Helpers (Legacy voice intake)
+// Conversation File Helpers
 function getConversationPath(conversationId) {
   const cleanId = sanitizeId(conversationId);
   if (!cleanId) return null;
@@ -58,7 +64,7 @@ function listConversations() {
   }).filter(Boolean);
 }
 
-// ─── PATIENT CASE STORAGE HELPERS ──────────────────────
+// ─── PATIENT STORAGE HELPERS ──────────────────────
 function getPatientDir(patientId) {
   const cleanId = sanitizeId(patientId) || 'PAT_DEFAULT';
   const pDir = path.join(PATIENTS_DIR, cleanId);
@@ -150,6 +156,196 @@ function getPatientSummary(patientId) {
   return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
 }
 
+// ─── CLINICAL ENCOUNTER CASE HELPERS (patientId vs caseId) ───────────
+function getCaseDir(caseId) {
+  const cleanId = sanitizeId(caseId) || 'CASE_DEFAULT';
+  const cDir = path.join(CASES_DIR, cleanId);
+  if (!fs.existsSync(cDir)) {
+    fs.mkdirSync(cDir, { recursive: true });
+  }
+  return cDir;
+}
+
+function saveCase(caseId, caseData) {
+  const cDir = getCaseDir(caseId);
+  const filePath = path.join(cDir, 'case.json');
+  fs.writeFileSync(filePath, JSON.stringify(caseData, null, 2), 'utf-8');
+  return caseData;
+}
+
+function getCase(caseId) {
+  const cleanId = sanitizeId(caseId);
+  if (!cleanId) return null;
+  const filePath = path.join(CASES_DIR, cleanId, 'case.json');
+  if (!fs.existsSync(filePath)) return null;
+  return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+}
+
+function addCaseTimelineEvent(caseId, event) {
+  const cDir = getCaseDir(caseId);
+  const filePath = path.join(cDir, 'timeline.json');
+  let events = [];
+  if (fs.existsSync(filePath)) {
+    try {
+      events = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+    } catch (_) { events = []; }
+  }
+
+  const timelineEvent = {
+    eventId: `evt_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+    timestamp: new Date().toISOString(),
+    type: event.type || 'NOTE',
+    title: event.title || 'Case Event',
+    description: event.description || '',
+    actor: event.actor || 'System',
+    actorRole: event.actorRole || 'assistant',
+    data: event.data || {}
+  };
+
+  events.push(timelineEvent);
+  fs.writeFileSync(filePath, JSON.stringify(events, null, 2), 'utf-8');
+  return timelineEvent;
+}
+
+function getCaseTimeline(caseId) {
+  const cleanId = sanitizeId(caseId);
+  if (!cleanId) return [];
+  const filePath = path.join(CASES_DIR, cleanId, 'timeline.json');
+  if (!fs.existsSync(filePath)) return [];
+  try {
+    return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+  } catch (_) { return []; }
+}
+
+// ─── DOCTORS & REFERRALS HELPERS ──────────────────────
+function saveDoctor(doctorData) {
+  ensureDirs();
+  const filePath = path.join(DOCTORS_DIR, `${doctorData.doctorId}.json`);
+  fs.writeFileSync(filePath, JSON.stringify(doctorData, null, 2), 'utf-8');
+  return doctorData;
+}
+
+function getDoctor(doctorId) {
+  const filePath = path.join(DOCTORS_DIR, `${doctorId}.json`);
+  if (!fs.existsSync(filePath)) return null;
+  return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+}
+
+function listDoctors() {
+  ensureDirs();
+  seedDefaultDoctorsIfNeeded();
+  const files = fs.readdirSync(DOCTORS_DIR).filter(f => f.endsWith('.json'));
+  return files.map(f => {
+    try {
+      return JSON.parse(fs.readFileSync(path.join(DOCTORS_DIR, f), 'utf-8'));
+    } catch (_) { return null; }
+  }).filter(Boolean);
+}
+
+function seedDefaultDoctorsIfNeeded() {
+  const existing = fs.readdirSync(DOCTORS_DIR).filter(f => f.endsWith('.json'));
+  if (existing.length > 0) return;
+
+  const defaultDoctors = [
+    {
+      doctorId: 'DOC_01',
+      name: 'Dr. Aarav Sharma',
+      specialty: 'Orthopedics',
+      subSpecialty: 'Trauma & Fracture Care',
+      onlineStatus: 'ONLINE',
+      hospital: 'GramCare Central Clinic',
+      currentQueueCount: 1,
+      email: 'aarav.sharma@gramcare.ai'
+    },
+    {
+      doctorId: 'DOC_02',
+      name: 'Dr. Priya Verma',
+      specialty: 'Cardiology',
+      subSpecialty: 'Emergency Cardiac Support',
+      onlineStatus: 'ONLINE',
+      hospital: 'District Hospital',
+      currentQueueCount: 0,
+      email: 'priya.verma@gramcare.ai'
+    },
+    {
+      doctorId: 'DOC_03',
+      name: 'Dr. Rajesh Mehra',
+      specialty: 'General Medicine',
+      subSpecialty: 'Internal Medicine & Respiratory',
+      onlineStatus: 'ONLINE',
+      hospital: 'Community Health Centre',
+      currentQueueCount: 2,
+      email: 'rajesh.mehra@gramcare.ai'
+    }
+  ];
+
+  defaultDoctors.forEach(doc => saveDoctor(doc));
+}
+
+function saveReferral(referralData) {
+  ensureDirs();
+  const filePath = path.join(REFERRALS_DIR, `${referralData.referralId}.json`);
+  fs.writeFileSync(filePath, JSON.stringify(referralData, null, 2), 'utf-8');
+  return referralData;
+}
+
+function getReferral(referralId) {
+  const filePath = path.join(REFERRALS_DIR, `${referralId}.json`);
+  if (!fs.existsSync(filePath)) return null;
+  return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+}
+
+function listReferrals() {
+  ensureDirs();
+  const files = fs.readdirSync(REFERRALS_DIR).filter(f => f.endsWith('.json'));
+  return files.map(f => {
+    try {
+      return JSON.parse(fs.readFileSync(path.join(REFERRALS_DIR, f), 'utf-8'));
+    } catch (_) { return null; }
+  }).filter(Boolean);
+}
+
+// ─── NOTIFICATIONS & SCHEDULE HELPERS ────────────────
+function saveNotification(notifData) {
+  ensureDirs();
+  const filePath = path.join(NOTIFICATIONS_DIR, `${notifData.notificationId}.json`);
+  fs.writeFileSync(filePath, JSON.stringify(notifData, null, 2), 'utf-8');
+  return notifData;
+}
+
+function listNotifications(recipientRole = null, recipientId = null) {
+  ensureDirs();
+  const files = fs.readdirSync(NOTIFICATIONS_DIR).filter(f => f.endsWith('.json'));
+  const all = files.map(f => {
+    try {
+      return JSON.parse(fs.readFileSync(path.join(NOTIFICATIONS_DIR, f), 'utf-8'));
+    } catch (_) { return null; }
+  }).filter(Boolean);
+
+  return all.filter(n => {
+    if (recipientId && n.recipientId && n.recipientId !== recipientId) return false;
+    if (recipientRole && n.recipientRole && n.recipientRole !== recipientRole) return false;
+    return true;
+  }).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+}
+
+function saveSchedule(scheduleData) {
+  ensureDirs();
+  const filePath = path.join(SCHEDULES_DIR, `${scheduleData.scheduleId}.json`);
+  fs.writeFileSync(filePath, JSON.stringify(scheduleData, null, 2), 'utf-8');
+  return scheduleData;
+}
+
+function listSchedules() {
+  ensureDirs();
+  const files = fs.readdirSync(SCHEDULES_DIR).filter(f => f.endsWith('.json'));
+  return files.map(f => {
+    try {
+      return JSON.parse(fs.readFileSync(path.join(SCHEDULES_DIR, f), 'utf-8'));
+    } catch (_) { return null; }
+  }).filter(Boolean);
+}
+
 function deleteFile(filePath) {
   try {
     if (filePath && fs.existsSync(filePath)) {
@@ -163,6 +359,12 @@ function deleteFile(filePath) {
 module.exports = {
   CONVERSATIONS_DIR,
   PATIENTS_DIR,
+  CASES_DIR,
+  DOCTORS_DIR,
+  REFERRALS_DIR,
+  NOTIFICATIONS_DIR,
+  SCHEDULES_DIR,
+  USERS_DIR,
   UPLOADS_DIR,
   sanitizeId,
   saveConversation,
@@ -178,5 +380,19 @@ module.exports = {
   getPatientVitals,
   savePatientSummary,
   getPatientSummary,
+  saveCase,
+  getCase,
+  addCaseTimelineEvent,
+  getCaseTimeline,
+  saveDoctor,
+  getDoctor,
+  listDoctors,
+  saveReferral,
+  getReferral,
+  listReferrals,
+  saveNotification,
+  listNotifications,
+  saveSchedule,
+  listSchedules,
   deleteFile
 };

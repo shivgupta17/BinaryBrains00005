@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786566594396",
+  "recipientRole": "assistant",
+  "recipientId": "ASSISTANT_DEFAULT",
+  "patientId": "PAT_DUAL_PANEL_01",
+  "caseId": "CASE_1786566594286_2akn",
+  "type": "BED_ASSIGNED",
+  "title": "🛏️ Bed Assigned",
+  "message": "Patient assigned to Trauma Ward, Room 04, Bed A",
+  "createdAt": "2026-08-12T20:29:54.396Z",
+  "read": false,
+  "priority": "HIGH"
+}

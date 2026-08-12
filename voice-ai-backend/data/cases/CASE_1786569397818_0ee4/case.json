@@ -1,0 +1,24 @@
+{
+  "caseId": "CASE_1786569397818_0ee4",
+  "patientId": "PAT_usr_patiente2egramcareai",
+  "assistantId": "ASSISTANT_DEFAULT",
+  "createdAt": "2026-08-12T21:16:37.818Z",
+  "status": "REFERRED",
+  "caseType": "Accident & Deep Laceration",
+  "textStatements": [
+    {
+      "id": "stmt_1786569397849",
+      "text": "Patient fell off motorcycle resulting in deep cut on left thigh.",
+      "author": "Assistant Suman",
+      "createdAt": "2026-08-12T21:16:37.849Z"
+    }
+  ],
+  "imageUploads": [],
+  "videoUploads": [],
+  "doctorNotes": [],
+  "assistantNotes": [],
+  "assignedDoctorId": "DOC_01",
+  "bedAssignment": null,
+  "followUp": null,
+  "medications": []
+}

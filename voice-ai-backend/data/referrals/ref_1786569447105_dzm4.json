@@ -1,0 +1,13 @@
+{
+  "referralId": "ref_1786569447105_dzm4",
+  "patientId": "PAT_usr_patient1786569446693gramcareai",
+  "caseId": "CASE_1786569447043_p8sw",
+  "doctorId": "DOC_usr_doctor1786569446693gramcareai",
+  "doctorName": "Attending Doctor",
+  "assistantId": "AST_usr_assistant1786569446693gramcareai",
+  "riskLevel": "amber",
+  "reason": "Deep thigh laceration requires doctor wound debridement & prescription",
+  "status": "ACCEPTED",
+  "createdAt": "2026-08-12T21:17:27.105Z",
+  "acceptedAt": "2026-08-12T21:17:27.115Z"
+}

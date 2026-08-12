@@ -1,0 +1,13 @@
+{
+  "referralId": "ref_1786569397864_w03o",
+  "patientId": "PAT_usr_patiente2egramcareai",
+  "caseId": "CASE_1786569397818_0ee4",
+  "doctorId": "DOC_01",
+  "doctorName": "Dr. Aarav Sharma",
+  "assistantId": "ASSISTANT_01",
+  "riskLevel": "amber",
+  "reason": "Deep thigh laceration requires doctor wound debridement & prescription",
+  "status": "NEW",
+  "createdAt": "2026-08-12T21:16:37.864Z",
+  "acceptedAt": null
+}

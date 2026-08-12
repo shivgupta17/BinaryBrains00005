@@ -15,7 +15,87 @@
 </head>
 <body>
 
-<div class="layout">
+<!-- ─── FULL-PAGE AUTHENTICATION GATE SCREEN ──────────────────── -->
+<div id="auth-screen-gate" style="display:flex;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:9999;background:linear-gradient(145deg,#0F1923 0%,#1A2840 50%,#1B4A2C 100%);align-items:center;justify-content:center;padding:20px;overflow-y:auto;">
+  <div style="width:100%;max-width:480px;background:var(--white);border-radius:24px;box-shadow:0 24px 64px rgba(0,0,0,.4);padding:32px 28px;position:relative;">
+    
+    <!-- Brand Banner -->
+    <div style="text-align:center;margin-bottom:24px;">
+      <div style="width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,var(--saffron),var(--saffron-lt));display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 12px;box-shadow:var(--shadow-glow-orange);">🏥</div>
+      <h2 style="font-family:var(--font-serif);font-size:24px;font-weight:700;color:var(--ink);margin-bottom:4px;">Gram<em>Care</em> AI</h2>
+      <p style="font-size:13px;color:var(--ink-50);">Virtual Village Clinic Portal · Select your role to sign in</p>
+    </div>
+
+    <!-- Role Selection Tabs -->
+    <div style="margin-bottom:18px;">
+      <label class="form-label" style="font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-60);display:block;margin-bottom:8px;text-align:center;">What is your role?</label>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;" id="auth-gate-role-grid">
+        <button type="button" class="btn btn-sm btn-primary" id="role-btn-assistant" onclick="selectAuthRole('assistant')" style="font-size:11.5px;padding:8px 4px;border-radius:10px;">
+          🏥 Assistant
+        </button>
+        <button type="button" class="btn btn-sm btn-ghost" id="role-btn-doctor" onclick="selectAuthRole('doctor')" style="font-size:11.5px;padding:8px 4px;border-radius:10px;">
+          👨‍⚕️ Doctor
+        </button>
+        <button type="button" class="btn btn-sm btn-ghost" id="role-btn-patient" onclick="selectAuthRole('patient')" style="font-size:11.5px;padding:8px 4px;border-radius:10px;">
+          👤 Patient
+        </button>
+      </div>
+    </div>
+
+    <!-- Login / Signup Mode Switcher -->
+    <div style="display:flex;background:var(--ink-10);border-radius:10px;padding:3px;margin-bottom:20px;">
+      <button type="button" id="auth-mode-login" class="btn btn-sm btn-primary btn-full" onclick="switchAuthMode('login')" style="font-size:12px;border-radius:8px;">Sign In</button>
+      <button type="button" id="auth-mode-register" class="btn btn-sm btn-ghost btn-full" onclick="switchAuthMode('register')" style="font-size:12px;border-radius:8px;">Register Account</button>
+    </div>
+
+    <!-- LOGIN FORM CONTAINER -->
+    <div id="gate-login-container">
+      <div class="form-group" style="margin-bottom:14px;">
+        <label class="form-label" style="font-size:12px;">Email Address / Identifier</label>
+        <input type="email" id="gate-email-input" class="form-input" placeholder="Enter your email address"/>
+      </div>
+      <div class="form-group" style="margin-bottom:18px;">
+        <label class="form-label" style="font-size:12px;">Password</label>
+        <input type="password" id="gate-password-input" class="form-input" placeholder="••••••••"/>
+      </div>
+      <button type="button" class="btn btn-primary btn-full btn-lg" onclick="executeGateLogin()" id="gate-login-btn" style="font-size:14px;">
+        🔐 Login to Portal
+      </button>
+    </div>
+
+    <!-- REGISTER FORM CONTAINER -->
+    <div id="gate-register-container" style="display:none;">
+      <div class="form-group" style="margin-bottom:10px;">
+        <label class="form-label" style="font-size:11.5px;">Full Name</label>
+        <input type="text" id="gate-reg-name" class="form-input" placeholder="Enter full name"/>
+      </div>
+      <div class="form-group" style="margin-bottom:10px;">
+        <label class="form-label" style="font-size:11.5px;">Email Address</label>
+        <input type="email" id="gate-reg-email" class="form-input" placeholder="user@gramcare.ai"/>
+      </div>
+      <div class="form-group" style="margin-bottom:10px;">
+        <label class="form-label" style="font-size:11.5px;">Password</label>
+        <input type="password" id="gate-reg-pass" class="form-input" placeholder="••••••••"/>
+      </div>
+
+      <!-- OTP Verification Section -->
+      <div style="background:var(--ink-10);border-radius:10px;padding:10px;margin-bottom:14px;">
+        <div style="display:flex;gap:8px;margin-bottom:8px;">
+          <input type="text" id="gate-otp-code" class="form-input" placeholder="Enter 6-digit OTP" style="font-size:12px;"/>
+          <button type="button" class="btn btn-sky btn-sm" onclick="sendGateOtp()" id="btn-send-otp" style="white-space:nowrap;font-size:11px;">Send OTP</button>
+        </div>
+        <div style="font-size:10.5px;color:var(--ink-50);" id="gate-otp-status">OTP will be sent via Nodemailer / verification API.</div>
+      </div>
+
+      <button type="button" class="btn btn-forest btn-full btn-lg" onclick="executeGateRegister()" id="gate-register-btn" style="font-size:14px;">
+        ✅ Complete Registration
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<div class="layout" id="main-app-layout" style="display:none;">
 
   <!-- ─── SIDEBAR ──────────────────────────────────── -->
   <aside class="sidebar">
@@ -28,67 +108,60 @@
     </div>
 
     <div class="sidebar-scroll">
-      <div class="nav-section">Main</div>
+      <!-- ASSISTANT NAV SECTION -->
+      <div id="sidebar-nav-assistant">
+        <div class="nav-section">Assistant Panel</div>
+        <a class="nav-item" data-page="dashboard" href="#dashboard">
+          <div class="nav-icon">🏠</div> Dashboard
+        </a>
+        <a class="nav-item" data-page="new-patient" href="#new-patient">
+          <div class="nav-icon">➕</div> New Patient
+        </a>
+        <a class="nav-item" data-page="queue" href="#queue">
+          <div class="nav-icon">🗂️</div> Patient Queue <span class="nav-badge">4</span>
+        </a>
+        <div class="nav-section">Clinical Workflow</div>
+        <a class="nav-item" data-page="intake" href="#intake">
+          <div class="nav-icon">🎙️</div> Voice Intake
+        </a>
+        <a class="nav-item" data-page="documents" href="#documents">
+          <div class="nav-icon">📄</div> Documents / OCR
+        </a>
+        <a class="nav-item" data-page="triage" href="#triage">
+          <div class="nav-icon">⚡</div> Triage Engine
+        </a>
+        <a class="nav-item" data-page="protocol" href="#protocol">
+          <div class="nav-icon">📋</div> First-Aid Protocol
+        </a>
+        <a class="nav-item" data-page="medicine" href="#medicine">
+          <div class="nav-icon">💊</div> Medicine Gate
+        </a>
+      </div>
 
-      <a class="nav-item" data-page="dashboard" href="#dashboard">
-        <div class="nav-icon">🏠</div>
-        Dashboard
-      </a>
-      <a class="nav-item" data-page="new-patient" href="#new-patient">
-        <div class="nav-icon">➕</div>
-        New Patient
-      </a>
-      <a class="nav-item" data-page="queue" href="#queue">
-        <div class="nav-icon">🗂️</div>
-        Patient Queue
-        <span class="nav-badge">4</span>
-      </a>
+      <!-- DOCTOR NAV SECTION -->
+      <div id="sidebar-nav-doctor" style="display:none;">
+        <div class="nav-section">Doctor Panel</div>
+        <a class="nav-item" data-page="doctor" href="#doctor">
+          <div class="nav-icon">👨‍⚕️</div> Doctor Dashboard <span class="nav-badge">2</span>
+        </a>
+        <a class="nav-item" data-page="queue" href="#queue">
+          <div class="nav-icon">🗂️</div> Patient Queue
+        </a>
+        <a class="nav-item" data-page="records" href="#records">
+          <div class="nav-icon">🗃️</div> Digital Records
+        </a>
+        <a class="nav-item" data-page="ibmbob" href="#ibmbob">
+          <div class="nav-icon">🤖</div> IBM Bob / MCP
+        </a>
+      </div>
 
-      <div class="nav-section">Clinical Workflow</div>
-
-      <a class="nav-item" data-page="intake" href="#intake">
-        <div class="nav-icon">🎙️</div>
-        Voice Intake
-      </a>
-      <a class="nav-item" data-page="documents" href="#documents">
-        <div class="nav-icon">📄</div>
-        Documents / OCR
-      </a>
-      <a class="nav-item" data-page="triage" href="#triage">
-        <div class="nav-icon">⚡</div>
-        Triage Engine
-      </a>
-      <a class="nav-item" data-page="protocol" href="#protocol">
-        <div class="nav-icon">📋</div>
-        First-Aid Protocol
-      </a>
-      <a class="nav-item" data-page="medicine" href="#medicine">
-        <div class="nav-icon">💊</div>
-        Medicine Gate
-      </a>
-
-      <div class="nav-section">Doctor</div>
-
-      <a class="nav-item" data-page="doctor" href="#doctor">
-        <div class="nav-icon">👨‍⚕️</div>
-        Doctor Dashboard
-        <span class="nav-badge">2</span>
-      </a>
-      <a class="nav-item" data-page="records" href="#records">
-        <div class="nav-icon">🗃️</div>
-        Digital Records
-      </a>
-      <a class="nav-item" data-page="ibmbob" href="#ibmbob">
-        <div class="nav-icon">🤖</div>
-        IBM Bob / MCP
-      </a>
-
-      <div class="nav-section">Account & Auth</div>
-
-      <a class="nav-item" data-page="login" href="pages/login.html">
-        <div class="nav-icon">🔐</div>
-        Login / Sign Up
-      </a>
+      <!-- PATIENT NAV SECTION -->
+      <div id="sidebar-nav-patient" style="display:none;">
+        <div class="nav-section">Patient Portal</div>
+        <a class="nav-item" data-page="patient-dashboard" href="#patient-dashboard">
+          <div class="nav-icon">👤</div> My Care Portal
+        </a>
+      </div>
     </div>
 
     <div class="sidebar-footer">
@@ -111,8 +184,21 @@
         <span class="topbar-crumb" id="topbar-sub">Overview</span>
       </div>
       <div class="topbar-right">
-        <button class="topbar-icon-btn" title="Notifications" onclick="GramCare.showToast('2 pending doctor approvals', 'warning')">
-          🔔<span class="badge"></span>
+        <!-- Role Panel Switcher (Assistant / Doctor / Patient) -->
+        <div style="display:flex;align-items:center;background:var(--ink-10);border-radius:10px;padding:3px;margin-right:10px;">
+          <button id="btn-panel-assistant" class="btn btn-sm btn-primary" onclick="switchToRolePanel('assistant')" style="font-size:11px;padding:5px 9px;border-radius:7px;">
+            🏥 Assistant
+          </button>
+          <button id="btn-panel-doctor" class="btn btn-sm btn-ghost" onclick="switchToRolePanel('doctor')" style="font-size:11px;padding:5px 9px;border-radius:7px;">
+            👨‍⚕️ Doctor
+          </button>
+          <button id="btn-panel-patient" class="btn btn-sm btn-ghost" onclick="switchToRolePanel('patient')" style="font-size:11px;padding:5px 9px;border-radius:7px;">
+            👤 Patient
+          </button>
+        </div>
+
+        <button class="topbar-icon-btn" title="Notifications" onclick="showNotificationTray()">
+          🔔<span class="badge" id="topbar-notif-badge" style="display:none;">0</span>
         </button>
         <button class="topbar-icon-btn" title="Offline mode">📡</button>
         <button class="topbar-icon-btn" title="Settings">⚙️</button>
@@ -138,26 +224,28 @@
 
               <!-- Demo credentials info box -->
               <div class="demo-cred-banner">
-                <div class="dcb-title">🔑 Demo Account Credentials:</div>
-                <div class="dcb-item"><strong>Email:</strong> <code>sunita@gramcare.ai</code></div>
-                <div class="dcb-item"><strong>Pass:</strong> <code>password123</code></div>
-                <button class="btn-fill-demo" type="button" onclick="fillDemoCreds()">⚡ Auto-Fill Credentials</button>
+                <div class="dcb-title">🔑 Account Credentials:</div>
+                <div class="dcb-item"><strong>Assistant:</strong> <code>assistant@gramcare.ai</code> / <code>password123</code></div>
+                <div class="dcb-item"><strong>Doctor:</strong> <code>doctor@gramcare.ai</code> / <code>doctor123</code></div>
               </div>
 
               <div class="adm-form">
                 <div class="form-group" style="margin-bottom:10px;">
+                  <label class="form-label" style="font-size:11px;">Select Role</label>
+                  <select class="form-select" id="modal-login-role" style="font-size:12px;">
+                    <option value="assistant">Clinic Assistant</option>
+                    <option value="doctor">Medical Doctor</option>
+                  </select>
+                </div>
+                <div class="form-group" style="margin-bottom:10px;">
                   <label class="form-label" style="font-size:11px;">Email Address</label>
-                  <input type="email" id="modal-login-email" class="form-input" placeholder="sunita@gramcare.ai" value="sunita@gramcare.ai"/>
+                  <input type="email" id="modal-login-email" class="form-input" placeholder="assistant@gramcare.ai" value="assistant@gramcare.ai"/>
                 </div>
                 <div class="form-group" style="margin-bottom:12px;">
                   <label class="form-label" style="font-size:11px;">Password</label>
                   <input type="password" id="modal-login-pass" class="form-input" placeholder="••••••••" value="password123"/>
                 </div>
                 <button class="btn btn-primary btn-full btn-sm" type="button" onclick="handleQuickLogin()">🔐 Login to Clinic</button>
-
-                <div style="text-align:center;margin-top:12px;font-size:11px;color:var(--ink-50);">
-                  Or open <a href="pages/login.html" style="color:var(--saffron);font-weight:700;">Full Signup / Login Page →</a>
-                </div>
               </div>
             </div>
 
@@ -169,10 +257,9 @@
               </div>
               <div style="padding:18px 16px;text-align:center;">
                 <div class="sidebar-avatar" id="modal-user-avatar" style="margin:0 auto 10px;width:50px;height:50px;font-size:18px;border-radius:14px;">SW</div>
-                <div style="font-weight:700;font-size:15px;color:var(--ink);" id="modal-user-name">Sunita Wagh</div>
+                <div style="font-weight:700;font-size:15px;color:var(--ink);" id="modal-user-name">Clinic Assistant</div>
                 <div style="font-size:12px;color:var(--ink-50);margin-top:2px;" id="modal-user-role">Health Worker · Rajpur PHC</div>
                 <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--ink-10);display:flex;gap:8px;">
-                  <a href="pages/login.html" class="btn btn-outline btn-sm btn-full" style="font-size:11px;">Switch Account</a>
                   <button class="btn btn-danger btn-sm btn-full" type="button" onclick="handleLogout()" style="font-size:11px;">🚪 Logout</button>
                 </div>
               </div>

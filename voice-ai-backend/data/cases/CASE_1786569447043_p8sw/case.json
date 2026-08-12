@@ -1,0 +1,56 @@
+{
+  "caseId": "CASE_1786569447043_p8sw",
+  "patientId": "PAT_usr_patient1786569446693gramcareai",
+  "assistantId": "ASSISTANT_DEFAULT",
+  "createdAt": "2026-08-12T21:17:27.043Z",
+  "status": "IN_CONSULTATION",
+  "caseType": "Accident & Deep Laceration",
+  "textStatements": [
+    {
+      "id": "stmt_1786569447090",
+      "text": "Patient fell off motorcycle resulting in deep cut on left thigh.",
+      "author": "Assistant Suman",
+      "createdAt": "2026-08-12T21:17:27.090Z"
+    }
+  ],
+  "imageUploads": [],
+  "videoUploads": [],
+  "doctorNotes": [
+    {
+      "noteId": "note_1786569447135",
+      "doctorId": "DOC_usr_doctor1786569446693gramcareai",
+      "text": "Clean wound with saline, administer Tetanus booster and oral Cefalexin 500mg",
+      "createdAt": "2026-08-12T21:17:27.135Z"
+    }
+  ],
+  "assistantNotes": [],
+  "assignedDoctorId": "DOC_usr_doctor1786569446693gramcareai",
+  "bedAssignment": {
+    "ward": "Surgical Ward",
+    "room": "Room 08",
+    "bed": "Bed 02",
+    "assignedBy": "DOC_01",
+    "assignedAt": "2026-08-12T21:17:27.150Z",
+    "notes": "Admitted for observation"
+  },
+  "followUp": null,
+  "medications": [],
+  "approvedMedications": [
+    {
+      "name": "Cefalexin 500mg",
+      "dosage": "TDS 5 days",
+      "reason": "Wound infection prophylaxis",
+      "status": "DOCTOR_APPROVED",
+      "approvedBy": "DOC_usr_doctor1786569446693gramcareai",
+      "approvedAt": "2026-08-12T21:17:27.135Z"
+    },
+    {
+      "name": "Tetanus Toxoid 0.5ml",
+      "dosage": "IM single dose",
+      "reason": "Tetanus prophylaxis",
+      "status": "DOCTOR_APPROVED",
+      "approvedBy": "DOC_usr_doctor1786569446693gramcareai",
+      "approvedAt": "2026-08-12T21:17:27.135Z"
+    }
+  ]
+}

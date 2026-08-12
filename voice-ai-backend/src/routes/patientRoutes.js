@@ -3,6 +3,7 @@ const multer = require('multer');
 const path = require('path');
 const fileUtils = require('../utils/fileUtils');
 const documentController = require('../controllers/documentController');
+const { requireAuth } = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
@@ -24,17 +25,17 @@ const upload = multer({
   limits: { fileSize: maxDocSizeMB * 1024 * 1024 }
 });
 
-// Patient Endpoints
-router.post('/', documentController.registerPatient);
-router.post('/:patientId/documents', upload.single('document'), documentController.uploadPatientDocument);
-router.get('/:patientId/documents', documentController.getPatientDocuments);
-router.get('/:patientId/documents/:documentId', documentController.getSinglePatientDocument);
-router.post('/:patientId/ai-summary', documentController.generatePatientAiSummary);
-router.get('/:patientId/ai-summary', documentController.getPatientSummary);
-router.get('/:patientId/context', documentController.getPatientContextEndpoint);
+// Patient Endpoints (Protected by requireAuth)
+router.post('/', requireAuth, documentController.registerPatient);
+router.post('/:patientId/documents', requireAuth, upload.single('document'), documentController.uploadPatientDocument);
+router.get('/:patientId/documents', requireAuth, documentController.getPatientDocuments);
+router.get('/:patientId/documents/:documentId', requireAuth, documentController.getSinglePatientDocument);
+router.post('/:patientId/ai-summary', requireAuth, documentController.generatePatientAiSummary);
+router.get('/:patientId/ai-summary', requireAuth, documentController.getPatientSummary);
+router.get('/:patientId/context', requireAuth, documentController.getPatientContextEndpoint);
 
 // First-Aid & Medicine Gate Endpoints
-router.get('/:patientId/first-aid', documentController.getPatientFirstAidProtocol);
-router.get('/:patientId/medicine-gate', documentController.getPatientMedicineGate);
+router.get('/:patientId/first-aid', requireAuth, documentController.getPatientFirstAidProtocol);
+router.get('/:patientId/medicine-gate', requireAuth, documentController.getPatientMedicineGate);
 
 module.exports = router;

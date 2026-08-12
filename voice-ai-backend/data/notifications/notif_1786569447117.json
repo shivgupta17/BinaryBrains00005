@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786569447117",
+  "recipientRole": "assistant",
+  "recipientId": "AST_usr_assistant1786569446693gramcareai",
+  "patientId": "PAT_usr_patient1786569446693gramcareai",
+  "caseId": "CASE_1786569447043_p8sw",
+  "type": "PATIENT UPDATE",
+  "title": "✅ Referral Accepted",
+  "message": "Attending Doctor has accepted referral for patient PAT_usr_patient1786569446693gramcareai",
+  "createdAt": "2026-08-12T21:17:27.117Z",
+  "read": false,
+  "priority": "MEDIUM"
+}

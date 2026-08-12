@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786566594410",
+  "recipientRole": "assistant",
+  "recipientId": "ASSISTANT_DEFAULT",
+  "patientId": "PAT_DUAL_PANEL_01",
+  "caseId": "CASE_1786566594286_2akn",
+  "type": "MEDICATION_DUE",
+  "title": "⏰ Medication Schedule Created",
+  "message": "Povidone-Iodine Dressing scheduled at 09:00, 18:00",
+  "createdAt": "2026-08-12T20:29:54.410Z",
+  "read": false,
+  "priority": "MEDIUM"
+}

@@ -1,0 +1,14 @@
+{
+  "scheduleId": "sched_1786566594408",
+  "caseId": "CASE_1786566594286_2akn",
+  "patientId": "PAT_DUAL_PANEL_01",
+  "medicationName": "Povidone-Iodine Dressing",
+  "dose": "Topical",
+  "times": [
+    "09:00",
+    "18:00"
+  ],
+  "status": "ACTIVE",
+  "createdBy": "DOC_01",
+  "createdAt": "2026-08-12T20:29:54.408Z"
+}

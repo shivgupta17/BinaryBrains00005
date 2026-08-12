@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>GramCare AI — Register Account</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏥</text></svg>"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;450;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --saffron:      #E8692A;
+  --saffron-lt:   #F4A261;
+  --saffron-pale: #FFF3EC;
+  --forest:       #1B6B4A;
+  --forest-lt:    #2D9B6F;
+  --sky:          #1A6FA8;
+  --ink:          #0F1923;
+  --ink-80:       #2C3E50;
+  --ink-60:       #475569;
+  --ink-50:       #64748B;
+  --ink-20:       #CBD5E1;
+  --ink-10:       #F1F5F9;
+  --white:        #FFFFFF;
+  --red:          #DC2626;
+  --green:        #16A34A;
+  --radius-xl:    28px;
+  --shadow-lg:    0 16px 64px rgba(15,25,35,.13);
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-body:  'DM Sans', system-ui, sans-serif;
+  --font-ui:    'Space Grotesk', system-ui, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font-body);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(145deg, #0F1923 0%, #1A2840 50%, #1B4A2C 100%);
+  padding: 24px;
+}
+
+.auth-card {
+  display: flex;
+  width: 100%;
+  max-width: 900px;
+  min-height: 560px;
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+.visual-panel {
+  flex: 1;
+  background: linear-gradient(160deg, #1B6B4A 0%, #0F1923 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  color: var(--white);
+  text-align: center;
+}
+
+.form-panel {
+  flex: 1.2;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.auth-title {
+  font-family: var(--font-serif);
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.auth-sub {
+  font-size: 13px;
+  color: var(--ink-50);
+  margin-bottom: 24px;
+}
+
+.role-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.role-btn {
+  padding: 10px 6px;
+  border-radius: 10px;
+  border: 1.5px solid var(--ink-20);
+  background: var(--white);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .2s;
+}
+
+.role-btn.selected {
+  border-color: var(--forest);
+  background: var(--forest);
+  color: var(--white);
+}
+
+.form-group {
+  margin-bottom: 14px;
+}
+
+.form-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-80);
+  margin-bottom: 6px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1.5px solid var(--ink-20);
+  font-size: 13px;
+  outline: none;
+}
+
+.form-input:focus {
+  border-color: var(--forest);
+}
+
+.otp-box {
+  background: var(--ink-10);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 18px;
+}
+
+.otp-flex {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  background: var(--forest);
+  color: var(--white);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-send {
+  padding: 0 14px;
+  border-radius: 8px;
+  border: none;
+  background: var(--sky);
+  color: var(--white);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.footer-link {
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--ink-60);
+  margin-top: 18px;
+}
+
+.footer-link a {
+  color: var(--forest);
+  font-weight: 600;
+  text-decoration: none;
+}
+</style>
+</head>
+<body>
+
+<div class="auth-card">
+  <div class="visual-panel">
+    <div style="font-size: 48px; margin-bottom: 16px;">🏥</div>
+    <h2 style="font-family: var(--font-serif); font-size: 28px; margin-bottom: 8px;">GramCare AI</h2>
+    <p style="font-size: 13px; opacity: .85; max-width: 280px; line-height: 1.5;">Join the Virtual Village Clinic Network as an Assistant, Doctor, or Patient.</p>
+  </div>
+
+  <div class="form-panel">
+    <h1 class="auth-title">Create Account</h1>
+    <p class="auth-sub">Select your clinic role & register with OTP verification</p>
+
+    <label class="form-label">Select Your Role</label>
+    <div class="role-grid">
+      <button type="button" class="role-btn selected" id="r-assistant" onclick="setRole('assistant')">🏥 Assistant</button>
+      <button type="button" class="role-btn" id="r-doctor" onclick="setRole('doctor')">👨‍⚕️ Doctor</button>
+      <button type="button" class="role-btn" id="r-patient" onclick="setRole('patient')">👤 Patient</button>
+    </div>
+
+    <form id="reg-form" onsubmit="executeRegister(event)">
+      <div class="form-group">
+        <label class="form-label" for="reg-name">Full Name</label>
+        <input type="text" id="reg-name" class="form-input" placeholder="e.g. Suman Wagh" required/>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="reg-email">Email Address</label>
+        <input type="email" id="reg-email" class="form-input" placeholder="user@gramcare.ai" required/>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="reg-pass">Password</label>
+        <input type="password" id="reg-pass" class="form-input" placeholder="••••••••" required minlength="6"/>
+      </div>
+
+      <div class="otp-box">
+        <label class="form-label" style="margin-bottom: 4px;">OTP Verification</label>
+        <div class="otp-flex">
+          <input type="text" id="reg-otp" class="form-input" placeholder="Enter 6-digit OTP"/>
+          <button type="button" class="btn-send" onclick="sendOtpCode()">Send OTP</button>
+        </div>
+        <div id="otp-msg" style="font-size: 11px; color: var(--ink-50); margin-top: 6px;">OTP will be sent via Nodemailer email API.</div>
+      </div>
+
+      <button type="submit" class="btn-primary" id="reg-submit-btn">✅ Complete Registration</button>
+    </form>
+
+    <div class="footer-link">
+      Already have an account? <a href="login.html">Sign In</a>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentRole = 'assistant';
+
+function setRole(role) {
+  currentRole = role;
+  document.getElementById('r-assistant').className = role === 'assistant' ? 'role-btn selected' : 'role-btn';
+  document.getElementById('r-doctor').className    = role === 'doctor'    ? 'role-btn selected' : 'role-btn';
+  document.getElementById('r-patient').className   = role === 'patient'   ? 'role-btn selected' : 'role-btn';
+}
+
+async function sendOtpCode() {
+  const email = document.getElementById('reg-email').value.trim();
+  const msgEl = document.getElementById('otp-msg');
+  if (!email) {
+    alert('Please enter an email address first.');
+    return;
+  }
+
+  try {
+    const res = await fetch('http://localhost:5000/api/auth/send-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, role: currentRole })
+    });
+    const data = await res.json();
+    if (data.success) {
+      msgEl.textContent = `✓ OTP sent to ${email}. Demo Code: ${data.otpDemoCode || 'Check inbox'}`;
+      if (data.otpDemoCode) document.getElementById('reg-otp').value = data.otpDemoCode;
+    } else {
+      alert(data.error || 'Failed to send OTP');
+    }
+  } catch (err) {
+    alert('Error sending OTP: ' + err.message);
+  }
+}
+
+async function executeRegister(e) {
+  e.preventDefault();
+  const name    = document.getElementById('reg-name').value.trim();
+  const email   = document.getElementById('reg-email').value.trim();
+  const pass    = document.getElementById('reg-pass').value;
+  const otpCode = document.getElementById('reg-otp').value.trim();
+  const btn     = document.getElementById('reg-submit-btn');
+
+  if (!name || !email || !pass) {
+    alert('Please fill in Name, Email, and Password.');
+    return;
+  }
+
+  btn.textContent = 'Creating account…';
+  btn.disabled = true;
+
+  try {
+    if (otpCode) {
+      const verifyRes = await fetch('http://localhost:5000/api/auth/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, otpCode, role: currentRole })
+      });
+      const verifyData = await verifyRes.json();
+      if (!verifyData.success) {
+        alert(verifyData.error || 'OTP verification failed.');
+        btn.textContent = '✅ Complete Registration';
+        btn.disabled = false;
+        return;
+      }
+    }
+
+    const regRes = await fetch('http://localhost:5000/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, password: pass, role: currentRole })
+    });
+    const regData = await regRes.json();
+
+    if (!regRes.ok || !regData.success) {
+      alert(regData.error || 'Registration failed.');
+      btn.textContent = '✅ Complete Registration';
+      btn.disabled = false;
+      return;
+    }
+
+    localStorage.setItem('gramcare_token', regData.token);
+    localStorage.setItem('gramcare_user', JSON.stringify(regData.user));
+    localStorage.setItem('gramcare_role', regData.user.role);
+
+    alert(`Welcome, ${regData.user.name}! Your account has been registered.`);
+    window.location.href = '../index.html';
+  } catch (err) {
+    alert('Registration error: ' + err.message);
+    btn.textContent = '✅ Complete Registration';
+    btn.disabled = false;
+  }
+}
+</script>
+
+</body>
+</html>

@@ -153,55 +153,66 @@ async function analyzeClientProblem(transcriptionData) {
 
   console.log(`[GeminiService] Analyzing REAL client transcript: "${englishText}"`);
 
-  const promptText = `You are a client-intake analysis AI.
+  const promptText = `You are analyzing the actual statement made by a client during a healthcare intake.
 
-You must analyze the actual client content provided in this request.
-Do not assume or invent a problem.
-Do not use pre-existing examples or demo scenarios.
-The output must be based ONLY on the actual client input provided below:
+Use ONLY the client information supplied below:
+- Client Spoken Original Words: "${originalText}"
+- Client Spoken English Translation: "${englishText}"
 
-- Client Original Words: "${originalText}"
-- Client English Translation: "${englishText}"
+Do not invent symptoms.
+Do not invent duration.
+Do not invent diagnoses.
+Do not invent medications.
+Do not invent vitals.
+Do not invent medical history.
+Do not assume information that the client did not provide.
 
-Identify:
-1. What the client is actually complaining about / main problem.
-2. Problem category (e.g. Technical, Financial, Operational, Clinical, Hardware, Connectivity, General Inquiry).
-3. Severity if reasonably determinable (low, medium, high, critical).
-4. Problem summary based strictly on the client's words.
-5. Specific key issues mentioned by the client.
-6. Important details extracted from the client's statement.
-7. Actionable suggestions to resolve the client's problem.
-8. Recommended immediate next step.
-9. Confidence score (0.0 to 1.0).
+Identify the client's main reported problem.
+Extract the symptoms actually mentioned.
+Summarize what the client said in clear language.
+Classify the problem category accurately based strictly on the client statement (e.g., Acute Illness, Injury/Laceration, Respiratory, Gastrointestinal, Pain, General Healthcare Inquiry).
+If the information is insufficient to determine a specific category, classify as "Unspecified / Insufficient Information".
+Classify severity (low, medium, high, critical, unknown) strictly based on reported symptoms. If insufficient info, set severity to "unknown".
+Do not convert an AI possibility into a confirmed diagnosis.
+Provide appropriate next steps based only on the available information and the application's approved clinical workflow.
+If medication information is not appropriate or insufficient, do not recommend a medication.
 
-If the client's problem is unclear, explicitly state that it is unclear rather than guessing.
-
-Return ONLY a JSON object with this exact schema:
+Return ONLY a JSON object matching this exact schema:
 {
   "problemAnalysis": {
-    "mainProblem": "Clear, concise main identified problem",
-    "category": "Problem category",
-    "severity": "low | medium | high | critical",
-    "problemSummary": "Detailed summary based on client input",
+    "mainProblem": "Actual problem identified strictly from voice statement",
+    "category": "Actual relevant category",
+    "severity": "low | medium | high | critical | unknown",
+    "problemSummary": "Clear summary of what the client actually reported",
     "keyIssues": [
-      "Issue 1",
-      "Issue 2"
+      "Actual key issue 1"
     ],
     "importantDetails": [
-      "Detail 1",
-      "Detail 2"
+      "Actual important detail 1"
     ]
   },
-  "suggestions": [
-    "Suggestion 1",
-    "Suggestion 2"
+  "symptoms": [
+    {
+      "name": "Actual symptom mentioned",
+      "source": "client_reported"
+    }
   ],
-  "recommendedNextStep": "Recommended immediate next step",
-  "confidence": 0.95
+  "aiSuggestions": [
+    "Relevant next step based on actual statement"
+  ],
+  "recommendedNextStep": "Actual appropriate next step",
+  "confidence": 0.85,
+  "missingInformation": []
 }`;
 
   const primaryModel = process.env.GEMINI_MODEL || 'gemini-flash-latest';
   const analysisResult = await callGeminiAPI(promptText, apiKey, primaryModel, true);
+
+  // Backward compatibility alias for aiSuggestions vs suggestions
+  if (!analysisResult.aiSuggestions && analysisResult.suggestions) {
+    analysisResult.aiSuggestions = analysisResult.suggestions;
+  }
+
   console.log(`[GeminiService] Real AI Problem Identified: "${analysisResult.problemAnalysis?.mainProblem}"`);
   return analysisResult;
 }

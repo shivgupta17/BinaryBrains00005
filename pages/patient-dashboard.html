@@ -1,0 +1,106 @@
+<!-- Page: Patient Dashboard Portal -->
+<div class="page-enter">
+  <div class="page-header">
+    <h1>👤 Patient Care Portal</h1>
+    <p>View doctor-approved medications, active encounter status, care instructions, and contact your assigned clinic assistant.</p>
+  </div>
+
+  <!-- Patient Profile Banner -->
+  <div class="card reveal" style="margin-bottom:20px;background:linear-gradient(135deg,#0F1923,#1A2840);color:white;border:2px solid var(--saffron);">
+    <div class="card-body" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+      <div style="display:flex;align-items:center;gap:16px;">
+        <div style="width:56px;height:56px;border-radius:50%;background:var(--saffron-pale);border:2px solid var(--saffron);display:flex;align-items:center;justify-content:center;font-size:28px;">👤</div>
+        <div>
+          <div style="font-size:20px;font-weight:700;" id="pat-name">Patient Name</div>
+          <div style="font-size:12.5px;color:rgba(255,255,255,.6);" id="pat-sub">Patient ID: PAT_DEFAULT · Active Clinic Encounter</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;">
+        <span class="pill pill-green" id="pat-status-pill">ACTIVE CARE</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-7-5">
+    <!-- Left Column: Doctor Approved Medications & Care Instructions -->
+    <div class="col">
+      <!-- DOCTOR APPROVED MEDICATIONS CARD (ONLY APPROVED DRUGS SHOWN!) -->
+      <div class="card reveal" style="margin-bottom:20px;">
+        <div class="card-header" style="background:var(--forest-pale);border-bottom:1px solid rgba(27,107,74,.2);">
+          <div class="card-title" style="color:var(--forest);">💊 My Approved Medications</div>
+          <span class="pill pill-green" style="font-size:11px;">✓ Doctor Approved</span>
+        </div>
+        <div class="card-body">
+          <div style="background:#FEF3C7;border:1px solid #FCD34D;border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:12px;color:#92400E;line-height:1.5;">
+            🔒 <strong>Strict Patient Safety:</strong> Only medications reviewed and prescribed by your qualified medical doctor are listed below. Unapproved candidates are never displayed.
+          </div>
+
+          <div id="pat-approved-meds-list" style="display:flex;flex-direction:column;gap:10px;">
+            <div style="font-size:13px;color:var(--ink-50);font-style:italic;padding:12px 0;">No doctor-approved medications issued for this encounter yet.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BED & ADMISSION INFO CARD -->
+      <div class="card reveal" style="margin-bottom:20px;">
+        <div class="card-header">
+          <div class="card-title">🛏️ Hospital Admission &amp; Bed Details</div>
+        </div>
+        <div class="card-body" id="pat-bed-info-body">
+          <div style="font-size:13px;color:var(--ink-50);font-style:italic;">No bed assignment required for this encounter.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Assigned Assistant Contact & Reminders -->
+    <div class="col">
+      <!-- ASSIGNED ASSISTANT CONTACT CARD -->
+      <div class="card reveal" style="margin-bottom:20px;">
+        <div class="card-header">
+          <div class="card-title">👩‍⚕️ Assigned Clinic Assistant</div>
+        </div>
+        <div class="card-body">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+            <div style="width:44px;height:44px;border-radius:12px;background:var(--sky-pale);display:flex;align-items:center;justify-content:center;font-size:22px;">👩‍⚕️</div>
+            <div>
+              <div style="font-weight:700;font-size:14.5px;color:var(--ink);" id="pat-asst-name">Sunita Wagh</div>
+              <div style="font-size:12px;color:var(--ink-50);" id="pat-asst-clinic">Rajpur Primary Health Centre</div>
+            </div>
+          </div>
+
+          <div style="background:var(--ink-10);border-radius:10px;padding:12px;font-size:12.5px;color:var(--ink-80);line-height:1.7;margin-bottom:16px;">
+            <strong>Phone:</strong> <span id="pat-asst-phone">+91 98765 43210</span><br/>
+            <strong>Email:</strong> <span id="pat-asst-email">assistant@gramcare.ai</span>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <button class="btn btn-primary btn-full" onclick="callAssignedAssistant()">
+              📞 Call Assistant
+            </button>
+            <button class="btn btn-forest btn-full" onclick="sendPatientReminderToAssistant()">
+              ✉️ Send Medication Reminder to Assistant
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ASSIGNED DOCTOR CARD -->
+      <div class="card reveal">
+        <div class="card-header">
+          <div class="card-title">👨‍⚕️ Attending Doctor</div>
+        </div>
+        <div class="card-body">
+          <div style="font-weight:700;font-size:15px;color:var(--ink);" id="pat-doc-name">Dr. Aarav Sharma</div>
+          <div style="font-size:12.5px;color:var(--ink-60);margin-top:2px;" id="pat-doc-spec">Orthopedics &amp; General Medicine</div>
+          <div style="font-size:12px;color:var(--ink-50);margin-top:2px;" id="pat-doc-hosp">GramCare Central Clinic</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    initPatientDashboardPage();
+  });
+</script>

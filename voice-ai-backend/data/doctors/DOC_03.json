@@ -1,0 +1,10 @@
+{
+  "doctorId": "DOC_03",
+  "name": "Dr. Rajesh Mehra",
+  "specialty": "General Medicine",
+  "subSpecialty": "Internal Medicine & Respiratory",
+  "onlineStatus": "ONLINE",
+  "hospital": "Community Health Centre",
+  "currentQueueCount": 2,
+  "email": "rajesh.mehra@gramcare.ai"
+}

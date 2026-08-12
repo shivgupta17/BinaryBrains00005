@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786566594355",
+  "recipientRole": "doctor",
+  "recipientId": "DOC_01",
+  "patientId": "PAT_DUAL_PANEL_01",
+  "caseId": "CASE_1786566594286_2akn",
+  "type": "NEW REFERRAL",
+  "title": "🚨 HIGH RISK Referral Received",
+  "message": "Patient PAT_DUAL_PANEL_01 referred for Deep forearm laceration needing physician inspection",
+  "createdAt": "2026-08-12T20:29:54.349Z",
+  "read": false,
+  "priority": "HIGH"
+}

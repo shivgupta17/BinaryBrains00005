@@ -1,0 +1,22 @@
+[
+  {
+    "eventId": "evt_1786567989299_cmoo",
+    "timestamp": "2026-08-12T20:53:09.299Z",
+    "type": "PATIENT_REGISTERED",
+    "title": "Encounter Case Created",
+    "description": "New clinical encounter CASE_1786567989297_scjl created for patient PAT_AUTH_TEST_01",
+    "actor": "Clinic Assistant",
+    "actorRole": "assistant",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786567989315_t6dl",
+    "timestamp": "2026-08-12T20:53:09.315Z",
+    "type": "MEDICATION_APPROVED",
+    "title": "Doctor Approved Prescription",
+    "description": "Medications approved: Amoxicillin 500mg",
+    "actor": "DOC_01",
+    "actorRole": "doctor",
+    "data": {}
+  }
+]

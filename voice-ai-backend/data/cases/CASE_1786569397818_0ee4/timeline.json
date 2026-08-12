@@ -1,0 +1,50 @@
+[
+  {
+    "eventId": "evt_1786569397821_c8t3",
+    "timestamp": "2026-08-12T21:16:37.821Z",
+    "type": "PATIENT_REGISTERED",
+    "title": "Encounter Case Created",
+    "description": "New clinical encounter CASE_1786569397818_0ee4 created for patient PAT_usr_patiente2egramcareai",
+    "actor": "Clinic Assistant",
+    "actorRole": "assistant",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786569397837_x1lt",
+    "timestamp": "2026-08-12T21:16:37.837Z",
+    "type": "VITALS_ENTERED",
+    "title": "Vitals Recorded",
+    "description": "Temp: 100.4°F, BP: 132/86, Pulse: 92 bpm, SpO2: 97%",
+    "actor": "Clinic Assistant",
+    "actorRole": "assistant",
+    "data": {
+      "temp": "100.4°F",
+      "bp": "132/86",
+      "pulse": "92 bpm",
+      "spo2": "97%",
+      "weight": "Not recorded",
+      "respRate": "Not recorded",
+      "recordedAt": "2026-08-12T21:16:37.833Z"
+    }
+  },
+  {
+    "eventId": "evt_1786569397851_19t4",
+    "timestamp": "2026-08-12T21:16:37.851Z",
+    "type": "TEXT_STATEMENT_ADDED",
+    "title": "Patient Statement Added",
+    "description": "\"Patient fell off motorcycle resulting in deep cut on left thigh.\"",
+    "actor": "Assistant Suman",
+    "actorRole": "assistant",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786569397866_zvyy",
+    "timestamp": "2026-08-12T21:16:37.866Z",
+    "type": "REFERRED_TO_DOCTOR",
+    "title": "Referred to Doctor",
+    "description": "Case referred to Dr. Aarav Sharma (Risk Level: AMBER)",
+    "actor": "ASSISTANT_01",
+    "actorRole": "assistant",
+    "data": {}
+  }
+]

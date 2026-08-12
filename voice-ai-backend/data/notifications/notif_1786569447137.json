@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786569447137",
+  "recipientRole": "assistant",
+  "recipientId": "ASSISTANT_DEFAULT",
+  "patientId": "PAT_usr_patient1786569446693gramcareai",
+  "caseId": "CASE_1786569447043_p8sw",
+  "type": "DOCTOR_MESSAGE",
+  "title": "💊 Medication Prescribed & Approved",
+  "message": "Doctor approved 2 medication(s) for patient PAT_usr_patient1786569446693gramcareai",
+  "createdAt": "2026-08-12T21:17:27.137Z",
+  "read": false,
+  "priority": "HIGH"
+}

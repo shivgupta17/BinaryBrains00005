@@ -1,0 +1,10 @@
+{
+  "doctorId": "DOC_01",
+  "name": "Dr. Aarav Sharma",
+  "specialty": "Orthopedics",
+  "subSpecialty": "Trauma & Fracture Care",
+  "onlineStatus": "ONLINE",
+  "hospital": "GramCare Central Clinic",
+  "currentQueueCount": 1,
+  "email": "aarav.sharma@gramcare.ai"
+}

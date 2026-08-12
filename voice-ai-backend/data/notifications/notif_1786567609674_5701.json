@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786567609674_5701",
+  "recipientRole": "assistant",
+  "recipientId": "ASSISTANT_DEFAULT",
+  "patientId": "PAT_DUAL_PANEL_01",
+  "caseId": "CASE_1786566594286_2akn",
+  "type": "REMINDER_REQUEST",
+  "title": "⏰ Patient Reminder Request: Medication Timing Support",
+  "message": "Patient Rohan Sharma (PAT_DUAL_PANEL_01) sent a reminder request: \"Can I take the prescribed iodine dressing at 9 PM instead of 6 PM?\"",
+  "priority": "HIGH",
+  "read": false,
+  "createdAt": "2026-08-12T20:46:49.674Z"
+}

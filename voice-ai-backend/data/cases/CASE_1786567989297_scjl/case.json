@@ -1,0 +1,34 @@
+{
+  "caseId": "CASE_1786567989297_scjl",
+  "patientId": "PAT_AUTH_TEST_01",
+  "assistantId": "ASSISTANT_DEFAULT",
+  "createdAt": "2026-08-12T20:53:09.297Z",
+  "status": "OPEN",
+  "caseType": "Emergency Triage",
+  "textStatements": [],
+  "imageUploads": [],
+  "videoUploads": [],
+  "doctorNotes": [
+    {
+      "noteId": "note_1786567989313",
+      "doctorId": "DOC_01",
+      "text": "Prescribed Paracetamol & Amoxicillin",
+      "createdAt": "2026-08-12T20:53:09.313Z"
+    }
+  ],
+  "assistantNotes": [],
+  "assignedDoctorId": null,
+  "bedAssignment": null,
+  "followUp": null,
+  "medications": [],
+  "approvedMedications": [
+    {
+      "name": "Amoxicillin 500mg",
+      "dosage": "TDS 5 days",
+      "reason": "Bacterial infection",
+      "status": "DOCTOR_APPROVED",
+      "approvedBy": "DOC_01",
+      "approvedAt": "2026-08-12T20:53:09.313Z"
+    }
+  ]
+}

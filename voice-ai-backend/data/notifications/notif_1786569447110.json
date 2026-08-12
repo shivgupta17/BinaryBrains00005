@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786569447110",
+  "recipientRole": "doctor",
+  "recipientId": "DOC_usr_doctor1786569446693gramcareai",
+  "patientId": "PAT_usr_patient1786569446693gramcareai",
+  "caseId": "CASE_1786569447043_p8sw",
+  "type": "NEW REFERRAL",
+  "title": "🚨 NEW Referral Received",
+  "message": "Patient PAT_usr_patient1786569446693gramcareai referred for Deep thigh laceration requires doctor wound debridement & prescription",
+  "createdAt": "2026-08-12T21:17:27.105Z",
+  "read": false,
+  "priority": "MEDIUM"
+}

@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786567989316",
+  "recipientRole": "assistant",
+  "recipientId": "ASSISTANT_DEFAULT",
+  "patientId": "PAT_AUTH_TEST_01",
+  "caseId": "CASE_1786567989297_scjl",
+  "type": "DOCTOR_MESSAGE",
+  "title": "💊 Medication Prescribed & Approved",
+  "message": "Doctor approved 1 medication(s) for patient PAT_AUTH_TEST_01",
+  "createdAt": "2026-08-12T20:53:09.316Z",
+  "read": false,
+  "priority": "HIGH"
+}
