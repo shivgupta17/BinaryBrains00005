@@ -1,0 +1,152 @@
+<!-- Page: Voice Intake -->
+<div class="page-enter">
+  <div class="page-header">
+    <h1>🎙️ Multilingual Voice Intake</h1>
+    <p>Speak in Hindi, English or any regional language. AI extracts and structures clinical information in real time.</p>
+  </div>
+
+  <!-- Workflow Progress -->
+  <div class="workflow-nav">
+    <div class="wf-step done" onclick="navigateTo('new-patient')"><div class="wf-num">✓</div>Register</div>
+    <div class="wf-arrow">›</div>
+    <div class="wf-step active"><div class="wf-num">2</div>Voice Intake</div>
+    <div class="wf-arrow">›</div>
+    <div class="wf-step" onclick="navigateTo('documents')"><div class="wf-num">3</div>Vitals</div>
+    <div class="wf-arrow">›</div>
+    <div class="wf-step" onclick="navigateTo('documents')"><div class="wf-num">4</div>Documents</div>
+    <div class="wf-arrow">›</div>
+    <div class="wf-step"><div class="wf-num">5</div>AI Summary</div>
+    <div class="wf-arrow">›</div>
+    <div class="wf-step" onclick="navigateTo('triage')"><div class="wf-num">6</div>Triage</div>
+    <div class="wf-arrow">›</div>
+    <div class="wf-step" onclick="navigateTo('doctor')"><div class="wf-num">7</div>Doctor</div>
+  </div>
+
+  <div class="grid-2">
+    <!-- Voice Recorder -->
+    <div class="card reveal">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Voice Recording</div>
+          <div class="card-subtitle">Ramesh Kumar · 44 yrs · Hindi preferred</div>
+        </div>
+        <span class="risk risk-green"><span class="risk-dot"></span>Ready</span>
+      </div>
+      <div class="card-body" style="text-align:center;padding:36px 24px;">
+        <p style="font-size:13px;color:var(--ink-50);margin-bottom:26px;line-height:1.65;max-width:320px;margin-left:auto;margin-right:auto;">
+          Press to start. Speak naturally — Hindi, English, or mix. AI transcribes and extracts clinical data automatically.
+        </p>
+
+        <!-- Voice Button with animated ring -->
+        <div style="position:relative;display:inline-block;margin-bottom:18px;">
+          <button class="voice-btn" id="voice-btn">🎙</button>
+        </div>
+
+        <p style="font-size:12.5px;color:var(--ink-50);" id="voice-status">Tap to start recording</p>
+
+        <!-- Waveform -->
+        <div style="margin-top:20px;display:flex;justify-content:center;">
+          <div class="waveform" id="waveform" style="height:36px;gap:5px;">
+            <div class="waveform-bar" style="height:10px;"></div>
+            <div class="waveform-bar" style="height:18px;"></div>
+            <div class="waveform-bar" style="height:26px;"></div>
+            <div class="waveform-bar" style="height:32px;"></div>
+            <div class="waveform-bar" style="height:24px;"></div>
+            <div class="waveform-bar" style="height:16px;"></div>
+            <div class="waveform-bar" style="height:10px;"></div>
+          </div>
+        </div>
+
+        <!-- Live Transcript Box -->
+        <div style="margin-top:24px;background:var(--ink-10);border-radius:var(--radius-md);padding:16px 18px;text-align:left;">
+          <div class="section-label">Live Transcription</div>
+          <p style="font-size:14px;color:var(--ink-80);line-height:1.75;font-style:italic;min-height:48px;" id="transcript-live">
+            "Patient ko do din se bukhar aur weakness hai aur haath par choti si injury hai. Koi allergy nahi pata, BP ki dawai le rahe hain..."
+          </p>
+        </div>
+
+        <!-- Vitals quick entry -->
+        <div style="margin-top:22px;text-align:left;">
+          <div class="section-label">Quick Vitals Entry</div>
+          <div class="form-row-3" style="gap:10px;">
+            <div>
+              <label class="form-label">Temp °F</label>
+              <input class="form-input" value="101.4" style="text-align:center;"/>
+            </div>
+            <div>
+              <label class="form-label">BP mmHg</label>
+              <input class="form-input" value="138/88" style="text-align:center;"/>
+            </div>
+            <div>
+              <label class="form-label">SpO₂ %</label>
+              <input class="form-input" value="97" style="text-align:center;"/>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Extracted Panel -->
+    <div class="card reveal delay-1">
+      <div class="card-header">
+        <div class="card-title">✦ AI Extracted Information</div>
+        <span class="pill pill-orange">Auto-structured</span>
+      </div>
+      <div class="card-body">
+        <div class="section-label">Chief Complaints</div>
+        <div style="margin-bottom:18px;">
+          <div class="extracted-item" style="display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--ink-10);transition:background .3s;">
+            <span style="font-size:14px;color:var(--ink-80);font-weight:500;">🌡️ Fever</span>
+            <span class="pill pill-orange">2 days</span>
+          </div>
+          <div class="extracted-item" style="display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--ink-10);transition:background .3s;">
+            <span style="font-size:14px;color:var(--ink-80);font-weight:500;">😓 Weakness</span>
+            <span class="pill pill-orange">2 days</span>
+          </div>
+          <div class="extracted-item" style="display:flex;align-items:center;justify-content:space-between;padding:11px 0;transition:background .3s;">
+            <span style="font-size:14px;color:var(--ink-80);font-weight:500;">🤕 Hand Injury</span>
+            <span class="pill pill-orange">1 day</span>
+          </div>
+        </div>
+
+        <div class="section-label">Patient Snapshot</div>
+        <div class="form-row-3" style="margin-bottom:18px;">
+          <div style="background:var(--ink-10);border-radius:10px;padding:12px;text-align:center;">
+            <div style="font-size:10.5px;color:var(--ink-50);">Age</div>
+            <div style="font-family:var(--font-ui);font-size:20px;font-weight:700;color:var(--ink);">44</div>
+          </div>
+          <div style="background:var(--ink-10);border-radius:10px;padding:12px;text-align:center;">
+            <div style="font-size:10.5px;color:var(--ink-50);">Sex</div>
+            <div style="font-family:var(--font-ui);font-size:20px;font-weight:700;color:var(--ink);">M</div>
+          </div>
+          <div style="background:var(--ink-10);border-radius:10px;padding:12px;text-align:center;">
+            <div style="font-size:10.5px;color:var(--ink-50);">Lang</div>
+            <div style="font-family:var(--font-ui);font-size:20px;font-weight:700;color:var(--ink);">HI</div>
+          </div>
+        </div>
+
+        <div class="section-label">Flags &amp; Alerts</div>
+        <div style="display:flex;flex-wrap:wrap;margin-bottom:18px;">
+          <span class="pill pill-orange">⚠ Allergy unknown</span>
+          <span class="pill pill-green">✓ BP medication noted</span>
+          <span class="pill pill-blue">📋 History: HTN</span>
+        </div>
+
+        <div class="section-label">Additional Notes</div>
+        <div class="form-group" style="margin-bottom:20px;">
+          <textarea class="form-textarea" style="min-height:70px;">Patient also mentions mild headache since yesterday. No nausea or vomiting.</textarea>
+        </div>
+
+        <button class="btn btn-primary btn-full btn-lg" onclick="navigateTo('documents')">
+          → Proceed to Document Upload
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Wire voice button on this page
+  const vBtn = document.getElementById('voice-btn');
+  if (vBtn) vBtn.addEventListener('click', toggleRecording);
+</script>

@@ -1,0 +1,19 @@
+{
+  "name": "gramcare-ai",
+  "version": "1.0.0",
+  "description": "GramCare AI — Virtual Village Clinic Platform",
+  "main": "index.html",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "healthcare",
+    "telemedicine",
+    "ai",
+    "mcp",
+    "gramcare"
+  ],
+  "author": "GramCare AI Team",
+  "license": "MIT"
+}

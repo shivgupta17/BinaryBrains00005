@@ -1,0 +1,114 @@
+<!-- Page: IBM Bob / MCP -->
+<div class="page-enter">
+  <div class="page-header">
+    <h1>🤖 IBM Bob + MCP Architecture</h1>
+    <p>Bob builds and validates the MCP tool ecosystem. watsonx Orchestrate runs the agents. Pattern: <strong>Bob → MCP → watsonx Orchestrate</strong> — as demonstrated in IBM's July 2026 developer tutorial.</p>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:22px;">
+
+    <!-- IBM Bob MCP Tools -->
+    <div class="ibm-card reveal">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+        <div style="width:46px;height:46px;border-radius:13px;background:linear-gradient(135deg,#3B9FD8,#1A6FA8);display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:var(--shadow-glow-sky);">🤖</div>
+        <div>
+          <div style="font-family:var(--font-ui);font-size:17px;font-weight:700;">IBM Bob Agent</div>
+          <div style="font-size:12px;color:rgba(255,255,255,.45);">Engineering &amp; MCP Tool Builder · Agent Mode</div>
+        </div>
+        <span style="margin-left:auto;background:rgba(59,159,216,.2);color:#93C5FD;font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;font-family:var(--font-ui);">v2 API</span>
+      </div>
+
+      <div class="section-label" style="color:rgba(255,255,255,.3);">Bob-Generated MCP Tools</div>
+      <div id="ibm-tools">
+        <div class="ibm-tool"><span class="ibm-tool-icon">📥</span><code>collect_patient_data()</code></div>
+        <div class="ibm-tool"><span class="ibm-tool-icon">📄</span><code>parse_medical_document()</code></div>
+        <div class="ibm-tool"><span class="ibm-tool-icon">🗂️</span><code>fetch_patient_history()</code></div>
+        <div class="ibm-tool"><span class="ibm-tool-icon">⚡</span><code>evaluate_red_flags()</code></div>
+        <div class="ibm-tool"><span class="ibm-tool-icon">📋</span><code>retrieve_clinical_protocol()</code></div>
+        <div class="ibm-tool"><span class="ibm-tool-icon">📝</span><code>create_case_summary()</code></div>
+        <div class="ibm-tool"><span class="ibm-tool-icon">👨‍⚕️</span><code>request_doctor()</code></div>
+        <div class="ibm-tool"><span class="ibm-tool-icon">📅</span><code>create_appointment()</code></div>
+        <div class="ibm-tool"><span class="ibm-tool-icon">💾</span><code>save_encounter()</code></div>
+        <div class="ibm-tool"><span class="ibm-tool-icon">🔔</span><code>notify_health_worker()</code></div>
+      </div>
+    </div>
+
+    <!-- Agents + Stack -->
+    <div class="col">
+      <div class="card reveal delay-1">
+        <div class="card-header"><div class="card-title">🧠 5 Specialized Agents</div></div>
+        <div class="card-body">
+          <div style="display:flex;flex-direction:column;gap:9px;">
+            <div style="background:var(--saffron-pale);border-radius:10px;padding:12px 14px;border-left:3px solid var(--saffron);">
+              <div style="font-size:13px;font-weight:700;color:var(--saffron);">🎙 Intake Agent</div>
+              <div style="font-size:12px;color:var(--ink-50);margin-top:3px;">Hindi/English/regional language → structured clinical information</div>
+            </div>
+            <div style="background:var(--sky-pale);border-radius:10px;padding:12px 14px;border-left:3px solid var(--sky);">
+              <div style="font-size:13px;font-weight:700;color:var(--sky);">📄 Medical Record Agent</div>
+              <div style="font-size:12px;color:var(--ink-50);margin-top:3px;">OCR + prior record extraction via Docling</div>
+            </div>
+            <div style="background:var(--red-pale);border-radius:10px;padding:12px 14px;border-left:3px solid var(--red);">
+              <div style="font-size:13px;font-weight:700;color:var(--red);">⚡ Safety Agent</div>
+              <div style="font-size:12px;color:var(--ink-50);margin-top:3px;">Deterministic red-flag checks, escalation decisions — no LLM override</div>
+            </div>
+            <div style="background:var(--forest-pale);border-radius:10px;padding:12px 14px;border-left:3px solid var(--forest);">
+              <div style="font-size:13px;font-weight:700;color:var(--forest);">📋 Protocol Agent</div>
+              <div style="font-size:12px;color:var(--ink-50);margin-top:3px;">RAG retrieval from approved clinical protocol knowledge base</div>
+            </div>
+            <div style="background:var(--amber-pale);border-radius:10px;padding:12px 14px;border-left:3px solid var(--amber);">
+              <div style="font-size:13px;font-weight:700;color:var(--amber);">🤝 Care Coordination Agent</div>
+              <div style="font-size:12px;color:var(--ink-50);margin-top:3px;">Doctor queue management, appointment creation, clinician decision recording</div>
+            </div>
+          </div>
+          <div style="margin-top:12px;font-size:12px;color:var(--ink-50);line-height:1.5;padding:10px;background:var(--ink-10);border-radius:8px;">These do not need to be 5 separate LLMs — they are logical agent capabilities in one orchestrated backend.</div>
+        </div>
+      </div>
+
+      <div class="card reveal delay-2">
+        <div class="card-header"><div class="card-title">🏗️ Tech Stack</div></div>
+        <div class="card-body">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <span class="pill pill-blue" style="padding:9px 12px;border-radius:10px;justify-content:center;">⚛ React / Next.js PWA</span>
+            <span class="pill pill-green" style="padding:9px 12px;border-radius:10px;justify-content:center;">🐍 FastAPI / Python</span>
+            <span class="pill pill-orange" style="padding:9px 12px;border-radius:10px;justify-content:center;">🤖 IBM Granite LLM</span>
+            <span class="pill pill-blue" style="padding:9px 12px;border-radius:10px;justify-content:center;">🧠 watsonx Orchestrate</span>
+            <span class="pill pill-green" style="padding:9px 12px;border-radius:10px;justify-content:center;">🗄 PostgreSQL</span>
+            <span class="pill pill-gray" style="padding:9px 12px;border-radius:10px;justify-content:center;">📦 IndexedDB Offline</span>
+            <span class="pill pill-orange" style="padding:9px 12px;border-radius:10px;justify-content:center;">🔍 Docling OCR</span>
+            <span class="pill pill-blue" style="padding:9px 12px;border-radius:10px;justify-content:center;">📹 WebRTC Video</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Architecture Diagram -->
+  <div class="card reveal">
+    <div class="card-header">
+      <div class="card-title">🏗️ Complete System Architecture</div>
+      <div class="card-subtitle">Bob → MCP → watsonx Orchestrate → Clinical Agents → Doctor Approval</div>
+    </div>
+    <div class="card-body">
+      <div style="background:var(--ink);border-radius:var(--radius-lg);padding:28px;color:white;font-family:var(--font-mono);font-size:13px;line-height:2.1;overflow-x:auto;">
+        <div style="color:var(--saffron-lt);font-weight:700;margin-bottom:8px;">VILLAGE CLINIC INPUT LAYER</div>
+        <div style="color:rgba(255,255,255,.65);">  🎙 Voice  +  📷 Camera  +  📄 Documents  +  📊 Vitals</div>
+        <div style="color:rgba(255,255,255,.3);margin:6px 0 10px 16px;">↓  STT · OCR Vision · Structured Parser</div>
+        <div style="color:var(--sky-lt);font-weight:700;margin-bottom:6px;">AGENTIC LAYER (watsonx Orchestrate)</div>
+        <div style="color:rgba(255,255,255,.65);">  Intake Agent → Record Agent → Safety Agent → Protocol Agent → Coord. Agent</div>
+        <div style="color:rgba(255,255,255,.3);margin:6px 0 10px 16px;">↓  MCP Tools (Bob-generated &amp; validated)</div>
+        <div style="color:#4ADE80;font-weight:700;margin-bottom:6px;">CLINICAL SAFETY ENGINE</div>
+        <div style="color:rgba(255,255,255,.65);">  Deterministic Rules + Clinical RAG → <span style="color:#4ADE80;">GREEN</span> / <span style="color:var(--amber);">AMBER</span> / <span style="color:var(--red);">RED</span></div>
+        <div style="color:rgba(255,255,255,.3);margin:6px 0 10px 16px;">↓  Risk-based routing</div>
+        <div style="color:rgba(255,255,255,.65);">  🟢 Protocol Support  ·  🟡 Doctor Queue  ·  🔴 Emergency Referral</div>
+        <div style="color:rgba(255,255,255,.3);margin:6px 0 10px 16px;">↓  Teleconsultation (eSanjeevani)</div>
+        <div style="color:white;font-weight:700;">  DOCTOR APPROVAL → DIGITAL PRESCRIPTION → PATIENT EHR RECORD</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    GramCareAnim.initIBMToolsReveal();
+  });
+</script>

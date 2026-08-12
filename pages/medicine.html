@@ -1,0 +1,93 @@
+<!-- Page: Medicine Safety Gate -->
+<div class="page-enter">
+  <div class="page-header">
+    <h1>💊 Medicine Safety Gate</h1>
+    <p>AI suggests. Doctor approves. Prescribing authority remains exclusively with the RMP as per India's Telemedicine Practice Guidelines 2020.</p>
+  </div>
+
+  <div class="grid-2">
+    <!-- Medication Checks -->
+    <div class="col">
+      <!-- Paracetamol — PENDING -->
+      <div class="med-gate reveal">
+        <div class="med-gate-header">
+          <span style="font-size:20px;">💊</span>
+          <div>
+            <div class="med-gate-name">Paracetamol 500mg</div>
+            <div style="font-size:12px;color:var(--ink-50);">Antipyretic · OTC Category List O</div>
+          </div>
+          <span class="risk risk-amber" style="margin-left:auto;"><span class="risk-dot"></span>PENDING</span>
+        </div>
+        <div class="med-gate-body stagger-list">
+          <div class="check-row"><span class="check-ok">✓</span> Patient age checked — 44 yrs, no restriction</div>
+          <div class="check-row"><span class="check-warn">?</span> Allergy information — <strong>not yet confirmed</strong></div>
+          <div class="check-row"><span class="check-ok">✓</span> Not pregnant (male patient)</div>
+          <div class="check-row"><span class="check-ok">✓</span> No contraindication with Amlodipine 5mg detected</div>
+          <div class="check-row"><span class="check-ok">✓</span> No duplicate therapy detected in medication list</div>
+          <div class="check-row"><span class="check-ok">✓</span> Protocol eligibility: Fever ≥ 100.4°F → eligible</div>
+          <div style="margin-top:12px;padding:12px;background:var(--amber-pale);border-radius:8px;border:1.5px solid #FCD34D;">
+            <div style="font-size:12.5px;font-weight:700;color:var(--amber);">⏳ AWAITING DOCTOR APPROVAL</div>
+            <div style="font-size:12px;color:var(--ink-60);margin-top:4px;line-height:1.5;">Allergy status must be confirmed before administration. Forwarded to doctor dashboard.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ORS — APPROVED -->
+      <div class="med-gate reveal delay-1">
+        <div class="med-gate-header">
+          <span style="font-size:20px;">🧴</span>
+          <div>
+            <div class="med-gate-name">ORS Sachet (WHO Formula)</div>
+            <div style="font-size:12px;color:var(--ink-50);">Oral Rehydration · Protocol Support</div>
+          </div>
+          <span class="risk risk-green" style="margin-left:auto;"><span class="risk-dot"></span>APPROVED</span>
+        </div>
+        <div class="med-gate-body stagger-list">
+          <div class="check-row"><span class="check-ok">✓</span> No allergy risk</div>
+          <div class="check-row"><span class="check-ok">✓</span> No medication interaction</div>
+          <div class="check-row"><span class="check-ok">✓</span> Protocol-recommended for fever + weakness + dehydration</div>
+          <div style="margin-top:12px;padding:12px;background:var(--green-pale);border-radius:8px;border:1.5px solid #86EFAC;">
+            <div style="font-size:12.5px;font-weight:700;color:var(--green);">✓ APPROVED — ADMINISTER NOW</div>
+            <div style="font-size:12px;color:var(--ink-60);margin-top:4px;">2–3 sachets/day in clean water. Record in encounter log.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Gate Architecture + Send to Doctor -->
+    <div class="col">
+      <div class="card reveal">
+        <div class="card-header">
+          <div class="card-title">🛡 Gate Architecture</div>
+          <span class="risk risk-blue">6-Layer Check</span>
+        </div>
+        <div class="card-body">
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:18px;">
+            <div style="background:var(--sky-pale);border-radius:10px;padding:11px 14px;font-size:13px;font-weight:600;color:var(--sky);display:flex;align-items:center;gap:8px;">🔍 Allergy &amp; sensitivity check</div>
+            <div style="background:var(--sky-pale);border-radius:10px;padding:11px 14px;font-size:13px;font-weight:600;color:var(--sky);display:flex;align-items:center;gap:8px;">👤 Age-appropriateness check</div>
+            <div style="background:var(--sky-pale);border-radius:10px;padding:11px 14px;font-size:13px;font-weight:600;color:var(--sky);display:flex;align-items:center;gap:8px;">🤰 Pregnancy safety check</div>
+            <div style="background:var(--sky-pale);border-radius:10px;padding:11px 14px;font-size:13px;font-weight:600;color:var(--sky);display:flex;align-items:center;gap:8px;">⚡ Contraindication detection</div>
+            <div style="background:var(--sky-pale);border-radius:10px;padding:11px 14px;font-size:13px;font-weight:600;color:var(--sky);display:flex;align-items:center;gap:8px;">🔄 Duplicate therapy detection</div>
+            <div style="background:var(--sky-pale);border-radius:10px;padding:11px 14px;font-size:13px;font-weight:600;color:var(--sky);display:flex;align-items:center;gap:8px;">📋 Protocol eligibility check</div>
+          </div>
+          <div style="background:var(--ink);border-radius:12px;padding:16px;color:white;font-size:13px;line-height:1.7;">
+            <span style="color:var(--saffron-lt);font-weight:700;">AI SUGGESTION</span>
+            <span style="color:rgba(255,255,255,.4);"> → Safety Gate → </span>
+            <span style="color:#4ADE80;font-weight:700;">DOCTOR APPROVAL</span>
+            <br/><span style="color:rgba(255,255,255,.35);font-size:12px;margin-top:4px;display:block;">"That final line makes judges notice the safety design." — Document</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Telemedicine Compliance -->
+      <div style="background:var(--forest-pale);border-radius:var(--radius-lg);padding:18px 20px;border:1.5px solid rgba(27,107,74,.2);" class="reveal delay-1">
+        <div style="font-size:13px;font-weight:700;color:var(--forest);margin-bottom:8px;">📜 Regulatory Compliance</div>
+        <div style="font-size:12.5px;color:var(--ink-60);line-height:1.65;">India's Telemedicine Practice Guidelines restrict prescribing authority to the RMP. List O (OTC) items may be suggested by AI — but doctor approval is mandatory before administration. Categories like List H &amp; H1 are blocked entirely.</div>
+      </div>
+
+      <button class="btn btn-primary btn-lg btn-full reveal delay-2" onclick="navigateTo('doctor')">
+        👨‍⚕️ Send Case to Doctor →
+      </button>
+    </div>
+  </div>
+</div>

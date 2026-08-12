@@ -1,0 +1,90 @@
+<!-- Page: Patient Queue -->
+<div class="page-enter">
+  <div class="page-header">
+    <h1>🗂️ Patient Queue</h1>
+    <p>All active encounters for today. Tap any patient to view their case.</p>
+  </div>
+
+  <!-- Filter Row -->
+  <div style="display:flex;gap:10px;margin-bottom:22px;flex-wrap:wrap;" class="reveal">
+    <span class="risk risk-gray" style="cursor:pointer;padding:8px 16px;font-size:12.5px;">All (18)</span>
+    <span class="risk risk-green" style="cursor:pointer;padding:8px 16px;font-size:12.5px;"><span class="risk-dot"></span>Green (8)</span>
+    <span class="risk risk-amber" style="cursor:pointer;padding:8px 16px;font-size:12.5px;"><span class="risk-dot"></span>Amber (7)</span>
+    <span class="risk risk-red" style="cursor:pointer;padding:8px 16px;font-size:12.5px;"><span class="risk-dot"></span>Red (3)</span>
+    <div style="margin-left:auto;">
+      <input class="form-input" placeholder="Search patient name…" style="width:220px;padding:8px 12px;font-size:13px;"/>
+    </div>
+  </div>
+
+  <div class="card reveal delay-1">
+    <div class="card-header">
+      <div class="card-title">Today's Encounters — 26 Aug 2026</div>
+      <span class="risk risk-gray">18 patients</span>
+    </div>
+    <div class="stagger-list">
+      <div class="patient-row" onclick="navigateTo('triage')">
+        <div class="patient-avatar" style="background:linear-gradient(135deg,#E8692A,#F4A261)">RK</div>
+        <div style="flex:1;">
+          <div class="patient-name">Ramesh Kumar, 44 · Male</div>
+          <div class="patient-meta">Fever · Weakness · Hand Injury · Hypertension</div>
+        </div>
+        <span class="risk risk-amber"><span class="risk-dot"></span>AMBER</span>
+        <span style="font-size:12px;color:var(--ink-50);margin-left:16px;">11:32 AM</span>
+      </div>
+      <div class="patient-row">
+        <div class="patient-avatar" style="background:linear-gradient(135deg,#DC2626,#F87171)">PD</div>
+        <div style="flex:1;">
+          <div class="patient-name">Parvati Devi, 62 · Female</div>
+          <div class="patient-meta">Severe Headache · BP 180/110 · Dizziness</div>
+        </div>
+        <span class="risk risk-red"><span class="risk-dot"></span>RED</span>
+        <span style="font-size:12px;color:var(--ink-50);margin-left:16px;">10:14 AM</span>
+      </div>
+      <div class="patient-row">
+        <div class="patient-avatar" style="background:linear-gradient(135deg,#1A6FA8,#3B9FD8)">AS</div>
+        <div style="flex:1;">
+          <div class="patient-name">Arun Singh, 28 · Male</div>
+          <div class="patient-meta">Mild Cough · Low-grade Fever</div>
+        </div>
+        <span class="risk risk-green"><span class="risk-dot"></span>GREEN</span>
+        <span style="font-size:12px;color:var(--ink-50);margin-left:16px;">09:50 AM</span>
+      </div>
+      <div class="patient-row">
+        <div class="patient-avatar" style="background:linear-gradient(135deg,#7C3AED,#A78BFA)">MK</div>
+        <div style="flex:1;">
+          <div class="patient-name">Meena Kumari, 35 · Female</div>
+          <div class="patient-meta">Pregnancy Check · Anaemia Suspected · ANC visit</div>
+        </div>
+        <span class="risk risk-amber"><span class="risk-dot"></span>AMBER</span>
+        <span style="font-size:12px;color:var(--ink-50);margin-left:16px;">09:20 AM</span>
+      </div>
+      <div class="patient-row">
+        <div class="patient-avatar" style="background:linear-gradient(135deg,#16A34A,#4ADE80)">VB</div>
+        <div style="flex:1;">
+          <div class="patient-name">Vijay Bhai, 9 · Male</div>
+          <div class="patient-meta">Diarrhoea · Mild Dehydration</div>
+        </div>
+        <span class="risk risk-green"><span class="risk-dot"></span>GREEN</span>
+        <span style="font-size:12px;color:var(--ink-50);margin-left:16px;">08:45 AM</span>
+      </div>
+      <div class="patient-row">
+        <div class="patient-avatar" style="background:linear-gradient(135deg,#B45309,#FCD34D)">SK</div>
+        <div style="flex:1;">
+          <div class="patient-name">Sushila Kaur, 55 · Female</div>
+          <div class="patient-meta">Diabetic Follow-up · Foot Ulcer</div>
+        </div>
+        <span class="risk risk-red"><span class="risk-dot"></span>RED</span>
+        <span style="font-size:12px;color:var(--ink-50);margin-left:16px;">08:10 AM</span>
+      </div>
+      <div class="patient-row">
+        <div class="patient-avatar" style="background:linear-gradient(135deg,#0891B2,#67E8F9)">RP</div>
+        <div style="flex:1;">
+          <div class="patient-name">Rajesh Patel, 32 · Male</div>
+          <div class="patient-meta">Eye Redness · Itching · 3 days</div>
+        </div>
+        <span class="risk risk-green"><span class="risk-dot"></span>GREEN</span>
+        <span style="font-size:12px;color:var(--ink-50);margin-left:16px;">07:55 AM</span>
+      </div>
+    </div>
+  </div>
+</div>

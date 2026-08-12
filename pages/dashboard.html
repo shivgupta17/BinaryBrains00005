@@ -1,0 +1,259 @@
+<!-- ══════════════════════════════════════════════
+   Page: Dashboard
+════════════════════════════════════════════════ -->
+<script>
+  if (window.GramCareAnim) {
+    GramCareAnim.staggerCards('.stat-card');
+    GramCareAnim.animateProgressBars();
+    GramCareAnim.initActivityFeed();
+    GramCareAnim.initHeroParticles();
+  }
+</script>
+
+<div class="page-enter">
+
+  <!-- HERO -->
+  <div style="background:linear-gradient(135deg,#0F1923 0%,#1A2840 55%,#0D2137 100%);border-radius:var(--radius-2xl);padding:44px 42px;color:white;margin-bottom:26px;position:relative;overflow:hidden;" id="hero-particles">
+    <!-- Glow rings -->
+    <div style="position:absolute;top:-60px;right:-60px;width:280px;height:280px;border-radius:50%;border:1px solid rgba(232,105,42,.12);pointer-events:none;"></div>
+    <div style="position:absolute;top:-30px;right:-30px;width:200px;height:200px;border-radius:50%;border:1px solid rgba(232,105,42,.08);pointer-events:none;"></div>
+    <div style="position:absolute;bottom:-40px;left:200px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(27,107,74,.14),transparent 70%);pointer-events:none;"></div>
+
+    <div class="anim-fadeInDown" style="font-size:10.5px;letter-spacing:2px;text-transform:uppercase;color:var(--saffron-lt);font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+      <span style="width:22px;height:2px;background:var(--saffron-lt);border-radius:2px;display:inline-block;"></span>
+      GramCare AI · Rajpur Primary Health Centre
+    </div>
+
+    <h1 class="anim-fadeInUp delay-1" style="font-family:var(--font-serif);font-size:36px;font-weight:700;line-height:1.22;letter-spacing:-.4px;margin-bottom:14px;">
+      Healthcare <span style="color:var(--saffron-lt);">without</span> barriers.<br/>
+      Care <span style="color:var(--saffron-lt);">without</span> distance.
+    </h1>
+    <p class="anim-fadeInUp delay-2" style="font-size:14.5px;color:rgba(255,255,255,.6);line-height:1.72;max-width:500px;margin-bottom:28px;">
+      AI assists. The doctor decides. Every patient in Rajpur village now has a virtual doorway to qualified medical care — regardless of connectivity or distance.
+    </p>
+
+    <div class="anim-fadeInUp delay-3" style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:36px;">
+      <button class="btn btn-primary btn-lg" onclick="navigateTo('new-patient')">🎙 Start New Encounter</button>
+      <button class="btn btn-ghost btn-lg" style="color:rgba(255,255,255,.8);background:rgba(255,255,255,.09);border:1.5px solid rgba(255,255,255,.18);" onclick="navigateTo('doctor')">👨‍⚕️ Doctor Dashboard</button>
+    </div>
+
+    <div class="anim-fadeInUp delay-4" style="display:flex;gap:40px;flex-wrap:wrap;padding-top:26px;border-top:1px solid rgba(255,255,255,.1);">
+      <div>
+        <div style="font-family:var(--font-ui);font-size:28px;font-weight:700;color:var(--saffron-lt);" data-count="247">0</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.42);margin-top:3px;">Patients This Month</div>
+      </div>
+      <div>
+        <div style="font-family:var(--font-ui);font-size:28px;font-weight:700;color:#4ADE80;" data-count="98">0</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.42);margin-top:3px;">% Safety Accuracy</div>
+      </div>
+      <div>
+        <div style="font-family:var(--font-ui);font-size:28px;font-weight:700;color:var(--sky-lt);">12 min</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.42);margin-top:3px;">Avg. Consult Time</div>
+      </div>
+      <div>
+        <div style="font-family:var(--font-ui);font-size:28px;font-weight:700;color:#F9A8D4;" data-count="3">0</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.42);margin-top:3px;">Doctors Online Now</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STAT CARDS -->
+  <div class="grid-stats">
+    <div class="stat-card card-orange glow-card reveal">
+      <div class="stat-card-stripe" style="background:linear-gradient(90deg,var(--saffron),var(--saffron-lt));"></div>
+      <div class="stat-card-glow" style="background:var(--saffron);"></div>
+      <div class="stat-icon" style="background:var(--saffron-pale);">🧑‍🤝‍🧑</div>
+      <div class="stat-value" data-count="18">0</div>
+      <div class="stat-label">Patients Today</div>
+      <div class="stat-delta up">↑ 4 from yesterday</div>
+    </div>
+    <div class="stat-card card-amber glow-card reveal delay-1">
+      <div class="stat-card-stripe" style="background:linear-gradient(90deg,var(--amber),#FBBF24);"></div>
+      <div class="stat-card-glow" style="background:var(--amber);"></div>
+      <div class="stat-icon" style="background:var(--amber-pale);">⏳</div>
+      <div class="stat-value" data-count="4">0</div>
+      <div class="stat-label">Awaiting Doctor Review</div>
+      <div class="stat-delta down">2 AMBER · 2 GREEN pending</div>
+    </div>
+    <div class="stat-card card-green glow-card reveal delay-2">
+      <div class="stat-card-stripe" style="background:linear-gradient(90deg,var(--forest),var(--forest-lt));"></div>
+      <div class="stat-card-glow" style="background:var(--forest);"></div>
+      <div class="stat-icon" style="background:var(--forest-pale);">✅</div>
+      <div class="stat-value" data-count="14">0</div>
+      <div class="stat-label">Encounters Completed</div>
+      <div class="stat-delta up">↑ 87% approval rate</div>
+    </div>
+    <div class="stat-card card-sky glow-card reveal delay-3">
+      <div class="stat-card-stripe" style="background:linear-gradient(90deg,var(--sky),var(--sky-lt));"></div>
+      <div class="stat-card-glow" style="background:var(--sky);"></div>
+      <div class="stat-icon" style="background:var(--sky-pale);">📡</div>
+      <div class="stat-value" style="font-size:20px;padding-top:6px;">Online</div>
+      <div class="stat-label">Network Status</div>
+      <div class="stat-delta info">↑ eSanjeevani linked</div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT GRID -->
+  <div class="grid-7-5">
+
+    <!-- Recent Patients -->
+    <div class="card card-hover reveal">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Recent Patients</div>
+          <div class="card-subtitle">Today's encounters — sorted by time</div>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="navigateTo('queue')">View All →</button>
+      </div>
+      <div class="scroll-list stagger-list" style="max-height:320px;">
+        <div class="patient-row" onclick="navigateTo('triage')">
+          <div class="patient-avatar" style="background:linear-gradient(135deg,#E8692A,#F4A261)">RK</div>
+          <div style="flex:1;">
+            <div class="patient-name">Ramesh Kumar, 44</div>
+            <div class="patient-meta">Fever · Weakness · Hand Injury</div>
+          </div>
+          <div class="patient-row-right">
+            <span class="risk risk-amber"><span class="risk-dot"></span>AMBER</span>
+            <div class="patient-time">11:32 AM</div>
+          </div>
+        </div>
+        <div class="patient-row">
+          <div class="patient-avatar" style="background:linear-gradient(135deg,#DC2626,#F87171)">PD</div>
+          <div style="flex:1;">
+            <div class="patient-name">Parvati Devi, 62</div>
+            <div class="patient-meta">BP 180/110 · Severe Headache</div>
+          </div>
+          <div class="patient-row-right">
+            <span class="risk risk-red"><span class="risk-dot"></span>RED</span>
+            <div class="patient-time">10:14 AM</div>
+          </div>
+        </div>
+        <div class="patient-row">
+          <div class="patient-avatar" style="background:linear-gradient(135deg,#1A6FA8,#3B9FD8)">AS</div>
+          <div style="flex:1;">
+            <div class="patient-name">Arun Singh, 28</div>
+            <div class="patient-meta">Mild Cough · Low-grade Fever</div>
+          </div>
+          <div class="patient-row-right">
+            <span class="risk risk-green"><span class="risk-dot"></span>GREEN</span>
+            <div class="patient-time">09:50 AM</div>
+          </div>
+        </div>
+        <div class="patient-row">
+          <div class="patient-avatar" style="background:linear-gradient(135deg,#7C3AED,#A78BFA)">MK</div>
+          <div style="flex:1;">
+            <div class="patient-name">Meena Kumari, 35</div>
+            <div class="patient-meta">Pregnancy Check · Anaemia</div>
+          </div>
+          <div class="patient-row-right">
+            <span class="risk risk-amber"><span class="risk-dot"></span>AMBER</span>
+            <div class="patient-time">09:20 AM</div>
+          </div>
+        </div>
+        <div class="patient-row">
+          <div class="patient-avatar" style="background:linear-gradient(135deg,#16A34A,#4ADE80)">VB</div>
+          <div style="flex:1;">
+            <div class="patient-name">Vijay Bhai, 9</div>
+            <div class="patient-meta">Diarrhoea · Mild Dehydration</div>
+          </div>
+          <div class="patient-row-right">
+            <span class="risk risk-green"><span class="risk-dot"></span>GREEN</span>
+            <div class="patient-time">08:45 AM</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right column -->
+    <div class="col">
+      <!-- Risk Distribution -->
+      <div class="card card-hover reveal">
+        <div class="card-header"><div class="card-title">Risk Distribution</div></div>
+        <div class="card-body">
+          <div style="margin-bottom:14px;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+              <span style="font-size:13px;font-weight:600;color:var(--green);">🟢 Green — Safe Protocol</span>
+              <span style="font-size:13px;font-weight:700;" data-count="8">0</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill pf-green" data-width="55%" style="width:0"></div></div>
+          </div>
+          <div style="margin-bottom:14px;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+              <span style="font-size:13px;font-weight:600;color:var(--amber);">🟡 Amber — Doctor Review</span>
+              <span style="font-size:13px;font-weight:700;" data-count="7">0</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill pf-orange" data-width="42%" style="width:0"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+              <span style="font-size:13px;font-weight:600;color:var(--red);">🔴 Red — Immediate Referral</span>
+              <span style="font-size:13px;font-weight:700;" data-count="3">0</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill pf-red" data-width="18%" style="width:0"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Activity -->
+      <div class="card card-hover reveal">
+        <div class="card-header"><div class="card-title">⚡ Live Activity</div></div>
+        <div class="scroll-list" style="max-height:200px;">
+          <div class="activity-item">
+            <div class="activity-dot" style="background:var(--green)"></div>
+            <div>
+              <div class="activity-text">Dr. Mehta approved Ramesh Kumar's treatment</div>
+              <div class="activity-time">2 min ago</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:var(--red)"></div>
+            <div>
+              <div class="activity-text">Parvati Devi referred to District Hospital</div>
+              <div class="activity-time">18 min ago</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:var(--sky)"></div>
+            <div>
+              <div class="activity-text">OCR extracted prescription for Meena Kumari</div>
+              <div class="activity-time">32 min ago</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:var(--saffron)"></div>
+            <div>
+              <div class="activity-text">New encounter — Vijay Bhai, 9 yrs</div>
+              <div class="activity-time">44 min ago</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="grid-3" style="margin-top:22px;">
+    <div class="card card-hover glow-card reveal" style="cursor:pointer;" onclick="navigateTo('intake')">
+      <div class="card-body" style="text-align:center;padding:28px 20px;">
+        <div style="font-size:36px;margin-bottom:12px;">🎙️</div>
+        <div style="font-family:var(--font-ui);font-size:15px;font-weight:700;color:var(--ink);">Voice Intake</div>
+        <div style="font-size:12.5px;color:var(--ink-50);margin-top:5px;line-height:1.5;">Hindi/English multilingual speech-to-structured data</div>
+      </div>
+    </div>
+    <div class="card card-hover glow-card reveal delay-1" style="cursor:pointer;" onclick="navigateTo('triage')">
+      <div class="card-body" style="text-align:center;padding:28px 20px;">
+        <div style="font-size:36px;margin-bottom:12px;">⚡</div>
+        <div style="font-family:var(--font-ui);font-size:15px;font-weight:700;color:var(--ink);">Safety Triage</div>
+        <div style="font-size:12.5px;color:var(--ink-50);margin-top:5px;line-height:1.5;">Deterministic rules + AI — GREEN / AMBER / RED</div>
+      </div>
+    </div>
+    <div class="card card-hover glow-card reveal delay-2" style="cursor:pointer;" onclick="navigateTo('doctor')">
+      <div class="card-body" style="text-align:center;padding:28px 20px;">
+        <div style="font-size:36px;margin-bottom:12px;">👨‍⚕️</div>
+        <div style="font-family:var(--font-ui);font-size:15px;font-weight:700;color:var(--ink);">Doctor Dashboard</div>
+        <div style="font-size:12.5px;color:var(--ink-50);margin-top:5px;line-height:1.5;">Pre-built case packet — approve in &lt;2 minutes</div>
+      </div>
+    </div>
+  </div>
+
+</div>

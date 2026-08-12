@@ -1,0 +1,112 @@
+<!-- Page: Documents & OCR -->
+<div class="page-enter">
+  <div class="page-header">
+    <h1>📄 Documents &amp; OCR Intelligence</h1>
+    <p>Photograph prescriptions, lab reports, and injury images. AI extracts structured medical data automatically using Docling OCR.</p>
+  </div>
+
+  <div class="workflow-nav">
+    <div class="wf-step done" onclick="navigateTo('new-patient')"><div class="wf-num">✓</div>Register</div>
+    <div class="wf-arrow">›</div>
+    <div class="wf-step done" onclick="navigateTo('intake')"><div class="wf-num">✓</div>Voice Intake</div>
+    <div class="wf-arrow">›</div>
+    <div class="wf-step done"><div class="wf-num">✓</div>Vitals</div>
+    <div class="wf-arrow">›</div>
+    <div class="wf-step active"><div class="wf-num">4</div>Documents</div>
+    <div class="wf-arrow">›</div>
+    <div class="wf-step"><div class="wf-num">5</div>AI Summary</div>
+    <div class="wf-arrow">›</div>
+    <div class="wf-step" onclick="navigateTo('triage')"><div class="wf-num">6</div>Triage</div>
+    <div class="wf-arrow">›</div>
+    <div class="wf-step" onclick="navigateTo('doctor')"><div class="wf-num">7</div>Doctor</div>
+  </div>
+
+  <div class="grid-2">
+    <!-- Upload Column -->
+    <div class="card reveal">
+      <div class="card-header">
+        <div class="card-title">Upload Documents</div>
+        <div class="card-subtitle">Camera · Gallery · File — any format</div>
+      </div>
+      <div class="card-body">
+        <div class="upload-zone" style="margin-bottom:12px;" id="upload-rx">
+          <div class="upload-icon">💊</div>
+          <div class="upload-title">Prescription / Medicine Strip</div>
+          <div class="upload-sub">Tap or drag — JPG, PNG, PDF</div>
+        </div>
+        <div class="upload-zone" style="margin-bottom:12px;" id="upload-lab">
+          <div class="upload-icon">🧪</div>
+          <div class="upload-title">Lab Report / Blood Test</div>
+          <div class="upload-sub">PDF, JPG, PNG supported</div>
+        </div>
+        <div class="upload-zone" style="margin-bottom:12px;" id="upload-wound">
+          <div class="upload-icon">🩹</div>
+          <div class="upload-title">Wound / Injury Photo</div>
+          <div class="upload-sub">AI vision — visible assessment</div>
+        </div>
+        <div class="upload-zone" id="upload-old">
+          <div class="upload-icon">🗂️</div>
+          <div class="upload-title">Discharge Summary / Old Records</div>
+          <div class="upload-sub">Any prior medical document</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OCR Results -->
+    <div class="card reveal delay-1">
+      <div class="card-header">
+        <div>
+          <div class="card-title">✦ OCR Extracted Data</div>
+          <div class="card-subtitle">From: Prescription — Dr. Sharma · 15 Nov 2025</div>
+        </div>
+        <span class="pill pill-green">✓ Processed</span>
+      </div>
+      <div class="card-body">
+        <!-- Medications -->
+        <div style="background:var(--sky-pale);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:14px;border:1px solid rgba(26,111,168,.15);">
+          <div style="font-size:12.5px;font-weight:700;color:var(--sky);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;">Detected Medications</div>
+          <div style="display:flex;flex-wrap:wrap;">
+            <span class="pill pill-blue">Amlodipine 5mg</span>
+            <span class="pill pill-blue">Paracetamol 500mg</span>
+          </div>
+        </div>
+
+        <!-- History -->
+        <div style="background:var(--saffron-pale);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:14px;border:1px solid rgba(232,105,42,.15);">
+          <div style="font-size:12.5px;font-weight:700;color:var(--saffron);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;">Detected History</div>
+          <div style="display:flex;flex-wrap:wrap;">
+            <span class="pill pill-orange">Hypertension (Stage 1)</span>
+            <span class="pill pill-gray">Fever episode — Oct 2025</span>
+          </div>
+        </div>
+
+        <!-- Safety Flag -->
+        <div style="background:var(--amber-pale);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:14px;border:1.5px solid #FCD34D;">
+          <div style="font-size:12.5px;font-weight:700;color:var(--amber);margin-bottom:6px;">⚠ Safety Flag Detected</div>
+          <div style="font-size:13px;color:var(--ink-80);line-height:1.6;">Allergy information not found in any uploaded document. Health worker must <strong>confirm verbally</strong> before any medication suggestion is forwarded to the Medicine Gate.</div>
+        </div>
+
+        <!-- Wound Vision -->
+        <div style="background:var(--forest-pale);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:14px;border:1px solid rgba(27,107,74,.15);">
+          <div style="font-size:12.5px;font-weight:700;color:var(--forest);margin-bottom:6px;">🩹 Wound Assessment (AI Vision)</div>
+          <div style="font-size:13px;color:var(--ink-80);line-height:1.6;">Minor superficial abrasion on dorsum of right hand. No visible deep laceration, arterial bleeding, or signs of infection detected. Appropriate for wound-care protocol.</div>
+        </div>
+
+        <!-- Audit notice -->
+        <div style="background:var(--ink-10);border-radius:var(--radius-sm);padding:11px 14px;margin-bottom:20px;">
+          <div style="font-size:11.5px;color:var(--ink-50);line-height:1.5;">Original documents preserved alongside extracted data. Physician can verify originals during review.</div>
+        </div>
+
+        <button class="btn btn-primary btn-full btn-lg" onclick="navigateTo('triage')">
+          → Generate AI Summary &amp; Triage
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    initUploadZones();
+  });
+</script>

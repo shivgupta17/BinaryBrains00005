@@ -1,0 +1,126 @@
+<!-- Page: New Patient Registration -->
+<div class="page-enter">
+  <div class="page-header">
+    <h1>Register New Patient</h1>
+    <p>Create a patient record before starting the clinical encounter. All fields marked * are required.</p>
+  </div>
+
+  <div class="grid-2">
+    <!-- Left: Form -->
+    <div class="card reveal">
+      <div class="card-header">
+        <div class="card-title">👤 Patient Demographics</div>
+        <span class="risk risk-orange"><span class="risk-dot"></span>Step 1 of 7</span>
+      </div>
+      <div class="card-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">First Name *</label>
+            <input class="form-input" placeholder="e.g. Ramesh" value="Ramesh"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last Name *</label>
+            <input class="form-input" placeholder="e.g. Kumar" value="Kumar"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Age *</label>
+            <input class="form-input" type="number" placeholder="Years" value="44"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Sex *</label>
+            <select class="form-select">
+              <option>Male</option><option>Female</option><option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Village / Ward *</label>
+            <input class="form-input" placeholder="e.g. Rajpur" value="Rajpur"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Preferred Language</label>
+            <select class="form-select">
+              <option>Hindi</option><option>English</option><option>Marathi</option><option>Bengali</option><option>Tamil</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone (optional)</label>
+          <input class="form-input" placeholder="+91 98765 XXXXX"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Known Allergies</label>
+          <input class="form-input" placeholder="Penicillin, Sulfa… or None known"/>
+          <div class="form-hint">⚠ Critical for medicine safety gate. Confirm verbally.</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Existing Conditions</label>
+          <input class="form-input" placeholder="Hypertension, Diabetes… or None" value="Hypertension"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Current Medications</label>
+          <textarea class="form-textarea" placeholder="List medications with dose…">Amlodipine 5mg OD</textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Pregnancy Status</label>
+          <select class="form-select">
+            <option>Not applicable (Male)</option>
+            <option>Not pregnant</option>
+            <option>Pregnant — specify trimester</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Photo + Consent + CTA -->
+    <div class="col">
+      <div class="card reveal delay-1">
+        <div class="card-header"><div class="card-title">📸 Patient Photo</div></div>
+        <div class="card-body">
+          <div class="upload-zone">
+            <div class="upload-icon">📷</div>
+            <div class="upload-title">Capture or Upload Photo</div>
+            <div class="upload-sub">Used for patient identification & records</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Abha / ID -->
+      <div class="card reveal delay-2">
+        <div class="card-header"><div class="card-title">🪪 ABHA / Health ID</div></div>
+        <div class="card-body">
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label">ABHA Number (optional)</label>
+            <input class="form-input" placeholder="14-digit ABHA ID"/>
+            <div class="form-hint">Links patient to National Health Stack automatically.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Consent -->
+      <div class="card reveal delay-3">
+        <div class="card-header"><div class="card-title">📋 Telemedicine Consent</div></div>
+        <div class="card-body">
+          <p style="font-size:13px;color:var(--ink-50);line-height:1.7;margin-bottom:14px;">
+            Patient or guardian informed about teleconsultation process, AI-assisted triage, and data handling as per <strong>India's Telemedicine Practice Guidelines 2020</strong>.
+          </p>
+          <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;margin-bottom:10px;">
+            <input type="checkbox" checked style="width:17px;height:17px;accent-color:var(--saffron);margin-top:2px;flex-shrink:0;"/>
+            <span style="font-size:13px;font-weight:600;color:var(--ink);">Verbal consent obtained</span>
+          </label>
+          <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;">
+            <input type="checkbox" style="width:17px;height:17px;accent-color:var(--saffron);margin-top:2px;flex-shrink:0;"/>
+            <span style="font-size:13px;font-weight:600;color:var(--ink);">Written consent form signed</span>
+          </label>
+        </div>
+      </div>
+
+      <button class="btn btn-primary btn-lg btn-full reveal delay-4" onclick="navigateTo('intake')">
+        → Proceed to Voice Intake
+      </button>
+    </div>
+  </div>
+</div>

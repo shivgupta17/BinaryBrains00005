@@ -1,0 +1,114 @@
+<!-- Page: Protocol -->
+<div class="page-enter">
+  <div class="page-header">
+    <h1>📋 Protocol-Based First-Aid Assistant</h1>
+    <p>Steps retrieved from a clinician-reviewed protocol library — <strong>not</strong> generated from model memory. Clinical RAG over approved MoHFW guidelines.</p>
+  </div>
+
+  <div class="grid-2">
+    <!-- Wound Protocol -->
+    <div class="card reveal">
+      <div class="card-header">
+        <div>
+          <div class="card-title">🩹 Minor Wound Care Protocol</div>
+          <div class="card-subtitle">Source: MoHFW / ASHA Guidelines · Revision 2024</div>
+        </div>
+        <span class="risk risk-green"><span class="risk-dot"></span>RAG-Retrieved</span>
+      </div>
+      <div class="card-body stagger-list">
+        <div class="protocol-step">
+          <div class="step-num">1</div>
+          <div>
+            <div class="step-text">Screen for immediate escalation criteria.</div>
+            <div class="step-sub">Deep laceration, arterial bleeding, pus, extreme redness beyond wound margins → escalate to RED immediately.</div>
+          </div>
+        </div>
+        <div class="protocol-step">
+          <div class="step-num">2</div>
+          <div>
+            <div class="step-text">Clean hands thoroughly with soap or sanitiser. Wear gloves if available.</div>
+          </div>
+        </div>
+        <div class="protocol-step">
+          <div class="step-num">3</div>
+          <div>
+            <div class="step-text">Irrigate wound with clean running water or saline for 2–3 minutes.</div>
+            <div class="step-sub">Do not apply raw iodine directly. Remove visible debris gently.</div>
+          </div>
+        </div>
+        <div class="protocol-step">
+          <div class="step-num">4</div>
+          <div>
+            <div class="step-text">Apply appropriate sterile dressing.</div>
+            <div class="step-sub">Dry dressing for clean wounds · Non-adherent for moist wounds.</div>
+          </div>
+        </div>
+        <div class="protocol-step">
+          <div class="step-num">5</div>
+          <div>
+            <div class="step-text">Monitor for warning signs every 30 minutes.</div>
+            <div class="step-sub">Increased pain, swelling, purulent discharge, fever spike → re-escalate.</div>
+          </div>
+        </div>
+        <div class="protocol-step">
+          <div class="step-num">6</div>
+          <div>
+            <div class="step-text">Record treatment in patient encounter log with time and steps followed.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right column -->
+    <div class="col">
+      <!-- Fever Protocol -->
+      <div class="card reveal delay-1">
+        <div class="card-header">
+          <div class="card-title">🌡️ Fever Management Protocol</div>
+          <span class="risk risk-green"><span class="risk-dot"></span>RAG-Retrieved</span>
+        </div>
+        <div class="card-body stagger-list">
+          <div class="protocol-step">
+            <div class="step-num">1</div>
+            <div>
+              <div class="step-text">Ensure adequate hydration — ORS or clean water (2–3 L/day).</div>
+            </div>
+          </div>
+          <div class="protocol-step">
+            <div class="step-num">2</div>
+            <div>
+              <div class="step-text">Tepid sponging for temperature above 102°F.</div>
+            </div>
+          </div>
+          <div class="protocol-step">
+            <div class="step-num">3</div>
+            <div>
+              <div class="step-text">Do not administer antipyretics without doctor approval.</div>
+              <div class="step-sub">Patient is on Amlodipine — medication interaction check required via Medicine Gate.</div>
+            </div>
+          </div>
+          <div class="protocol-step">
+            <div class="step-num">4</div>
+            <div>
+              <div class="step-text">Escalate immediately if temp exceeds 104°F or patient has seizure / altered consciousness.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RAG Explainer -->
+      <div style="background:var(--forest-pale);border-radius:var(--radius-lg);padding:20px 22px;border:1.5px solid rgba(27,107,74,.2);" class="reveal delay-2">
+        <div style="font-size:14px;font-weight:700;color:var(--forest);margin-bottom:8px;">✦ Clinical RAG — Not LLM Memory</div>
+        <div style="font-size:13px;color:var(--ink-50);line-height:1.65;">
+          "Our clinical guidance isn't generated from the model's memory. It is grounded in an approved clinical protocol knowledge base."
+          <br/><br/>
+          <strong style="color:var(--forest);">Question → Clinical RAG → Approved Protocol DB → Relevant Evidence</strong>
+        </div>
+      </div>
+
+      <button class="btn btn-primary btn-lg btn-full reveal delay-3" onclick="navigateTo('medicine')">
+        💊 Check Medicine Safety Gate →
+      </button>
+    </div>
+  </div>
+</div>
