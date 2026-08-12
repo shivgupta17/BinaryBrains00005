@@ -1226,11 +1226,11 @@ async function initPatientDashboardPage() {
     if (nameEl) nameEl.textContent = demo.name || 'Patient';
     if (subEl)  subEl.textContent  = `Patient ID: ${patientId} · Active Clinic Encounter`;
 
-    if (asstName)  asstName.textContent  = asst.name || 'Sunita Wagh (Assistant)';
-    if (asstPhone) asstPhone.textContent = asst.phone || '+91 98765 43210';
-    if (asstEmail) asstEmail.textContent = asst.email || 'assistant@gramcare.ai';
+    if (asstName)  asstName.textContent  = asst ? (asst.name || 'Clinic Assistant') : 'Clinic Assistant';
+    if (asstPhone) asstPhone.textContent = asst ? (asst.phone || 'Not recorded') : 'Not recorded';
+    if (asstEmail) asstEmail.textContent = asst ? (asst.email || 'Not recorded') : 'Not recorded';
 
-    if (docName) docName.textContent = doc.name || 'Dr. Aarav Sharma';
+    if (docName) docName.textContent = doc ? (doc.name || 'Attending Physician') : 'Attending Physician';
 
     // Render ONLY DOCTOR APPROVED MEDICATIONS
     if (medsList) {
@@ -1365,7 +1365,7 @@ async function sendReferralToDoctor() {
     });
     const result = await res.json();
     if (result.success) {
-      showToast('Case successfully referred to Dr. Aarav Sharma!', 'success');
+      showToast('Case successfully referred to attending physician!', 'success');
     }
   } catch (err) {
     showToast('Referral error: ' + err.message, 'error');
@@ -1764,16 +1764,61 @@ async function sendGateOtp() {
     });
     const data = await res.json();
     if (data.success) {
-      if (statusEl) statusEl.textContent = `✓ OTP Sent! Demo Code: ${data.otpDemoCode || 'Check email'}`;
+      if (statusEl) statusEl.textContent = `✓ OTP sent to your email. Please check your inbox.`;
       showToast(`OTP sent to ${email}`, 'success');
-      const otpInput = document.getElementById('gate-otp-code');
-      if (otpInput && data.otpDemoCode) otpInput.value = data.otpDemoCode;
+      startResendCooldownTimer();
     } else {
       showToast(data.error || 'Failed to send OTP', 'error');
     }
   } catch (err) {
     showToast('Network error sending OTP: ' + err.message, 'error');
   }
+}
+
+async function resendGateOtp() {
+  const email = document.getElementById('gate-reg-email')?.value.trim();
+  const statusEl = document.getElementById('gate-otp-status');
+
+  if (!email) {
+    showToast('Please enter your email address to resend OTP', 'warning');
+    return;
+  }
+
+  try {
+    const res = await fetch('http://localhost:5000/api/auth/resend-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, role: selectedGateRole })
+    });
+    const data = await res.json();
+    if (data.success) {
+      if (statusEl) statusEl.textContent = `✓ Resent OTP to your email. Check your inbox.`;
+      showToast(`Resent OTP to ${email}`, 'success');
+      startResendCooldownTimer();
+    } else {
+      showToast(data.error || 'Failed to resend OTP', 'error');
+    }
+  } catch (err) {
+    showToast('Error resending OTP: ' + err.message, 'error');
+  }
+}
+
+function startResendCooldownTimer() {
+  const resendBtn = document.getElementById('gate-btn-resend-otp');
+  if (!resendBtn) return;
+  let seconds = 60;
+  resendBtn.disabled = true;
+  resendBtn.textContent = `Resend in ${seconds}s`;
+  const interval = setInterval(() => {
+    seconds--;
+    if (seconds <= 0) {
+      clearInterval(interval);
+      resendBtn.disabled = false;
+      resendBtn.textContent = `🔄 Resend Email OTP`;
+    } else {
+      resendBtn.textContent = `Resend in ${seconds}s`;
+    }
+  }, 1000);
 }
 
 async function executeGateLogin() {
@@ -1814,7 +1859,6 @@ async function executeGateRegister() {
   const name  = document.getElementById('gate-reg-name')?.value.trim();
   const email = document.getElementById('gate-reg-email')?.value.trim();
   const pass  = document.getElementById('gate-reg-pass')?.value;
-  const otpCode = document.getElementById('gate-otp-code')?.value.trim();
 
   if (!name || !email || !pass) {
     showToast('Please fill in Name, Email, and Password.', 'warning');
@@ -1822,24 +1866,15 @@ async function executeGateRegister() {
   }
 
   try {
-    // If OTP provided, verify OTP first
-    if (otpCode) {
-      const verifyRes = await fetch('http://localhost:5000/api/auth/verify-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, otpCode, role: selectedGateRole })
-      });
-      const verifyData = await verifyRes.json();
-      if (!verifyData.success) {
-        showToast(verifyData.error || 'OTP verification failed.', 'error');
-        return;
-      }
-    }
-
     const regRes = await fetch('http://localhost:5000/api/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, password: pass, role: selectedGateRole })
+      body: JSON.stringify({
+        name,
+        email,
+        password: pass,
+        role: selectedGateRole
+      })
     });
     const regData = await regRes.json();
 
@@ -1973,10 +2008,124 @@ function populateSidebarUser() {
       initialsText = parts.length >= 2 ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase() : user.name.substring(0, 2).toUpperCase();
     }
 
+    const customId = user.patientId || user.doctorId || user.assistantId || user.userId || '';
+
     if (nameEl)   nameEl.textContent   = user.name;
-    if (roleEl)   roleEl.textContent   = user.role === 'doctor' ? (user.specialty || 'Medical Doctor') : (user.role === 'patient' ? 'Registered Patient' : 'Clinic Assistant');
+    if (roleEl)   roleEl.textContent   = (user.role === 'doctor' ? (user.specialty || 'Medical Doctor') : (user.role === 'patient' ? 'Registered Patient' : 'Clinic Assistant')) + (customId ? ` (${customId})` : '');
     if (initials) initials.textContent = initialsText;
+
+    const modalName = document.getElementById('modal-user-name');
+    const modalRole = document.getElementById('modal-user-role');
+    if (modalName) modalName.textContent = user.name;
+    if (modalRole) modalRole.textContent = `${user.role.toUpperCase()} ID: ${customId}`;
+
+    const docIdBadge = document.getElementById('doc-id-badge');
+    if (docIdBadge && user.role === 'doctor') docIdBadge.textContent = user.doctorId || customId || 'DOC-PENDING';
+
+    const patIdBadge = document.getElementById('pat-id-display');
+    if (patIdBadge && user.role === 'patient') patIdBadge.textContent = user.patientId || customId || 'PAT-PENDING';
   } catch (_) {}
+}
+
+async function asstSearchPatientById() {
+  const patientIdInput = document.getElementById('asst-search-patient-id')?.value.trim();
+  const resEl = document.getElementById('asst-patient-search-result');
+  if (!patientIdInput) {
+    showToast('Please enter a Patient ID (e.g. PAT-8F29K31A)', 'warning');
+    return;
+  }
+
+  try {
+    const token = getAuthToken();
+    const res = await fetch(`http://localhost:5000/api/patients/lookup/${encodeURIComponent(patientIdInput)}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await res.json();
+    if (!res.ok || !data.success) {
+      if (resEl) resEl.innerHTML = `<span style="color:var(--red);">❌ ${data.error || 'Patient not found.'}</span>`;
+      showToast(data.error || 'Patient not found.', 'error');
+      return;
+    }
+
+    const p = data.data;
+    GramCare.patient.id = p.patientId;
+    sessionStorage.setItem('gc_patient_id', p.patientId);
+
+    if (resEl) {
+      resEl.innerHTML = `
+        <div style="background:var(--forest-pale);border:1px solid var(--forest);border-radius:8px;padding:8px 10px;margin-top:6px;">
+          <strong>✓ Found Patient:</strong> ${p.name} (${p.age} yrs, ${p.sex})<br/>
+          <strong>Patient ID:</strong> <code>${p.patientId}</code> | <strong>Case ID:</strong> <code>${p.currentCaseId || 'None'}</code><br/>
+          <button class="btn btn-sm btn-forest" onclick="navigateTo('intake')" style="margin-top:6px;">Open Intake &amp; Case Packet</button>
+        </div>
+      `;
+    }
+    showToast(`Patient found: ${p.name} (${p.patientId})`, 'success');
+  } catch (err) {
+    showToast('Error searching patient: ' + err.message, 'error');
+  }
+}
+
+async function asstReferToDoctorById() {
+  const doctorIdInput = document.getElementById('asst-refer-doctor-id')?.value.trim();
+  const resEl = document.getElementById('asst-doctor-refer-result');
+  if (!doctorIdInput) {
+    showToast('Please enter a Doctor ID (e.g. DOC-77291045)', 'warning');
+    return;
+  }
+
+  const patientId = GramCare.patient.id || sessionStorage.getItem('gc_patient_id') || 'PAT_DEFAULT';
+  const caseId    = `CASE_${patientId}`;
+  const user      = getAuthUser();
+
+  try {
+    const token = getAuthToken();
+    const docRes = await fetch(`http://localhost:5000/api/doctors/lookup/${encodeURIComponent(doctorIdInput)}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const docData = await docRes.json();
+    if (!docRes.ok || !docData.success) {
+      if (resEl) resEl.innerHTML = `<span style="color:var(--red);">❌ Doctor not found. Please check Doctor ID.</span>`;
+      showToast(docData.error || 'Doctor not found.', 'error');
+      return;
+    }
+
+    const doc = docData.data;
+
+    const refRes = await fetch('http://localhost:5000/api/referrals', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        patientId,
+        caseId,
+        doctorId: doc.doctorId,
+        assistantId: user?.assistantId || 'AST_DEFAULT',
+        riskLevel: GramCare.patient.risk || 'medium',
+        reason: 'Clinical referral from Assistant Panel'
+      })
+    });
+    const refData = await refRes.json();
+    if (!refRes.ok || !refData.success) {
+      showToast(refData.error || 'Referral failed.', 'error');
+      return;
+    }
+
+    if (resEl) {
+      resEl.innerHTML = `
+        <div style="background:var(--sky-pale);border:1px solid var(--sky);border-radius:8px;padding:8px 10px;margin-top:6px;">
+          <strong>✓ Referred to Doctor:</strong> ${doc.name} (${doc.specialty})<br/>
+          <strong>Doctor ID:</strong> <code>${doc.doctorId}</code> | <strong>Referral ID:</strong> <code>${refData.referralId}</code><br/>
+          <span class="pill pill-amber" style="font-size:10px;margin-top:4px;">Status: NEW</span>
+        </div>
+      `;
+    }
+    showToast(`Referral sent to ${doc.name} (${doc.doctorId})!`, 'success');
+  } catch (err) {
+    showToast('Error referring to doctor: ' + err.message, 'error');
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {

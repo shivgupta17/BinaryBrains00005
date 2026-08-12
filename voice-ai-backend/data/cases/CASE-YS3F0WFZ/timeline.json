@@ -1,0 +1,52 @@
+[
+  {
+    "eventId": "evt_1786578372656_e269",
+    "timestamp": "2026-08-12T23:46:12.656Z",
+    "type": "PATIENT_REGISTERED",
+    "title": "Encounter Case Created",
+    "description": "New clinical encounter CASE-YS3F0WFZ created for patient PAT-2DPV4Y9J",
+    "actor": "Clinic Assistant",
+    "actorRole": "assistant",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786578373306_mjh7",
+    "timestamp": "2026-08-12T23:46:13.306Z",
+    "type": "REFERRED_TO_DOCTOR",
+    "title": "Referred to Doctor",
+    "description": "Case referred to Dr. Saif Anwar (Risk Level: AMBER)",
+    "actor": "AST-YKRL7XC1",
+    "actorRole": "assistant",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786578373788_2fad",
+    "timestamp": "2026-08-12T23:46:13.788Z",
+    "type": "DOCTOR_ACCEPTED",
+    "title": "Doctor Accepted Referral",
+    "description": "Referral accepted by Dr. Saif Anwar. Consultation initiated.",
+    "actor": "Dr. Saif Anwar",
+    "actorRole": "doctor",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786578373860_emno",
+    "timestamp": "2026-08-12T23:46:13.860Z",
+    "type": "MEDICATION_APPROVED",
+    "title": "Doctor Approved Prescription",
+    "description": "Medications approved: Paracetamol 500mg, Azithromycin 500mg",
+    "actor": "Dr. Aarav Sharma",
+    "actorRole": "doctor",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786578373977_nur2",
+    "timestamp": "2026-08-12T23:46:13.977Z",
+    "type": "BED_ASSIGNED",
+    "title": "Patient Bed Assigned",
+    "description": "General Medical Ward A · Room 12 · Bed B",
+    "actor": "Dr. Aarav Sharma",
+    "actorRole": "doctor",
+    "data": {}
+  }
+]

@@ -7,36 +7,79 @@ const notificationService = require('../services/notificationService');
  * Patient Dashboard Controller
  * Enforces strict rule: Patient sees ONLY DOCTOR APPROVED medications (no unapproved AI candidates)!
  */
+const { getDb, isDbConnected } = require('../config/db');
+
 async function getPatientDashboardData(req, res) {
   try {
-    const patientId = req.query.patientId || req.headers['x-patient-id'] || 'PAT_DUAL_PANEL_01';
-    const caseId    = req.query.caseId    || `CASE_${patientId}`;
+    const patientId = req.query.patientId || req.headers['x-patient-id'] || req.user?.patientId;
+    if (!patientId) {
+      return res.status(400).json({ success: false, error: 'patientId parameter or header is required.' });
+    }
 
-    const context  = patientContextService.getPatientCaseContext(patientId, caseId);
-    const caseData = context.case || {};
+    const cleanPatientId = patientId.trim();
+    let patientDoc = null;
+    let caseData = null;
 
-    // Doctor details if assigned
+    if (isDbConnected()) {
+      const db = getDb();
+      patientDoc = await db.collection('patients').findOne({
+        $or: [{ patientId: cleanPatientId }, { userId: cleanPatientId }]
+      });
+      if (!patientDoc) {
+        patientDoc = await db.collection('users').findOne({
+          role: 'patient',
+          $or: [{ patientId: cleanPatientId }, { userId: cleanPatientId }]
+        });
+      }
+
+      const pId = patientDoc?.patientId || cleanPatientId;
+      caseData = await db.collection('cases').findOne({
+        patientId: pId,
+        status: { $in: ['OPEN', 'REFERRED', 'IN_CONSULTATION'] }
+      });
+    }
+
+    if (!patientDoc) {
+      patientDoc = fileUtils.getPatient(cleanPatientId);
+    }
+
+    const pId = patientDoc?.patientId || cleanPatientId;
+    const context = patientContextService.getPatientCaseContext(pId, caseData?.caseId || req.query.caseId || `CASE_${pId}`);
+    if (!caseData) {
+      caseData = context.case || {};
+    }
+
+    // Fetch Assigned Doctor
     let assignedDoctor = null;
-    if (caseData.assignedDoctorId) {
-      assignedDoctor = fileUtils.getDoctor(caseData.assignedDoctorId);
-    }
-    if (!assignedDoctor) {
-      assignedDoctor = {
-        doctorId: 'DOC_01',
-        name: 'Dr. Aarav Sharma',
-        specialty: 'Orthopedics & General Medicine',
-        hospital: 'GramCare Central Clinic'
-      };
+    const docId = caseData.assignedDoctorId;
+    if (docId) {
+      if (isDbConnected()) {
+        const db = getDb();
+        const docObj = await db.collection('doctors').findOne({ $or: [{ doctorId: docId }, { userId: docId }] });
+        if (docObj) {
+          assignedDoctor = { doctorId: docObj.doctorId || docId, name: docObj.name, specialty: docObj.specialty || 'General Medicine' };
+        }
+      }
+      if (!assignedDoctor) {
+        assignedDoctor = fileUtils.getDoctor(docId);
+      }
     }
 
-    // Assigned Assistant details
-    const assignedAssistant = {
-      assistantId: caseData.assistantId || 'ASSISTANT_01',
-      name: 'Sunita Wagh (Clinic Assistant)',
-      email: process.env.ASSISTANT_EMAIL || 'assistant@gramcare.ai',
-      phone: '+91 98765 43210',
-      clinic: 'Rajpur Primary Health Centre'
-    };
+    // Fetch Assigned Assistant
+    let assignedAssistant = null;
+    const asstId = caseData.assistantId;
+    if (asstId) {
+      if (isDbConnected()) {
+        const db = getDb();
+        const asstObj = await db.collection('assistants').findOne({ $or: [{ assistantId: asstId }, { userId: asstId }] });
+        if (asstObj) {
+          assignedAssistant = { assistantId: asstObj.assistantId || asstId, name: asstObj.name, email: asstObj.email };
+        }
+      }
+      if (!assignedAssistant) {
+        assignedAssistant = { assistantId: asstId, name: 'Assigned Clinic Assistant', email: process.env.ASSISTANT_EMAIL || 'assistant@gramcare.ai' };
+      }
+    }
 
     // STRICT PATIENT PRIVACY RULE: Filter ONLY Doctor-Approved Medications
     const approvedMedications = (caseData.approvedMedications || []).filter(m => 
@@ -49,9 +92,14 @@ async function getPatientDashboardData(req, res) {
     return res.status(200).json({
       success: true,
       data: {
-        patientId,
-        caseId,
-        demographics: context.demographics,
+        patientId: pId,
+        caseId: caseData.caseId || `CASE_${pId}`,
+        demographics: {
+          name: patientDoc?.name || context.demographics?.name || 'Patient',
+          age: patientDoc?.age || context.demographics?.age || 30,
+          sex: patientDoc?.sex || context.demographics?.sex || 'Male',
+          village: patientDoc?.village || 'Rajpur'
+        },
         status: caseData.status || 'ACTIVE',
         vitals: context.vitals,
         assignedDoctor,

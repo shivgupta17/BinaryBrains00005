@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786578373306",
+  "recipientRole": "doctor",
+  "recipientId": "DOC-FYZWX0N7",
+  "patientId": "PAT-2DPV4Y9J",
+  "caseId": "CASE-YS3F0WFZ",
+  "type": "NEW REFERRAL",
+  "title": "🚨 NEW Referral Received",
+  "message": "Patient PAT-2DPV4Y9J referred for High fever and persistent cough for 3 days",
+  "createdAt": "2026-08-12T23:46:13.175Z",
+  "read": false,
+  "priority": "MEDIUM"
+}

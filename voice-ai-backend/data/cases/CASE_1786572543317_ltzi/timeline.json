@@ -1,0 +1,80 @@
+[
+  {
+    "eventId": "evt_1786572543392_yb3a",
+    "timestamp": "2026-08-12T22:09:03.392Z",
+    "type": "PATIENT_REGISTERED",
+    "title": "Encounter Case Created",
+    "description": "New clinical encounter CASE_1786572543317_ltzi created for patient PAT_usr_realpatienttest1786572514556gramcareai",
+    "actor": "Clinic Assistant",
+    "actorRole": "assistant",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786572543406_j3bn",
+    "timestamp": "2026-08-12T22:09:03.406Z",
+    "type": "VITALS_ENTERED",
+    "title": "Vitals Recorded",
+    "description": "Temp: 101.4°F, BP: 130/85, Pulse: 88 bpm, SpO2: 96%",
+    "actor": "Clinic Assistant",
+    "actorRole": "assistant",
+    "data": {
+      "temp": "101.4°F",
+      "bp": "130/85",
+      "pulse": "88 bpm",
+      "spo2": "96%",
+      "weight": "Not recorded",
+      "respRate": "Not recorded",
+      "recordedAt": "2026-08-12T22:09:03.405Z"
+    }
+  },
+  {
+    "eventId": "evt_1786572543527_i29r",
+    "timestamp": "2026-08-12T22:09:03.527Z",
+    "type": "REFERRED_TO_DOCTOR",
+    "title": "Referred to Doctor",
+    "description": "Case referred to Attending Doctor (Risk Level: MEDIUM)",
+    "actor": "Clinic Assistant",
+    "actorRole": "assistant",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786572543651_184v",
+    "timestamp": "2026-08-12T22:09:03.651Z",
+    "type": "DOCTOR_ACCEPTED",
+    "title": "Doctor Accepted Referral",
+    "description": "Referral accepted by Attending Doctor. Consultation initiated.",
+    "actor": "Attending Doctor",
+    "actorRole": "doctor",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786572543739_pdha",
+    "timestamp": "2026-08-12T22:09:03.739Z",
+    "type": "MEDICATION_APPROVED",
+    "title": "Doctor Approved Prescription",
+    "description": "Medications approved: Paracetamol 500mg",
+    "actor": "DOC_usr_realdoctortest1786572508574gramcareai",
+    "actorRole": "doctor",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786572543890_ldtb",
+    "timestamp": "2026-08-12T22:09:03.890Z",
+    "type": "BED_ASSIGNED",
+    "title": "Patient Bed Assigned",
+    "description": "Emergency Ward · Room 04 · Bed 2A",
+    "actor": "DOC_usr_realdoctortest1786572508574gramcareai",
+    "actorRole": "doctor",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786572544053_knyg",
+    "timestamp": "2026-08-12T22:09:04.053Z",
+    "type": "FOLLOWUP_SCHEDULED",
+    "title": "Follow-Up Scheduled",
+    "description": "Follow-up set for 2026-08-15 at 10:30 AM",
+    "actor": "Dr. Aarav Sharma",
+    "actorRole": "doctor",
+    "data": {}
+  }
+]

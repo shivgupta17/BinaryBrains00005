@@ -78,16 +78,7 @@
         <input type="password" id="gate-reg-pass" class="form-input" placeholder="••••••••"/>
       </div>
 
-      <!-- OTP Verification Section -->
-      <div style="background:var(--ink-10);border-radius:10px;padding:10px;margin-bottom:14px;">
-        <div style="display:flex;gap:8px;margin-bottom:8px;">
-          <input type="text" id="gate-otp-code" class="form-input" placeholder="Enter 6-digit OTP" style="font-size:12px;"/>
-          <button type="button" class="btn btn-sky btn-sm" onclick="sendGateOtp()" id="btn-send-otp" style="white-space:nowrap;font-size:11px;">Send OTP</button>
-        </div>
-        <div style="font-size:10.5px;color:var(--ink-50);" id="gate-otp-status">OTP will be sent via Nodemailer / verification API.</div>
-      </div>
-
-      <button type="button" class="btn btn-forest btn-full btn-lg" onclick="executeGateRegister()" id="gate-register-btn" style="font-size:14px;">
+      <button type="button" class="btn btn-forest btn-full btn-lg" onclick="executeGateRegister()" id="gate-register-btn" style="font-size:14px;margin-top:10px;">
         ✅ Complete Registration
       </button>
     </div>

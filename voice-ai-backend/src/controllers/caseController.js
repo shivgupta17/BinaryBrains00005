@@ -1,10 +1,9 @@
 const fileUtils = require('../utils/fileUtils');
 const patientContextService = require('../services/patientContextService');
 const aiSummaryService = require('../services/aiSummaryService');
+const { getDb, isDbConnected } = require('../config/db');
+const idGen = require('../utils/idGenerator');
 
-/**
- * Creates a new clinical encounter case (separates patientId vs caseId)
- */
 async function createCase(req, res) {
   try {
     const { patientId, caseType, assistantId } = req.body;
@@ -12,8 +11,8 @@ async function createCase(req, res) {
       return res.status(400).json({ success: false, error: 'patientId is required' });
     }
 
-    const cleanPatientId = fileUtils.sanitizeId(patientId);
-    const caseId = `CASE_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
+    const cleanPatientId = patientId.trim();
+    const caseId = idGen.generateCaseId();
     const createdAt = new Date().toISOString();
 
     const caseData = {
@@ -35,6 +34,12 @@ async function createCase(req, res) {
     };
 
     fileUtils.saveCase(caseId, caseData);
+
+    if (isDbConnected()) {
+      const db = getDb();
+      await db.collection('cases').updateOne({ caseId }, { $set: caseData }, { upsert: true });
+    }
+
     fileUtils.addCaseTimelineEvent(caseId, {
       type: 'PATIENT_REGISTERED',
       title: 'Encounter Case Created',

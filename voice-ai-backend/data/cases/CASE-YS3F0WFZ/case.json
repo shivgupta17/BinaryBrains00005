@@ -1,0 +1,40 @@
+{
+  "caseId": "CASE-YS3F0WFZ",
+  "patientId": "PAT-2DPV4Y9J",
+  "assistantId": "AST-YKRL7XC1",
+  "createdAt": "2026-08-12T23:46:12.587Z",
+  "status": "IN_CONSULTATION",
+  "caseType": "Fever & Cough Consultation",
+  "textStatements": [],
+  "imageUploads": [],
+  "videoUploads": [],
+  "doctorNotes": [],
+  "assistantNotes": [],
+  "assignedDoctorId": "DOC-FYZWX0N7",
+  "bedAssignment": {
+    "ward": "General Medical Ward A",
+    "room": "Room 12",
+    "bed": "Bed B",
+    "assignedBy": "DOC_01",
+    "assignedAt": "2026-08-12T23:46:13.867Z",
+    "notes": "Patient admitted for 24h observation"
+  },
+  "followUp": null,
+  "medications": [],
+  "approvedMedications": [
+    {
+      "name": "Paracetamol 500mg",
+      "dosage": "1 tablet 3x daily after meals",
+      "status": "DOCTOR_APPROVED",
+      "approvedBy": "DOC_01",
+      "approvedAt": "2026-08-12T23:46:13.795Z"
+    },
+    {
+      "name": "Azithromycin 500mg",
+      "dosage": "1 tablet daily for 5 days",
+      "status": "DOCTOR_APPROVED",
+      "approvedBy": "DOC_01",
+      "approvedAt": "2026-08-12T23:46:13.795Z"
+    }
+  ]
+}

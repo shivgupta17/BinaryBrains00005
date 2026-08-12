@@ -57,6 +57,34 @@
     </div>
   </div>
 
+  <!-- CLINICAL UNIQUE ID LOOKUP & DOCTOR REFERRAL TOOL -->
+  <div class="card reveal" style="margin-bottom:26px;background:var(--ink-10);border:1.5px solid var(--saffron-pale);border-radius:var(--radius-xl);padding:18px 20px;">
+    <div style="font-weight:700;font-size:15px;color:var(--ink);margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+      <span>🔍</span> Patient &amp; Doctor Unique ID Linkage System
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+      <!-- Patient Search by ID -->
+      <div style="background:white;padding:14px;border-radius:10px;border:1px solid var(--ink-20);">
+        <label class="form-label" style="font-size:11.5px;font-weight:700;color:var(--ink-80);">1. Search Patient by Unique ID</label>
+        <div style="display:flex;gap:8px;margin-top:6px;">
+          <input type="text" id="asst-search-patient-id" class="form-input" placeholder="e.g. PAT-8F29K31A" style="font-size:12px;text-transform:uppercase;"/>
+          <button class="btn btn-primary btn-sm" onclick="asstSearchPatientById()" style="white-space:nowrap;">Search Patient</button>
+        </div>
+        <div id="asst-patient-search-result" style="margin-top:8px;font-size:12px;color:var(--ink-70);"></div>
+      </div>
+
+      <!-- Refer to Doctor by ID -->
+      <div style="background:white;padding:14px;border-radius:10px;border:1px solid var(--ink-20);">
+        <label class="form-label" style="font-size:11.5px;font-weight:700;color:var(--ink-80);">2. Refer Active Case to Doctor by Unique ID</label>
+        <div style="display:flex;gap:8px;margin-top:6px;">
+          <input type="text" id="asst-refer-doctor-id" class="form-input" placeholder="e.g. DOC-77291045" style="font-size:12px;text-transform:uppercase;"/>
+          <button class="btn btn-forest btn-sm" onclick="asstReferToDoctorById()" style="white-space:nowrap;">Refer to Doctor</button>
+        </div>
+        <div id="asst-doctor-refer-result" style="margin-top:8px;font-size:12px;color:var(--ink-70);"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- STAT CARDS -->
   <div class="grid-stats">
     <div class="stat-card card-orange glow-card reveal">
@@ -201,15 +229,8 @@
           <div class="activity-item">
             <div class="activity-dot" style="background:var(--green)"></div>
             <div>
-              <div class="activity-text">Dr. Mehta approved Ramesh Kumar's treatment</div>
-              <div class="activity-time">2 min ago</div>
-            </div>
-          </div>
-          <div class="activity-item">
-            <div class="activity-dot" style="background:var(--red)"></div>
-            <div>
-              <div class="activity-text">Parvati Devi referred to District Hospital</div>
-              <div class="activity-time">18 min ago</div>
+              <div class="activity-text">Clinical Encounter System Ready</div>
+              <div class="activity-time">Just now</div>
             </div>
           </div>
           <div class="activity-item">

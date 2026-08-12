@@ -1,5 +1,6 @@
 const fileUtils = require('../utils/fileUtils');
 const geminiService = require('../services/geminiService');
+const { getDb, isDbConnected } = require('../config/db');
 
 /**
  * Helper to generate conversation ID
@@ -73,6 +74,11 @@ async function completeVoiceIntake(req, res) {
       fileUtils.savePatientVoice(patientId, conversationData);
     }
 
+    if (isDbConnected()) {
+      const db = getDb();
+      await db.collection('conversations').updateOne({ conversationId }, { $set: conversationData }, { upsert: true });
+    }
+
     return res.status(200).json({
       success: true,
       conversationId,
@@ -130,6 +136,11 @@ async function analyzeVoiceConversation(req, res) {
     const patientId = conversation.patientId || req.body.patientId || 'PAT_DEFAULT';
     if (patientId) {
       fileUtils.savePatientVoice(patientId, conversation);
+    }
+
+    if (isDbConnected()) {
+      const db = getDb();
+      await db.collection('conversations').updateOne({ conversationId }, { $set: { aiAnalysis: aiAnalysisResult } });
     }
 
     return res.status(200).json({

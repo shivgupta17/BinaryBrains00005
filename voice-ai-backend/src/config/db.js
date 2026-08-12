@@ -76,6 +76,29 @@ async function createIndexes() {
     const otps = db.collection('otps');
     await otps.createIndex({ email: 1 });
     await otps.createIndex({ createdAt: 1 }, { expireAfterSeconds: 600 });
+
+    const patients = db.collection('patients');
+    await patients.createIndex({ patientId: 1 }, { unique: true });
+
+    const cases = db.collection('cases');
+    await cases.createIndex({ caseId: 1 }, { unique: true });
+    await cases.createIndex({ patientId: 1 });
+
+    const referrals = db.collection('referrals');
+    await referrals.createIndex({ referralId: 1 }, { unique: true });
+    await referrals.createIndex({ doctorId: 1 });
+
+    const notifications = db.collection('notifications');
+    await notifications.createIndex({ notificationId: 1 });
+    await notifications.createIndex({ recipientRole: 1 });
+
+    const conversations = db.collection('conversations');
+    await conversations.createIndex({ conversationId: 1 });
+    await conversations.createIndex({ patientId: 1 });
+
+    const documents = db.collection('documents');
+    await documents.createIndex({ documentId: 1 });
+    await documents.createIndex({ patientId: 1 });
   } catch (e) {
     console.warn('[MongoClient] Index notice:', e.message);
   }

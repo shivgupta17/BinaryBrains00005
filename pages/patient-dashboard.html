@@ -12,7 +12,10 @@
         <div style="width:56px;height:56px;border-radius:50%;background:var(--saffron-pale);border:2px solid var(--saffron);display:flex;align-items:center;justify-content:center;font-size:28px;">👤</div>
         <div>
           <div style="font-size:20px;font-weight:700;" id="pat-name">Patient Name</div>
-          <div style="font-size:12.5px;color:rgba(255,255,255,.6);" id="pat-sub">Patient ID: PAT_DEFAULT · Active Clinic Encounter</div>
+          <div style="font-size:13px;color:rgba(255,255,255,.9);margin-top:2px;">
+            YOUR PATIENT ID: <code id="pat-id-display" style="background:var(--saffron);color:white;padding:3px 9px;border-radius:6px;font-size:13px;font-weight:700;">PAT-PENDING</code>
+          </div>
+          <div style="font-size:12px;color:rgba(255,255,255,.6);margin-top:2px;" id="pat-sub">Active Clinic Encounter · Rajpur Primary Health Centre</div>
         </div>
       </div>
       <div style="display:flex;gap:10px;align-items:center;">
@@ -63,14 +66,14 @@
           <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
             <div style="width:44px;height:44px;border-radius:12px;background:var(--sky-pale);display:flex;align-items:center;justify-content:center;font-size:22px;">👩‍⚕️</div>
             <div>
-              <div style="font-weight:700;font-size:14.5px;color:var(--ink);" id="pat-asst-name">Sunita Wagh</div>
-              <div style="font-size:12px;color:var(--ink-50);" id="pat-asst-clinic">Rajpur Primary Health Centre</div>
+              <div style="font-weight:700;font-size:14.5px;color:var(--ink);" id="pat-asst-name">Clinic Assistant</div>
+              <div style="font-size:12px;color:var(--ink-50);" id="pat-asst-clinic">Primary Health Centre</div>
             </div>
           </div>
 
           <div style="background:var(--ink-10);border-radius:10px;padding:12px;font-size:12.5px;color:var(--ink-80);line-height:1.7;margin-bottom:16px;">
-            <strong>Phone:</strong> <span id="pat-asst-phone">+91 98765 43210</span><br/>
-            <strong>Email:</strong> <span id="pat-asst-email">assistant@gramcare.ai</span>
+            <strong>Phone:</strong> <span id="pat-asst-phone">Not recorded</span><br/>
+            <strong>Email:</strong> <span id="pat-asst-email">Not recorded</span>
           </div>
 
           <div style="display:flex;flex-direction:column;gap:10px;">
@@ -90,7 +93,7 @@
           <div class="card-title">👨‍⚕️ Attending Doctor</div>
         </div>
         <div class="card-body">
-          <div style="font-weight:700;font-size:15px;color:var(--ink);" id="pat-doc-name">Dr. Aarav Sharma</div>
+          <div style="font-weight:700;font-size:15px;color:var(--ink);" id="pat-doc-name">Attending Doctor</div>
           <div style="font-size:12.5px;color:var(--ink-60);margin-top:2px;" id="pat-doc-spec">Orthopedics &amp; General Medicine</div>
           <div style="font-size:12px;color:var(--ink-50);margin-top:2px;" id="pat-doc-hosp">GramCare Central Clinic</div>
         </div>

@@ -6,6 +6,8 @@ const router = express.Router();
 
 // Doctor routes
 router.get('/available', requireAuth, doctorController.getAvailableDoctors);
+router.get('/lookup/:doctorId', requireAuth, doctorController.getDoctorById);
+router.get('/:doctorId', requireAuth, doctorController.getDoctorById);
 router.put('/:doctorId/status', requireAuth, requireRole('doctor'), doctorController.updateDoctorStatus);
 router.post('/cases/:caseId/medications', requireAuth, requireRole('doctor'), doctorController.approveMedication);
 router.post('/cases/:caseId/bed-assignment', requireAuth, requireRole('doctor'), doctorController.assignBed);

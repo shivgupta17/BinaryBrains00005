@@ -1,0 +1,14 @@
+{
+  "referralId": "REF-BX3BSFH6",
+  "patientId": "PAT-2DPV4Y9J",
+  "caseId": "CASE-YS3F0WFZ",
+  "doctorId": "DOC-FYZWX0N7",
+  "doctorName": "Dr. Saif Anwar",
+  "assistantId": "AST-YKRL7XC1",
+  "riskLevel": "amber",
+  "reason": "High fever and persistent cough for 3 days",
+  "aiSummary": null,
+  "status": "ACCEPTED",
+  "createdAt": "2026-08-12T23:46:13.175Z",
+  "acceptedAt": "2026-08-12T23:46:13.678Z"
+}

@@ -1,0 +1,13 @@
+{
+  "referralId": "ref_1786572526319_4hyb",
+  "patientId": "PAT_usr_realpatienttest1786572514556gramcareai",
+  "caseId": "CASE_1786572526226_hy65",
+  "doctorId": "DOC_usr_realdoctortest1786572508574gramcareai",
+  "doctorName": "Attending Doctor",
+  "assistantId": "ASSISTANT_DEFAULT",
+  "riskLevel": "medium",
+  "reason": "High fever and leg swelling",
+  "status": "ACCEPTED",
+  "createdAt": "2026-08-12T22:08:46.319Z",
+  "acceptedAt": "2026-08-12T22:08:46.820Z"
+}

@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786578373789",
+  "recipientRole": "assistant",
+  "recipientId": "AST-YKRL7XC1",
+  "patientId": "PAT-2DPV4Y9J",
+  "caseId": "CASE-YS3F0WFZ",
+  "type": "PATIENT UPDATE",
+  "title": "✅ Referral Accepted",
+  "message": "Dr. Saif Anwar has accepted referral for patient PAT-2DPV4Y9J",
+  "createdAt": "2026-08-12T23:46:13.789Z",
+  "read": false,
+  "priority": "MEDIUM"
+}

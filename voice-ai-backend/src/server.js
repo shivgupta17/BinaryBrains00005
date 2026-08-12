@@ -12,6 +12,7 @@ const doctorRoutes = require('./routes/doctorRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
 const patientDashboardRoutes = require('./routes/patientDashboardRoutes');
 const schedulerService = require('./services/schedulerService');
+const migrationService = require('./services/migrationService');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -64,6 +65,7 @@ app.use((err, req, res, next) => {
 // Connect to MongoDB Atlas & Start Server
 async function startServer() {
   await connectDB();
+  await migrationService.backfillUniqueIds();
   schedulerService.initScheduler();
 
   app.listen(PORT, '0.0.0.0', () => {

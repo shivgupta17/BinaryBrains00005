@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786572543891",
+  "recipientRole": "assistant",
+  "recipientId": "AST_01",
+  "patientId": "PAT_usr_realpatienttest1786572514556gramcareai",
+  "caseId": "CASE_1786572543317_ltzi",
+  "type": "BED_ASSIGNED",
+  "title": "🛏️ Bed Assigned",
+  "message": "Patient assigned to Emergency Ward, Room 04, Bed 2A",
+  "createdAt": "2026-08-12T22:09:03.891Z",
+  "read": false,
+  "priority": "HIGH"
+}

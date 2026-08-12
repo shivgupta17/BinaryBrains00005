@@ -204,6 +204,15 @@ function addCaseTimelineEvent(caseId, event) {
 
   events.push(timelineEvent);
   fs.writeFileSync(filePath, JSON.stringify(events, null, 2), 'utf-8');
+
+  try {
+    const { getDb, isDbConnected } = require('../config/db');
+    if (isDbConnected()) {
+      const db = getDb();
+      db.collection('caseTimeline').insertOne({ caseId, ...timelineEvent }).catch(() => {});
+    }
+  } catch (_) {}
+
   return timelineEvent;
 }
 
@@ -310,6 +319,15 @@ function saveNotification(notifData) {
   ensureDirs();
   const filePath = path.join(NOTIFICATIONS_DIR, `${notifData.notificationId}.json`);
   fs.writeFileSync(filePath, JSON.stringify(notifData, null, 2), 'utf-8');
+
+  try {
+    const { getDb, isDbConnected } = require('../config/db');
+    if (isDbConnected()) {
+      const db = getDb();
+      db.collection('notifications').insertOne(notifData).catch(() => {});
+    }
+  } catch (_) {}
+
   return notifData;
 }
 

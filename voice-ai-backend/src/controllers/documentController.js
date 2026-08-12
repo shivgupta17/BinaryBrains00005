@@ -5,6 +5,7 @@ const aiSummaryService = require('../services/aiSummaryService');
 const patientContextService = require('../services/patientContextService');
 const firstAidService = require('../services/firstAidService');
 const medicineGateService = require('../services/medicineGateService');
+const { getDb, isDbConnected } = require('../config/db');
 
 /**
  * Register / Update Patient Demographics & Vitals
@@ -16,6 +17,7 @@ async function registerPatient(req, res) {
     const patientId = fileUtils.sanitizeId(id) || `PAT_${Date.now()}`;
 
     const patientData = {
+      patientId,
       id: patientId,
       name: name || 'Patient',
       age: age ? parseInt(age, 10) : 'Not provided',
@@ -28,6 +30,14 @@ async function registerPatient(req, res) {
     };
 
     fileUtils.savePatient(patientId, patientData);
+
+    if (isDbConnected()) {
+      const db = getDb();
+      await db.collection('patients').updateOne({ patientId }, { $set: patientData }, { upsert: true });
+      if (vitals) {
+        await db.collection('vitals').updateOne({ patientId }, { $set: { ...vitals, updatedAt: new Date().toISOString() } }, { upsert: true });
+      }
+    }
 
     if (vitals) {
       fileUtils.savePatientVitals(patientId, vitals);
@@ -116,6 +126,11 @@ async function uploadPatientDocument(req, res) {
     };
 
     fileUtils.savePatientDocument(cleanPatientId, docRecord.documentId, docRecord);
+
+    if (isDbConnected()) {
+      const db = getDb();
+      await db.collection('documents').updateOne({ documentId: docRecord.documentId }, { $set: docRecord }, { upsert: true });
+    }
 
     return res.status(200).json({
       success: true,
@@ -283,15 +298,102 @@ async function getPatientMedicineGate(req, res) {
     });
   } catch (err) {
     console.error('[DocumentController] Error in getPatientMedicineGate:', err.message);
-    return res.status(500).json({
-      success: false,
-      error: err.message || 'Failed to evaluate medicine gate'
+    return res.status(500).json({ success: false, error: err.message });
+  }
+}
+
+async function lookupPatientById(req, res) {
+  try {
+    const { patientId } = req.params;
+    const cleanId = (patientId || '').trim();
+
+    if (!cleanId) {
+      return res.status(400).json({ success: false, error: 'Patient ID parameter is required.' });
+    }
+
+    let patient = null;
+    let activeCase = null;
+
+    if (isDbConnected()) {
+      const db = getDb();
+      patient = await db.collection('patients').findOne({
+        $or: [
+          { patientId: cleanId },
+          { userId: cleanId }
+        ]
+      });
+
+      if (!patient) {
+        const userDoc = await db.collection('users').findOne({
+          role: 'patient',
+          $or: [
+            { patientId: cleanId },
+            { userId: cleanId }
+          ]
+        });
+        if (userDoc) {
+          patient = {
+            patientId: userDoc.patientId || cleanId,
+            name: userDoc.name,
+            email: userDoc.email,
+            phone: userDoc.phone || '',
+            age: 30,
+            sex: 'Male'
+          };
+        }
+      }
+
+      if (patient) {
+        const pId = patient.patientId || cleanId;
+        activeCase = await db.collection('cases').findOne({
+          patientId: pId,
+          status: { $in: ['OPEN', 'REFERRED', 'IN_CONSULTATION'] }
+        });
+      }
+    }
+
+    if (!patient) {
+      patient = fileUtils.getPatient(cleanId);
+    }
+
+    if (!patient) {
+      return res.status(404).json({ success: false, error: `Patient not found for ID: ${cleanId}` });
+    }
+
+    const pId = patient.patientId || cleanId;
+    if (!activeCase) {
+      activeCase = fileUtils.getCase(`CASE_${pId}`) || fileUtils.getCase(pId);
+    }
+
+    const vitals = fileUtils.getPatientVitals(pId) || {};
+    const summary = fileUtils.getPatientSummary(pId) || null;
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        patientId: pId,
+        name: patient.name || 'Patient',
+        age: patient.age || 30,
+        sex: patient.sex || 'Male',
+        village: patient.village || 'Rajpur',
+        email: patient.email || '',
+        phone: patient.phone || '',
+        vitals,
+        aiSummary: summary,
+        currentCaseId: activeCase ? activeCase.caseId : null,
+        caseStatus: activeCase ? activeCase.status : 'NO_ACTIVE_CASE',
+        assignedDoctorId: activeCase ? activeCase.assignedDoctorId : null,
+        assignedAssistantId: activeCase ? activeCase.assistantId : null
+      }
     });
+  } catch (err) {
+    return res.status(500).json({ success: false, error: err.message });
   }
 }
 
 module.exports = {
   registerPatient,
+  lookupPatientById,
   uploadPatientDocument,
   getPatientDocuments,
   getSinglePatientDocument,

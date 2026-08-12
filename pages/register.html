@@ -221,16 +221,7 @@ body {
         <input type="password" id="reg-pass" class="form-input" placeholder="••••••••" required minlength="6"/>
       </div>
 
-      <div class="otp-box">
-        <label class="form-label" style="margin-bottom: 4px;">OTP Verification</label>
-        <div class="otp-flex">
-          <input type="text" id="reg-otp" class="form-input" placeholder="Enter 6-digit OTP"/>
-          <button type="button" class="btn-send" onclick="sendOtpCode()">Send OTP</button>
-        </div>
-        <div id="otp-msg" style="font-size: 11px; color: var(--ink-50); margin-top: 6px;">OTP will be sent via Nodemailer email API.</div>
-      </div>
-
-      <button type="submit" class="btn-primary" id="reg-submit-btn">✅ Complete Registration</button>
+      <button type="submit" class="btn-primary" id="reg-submit-btn" style="margin-top: 14px;">✅ Complete Registration</button>
     </form>
 
     <div class="footer-link">
@@ -265,8 +256,8 @@ async function sendOtpCode() {
     });
     const data = await res.json();
     if (data.success) {
-      msgEl.textContent = `✓ OTP sent to ${email}. Demo Code: ${data.otpDemoCode || 'Check inbox'}`;
-      if (data.otpDemoCode) document.getElementById('reg-otp').value = data.otpDemoCode;
+      msgEl.textContent = `✓ OTP sent to ${email}. Please check your inbox.`;
+      startRegResendCooldown();
     } else {
       alert(data.error || 'Failed to send OTP');
     }
@@ -275,13 +266,56 @@ async function sendOtpCode() {
   }
 }
 
+async function resendOtpCode() {
+  const email = document.getElementById('reg-email').value.trim();
+  const msgEl = document.getElementById('otp-msg');
+  if (!email) {
+    alert('Please enter your email address first.');
+    return;
+  }
+
+  try {
+    const res = await fetch('http://localhost:5000/api/auth/resend-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, role: currentRole })
+    });
+    const data = await res.json();
+    if (data.success) {
+      msgEl.textContent = `✓ Resent OTP to ${email}. Check your inbox.`;
+      startRegResendCooldown();
+    } else {
+      alert(data.error || 'Failed to resend OTP');
+    }
+  } catch (err) {
+    alert('Error resending OTP: ' + err.message);
+  }
+}
+
+function startRegResendCooldown() {
+  const btn = document.getElementById('reg-btn-resend-otp');
+  if (!btn) return;
+  let seconds = 60;
+  btn.disabled = true;
+  btn.textContent = `Resend in ${seconds}s`;
+  const interval = setInterval(() => {
+    seconds--;
+    if (seconds <= 0) {
+      clearInterval(interval);
+      btn.disabled = false;
+      btn.textContent = `🔄 Resend OTP`;
+    } else {
+      btn.textContent = `Resend in ${seconds}s`;
+    }
+  }, 1000);
+}
+
 async function executeRegister(e) {
   e.preventDefault();
-  const name    = document.getElementById('reg-name').value.trim();
-  const email   = document.getElementById('reg-email').value.trim();
-  const pass    = document.getElementById('reg-pass').value;
-  const otpCode = document.getElementById('reg-otp').value.trim();
-  const btn     = document.getElementById('reg-submit-btn');
+  const name  = document.getElementById('reg-name').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const pass  = document.getElementById('reg-pass').value;
+  const btn   = document.getElementById('reg-submit-btn');
 
   if (!name || !email || !pass) {
     alert('Please fill in Name, Email, and Password.');
@@ -292,25 +326,15 @@ async function executeRegister(e) {
   btn.disabled = true;
 
   try {
-    if (otpCode) {
-      const verifyRes = await fetch('http://localhost:5000/api/auth/verify-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, otpCode, role: currentRole })
-      });
-      const verifyData = await verifyRes.json();
-      if (!verifyData.success) {
-        alert(verifyData.error || 'OTP verification failed.');
-        btn.textContent = '✅ Complete Registration';
-        btn.disabled = false;
-        return;
-      }
-    }
-
     const regRes = await fetch('http://localhost:5000/api/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, password: pass, role: currentRole })
+      body: JSON.stringify({
+        name,
+        email,
+        password: pass,
+        role: currentRole
+      })
     });
     const regData = await regRes.json();
 

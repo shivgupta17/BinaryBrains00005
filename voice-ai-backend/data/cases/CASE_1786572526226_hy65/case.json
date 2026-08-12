@@ -1,0 +1,17 @@
+{
+  "caseId": "CASE_1786572526226_hy65",
+  "patientId": "PAT_usr_realpatienttest1786572514556gramcareai",
+  "assistantId": "AST_01",
+  "createdAt": "2026-08-12T22:08:46.226Z",
+  "status": "IN_CONSULTATION",
+  "caseType": "Acute Fever & Joint Pain",
+  "textStatements": [],
+  "imageUploads": [],
+  "videoUploads": [],
+  "doctorNotes": [],
+  "assistantNotes": [],
+  "assignedDoctorId": "DOC_usr_realdoctortest1786572508574gramcareai",
+  "bedAssignment": null,
+  "followUp": null,
+  "medications": []
+}

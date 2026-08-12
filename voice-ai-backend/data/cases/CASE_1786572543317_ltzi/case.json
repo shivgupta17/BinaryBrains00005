@@ -1,0 +1,46 @@
+{
+  "caseId": "CASE_1786572543317_ltzi",
+  "patientId": "PAT_usr_realpatienttest1786572514556gramcareai",
+  "assistantId": "AST_01",
+  "createdAt": "2026-08-12T22:09:03.317Z",
+  "status": "IN_CONSULTATION",
+  "caseType": "Acute Fever & Joint Pain",
+  "textStatements": [],
+  "imageUploads": [],
+  "videoUploads": [],
+  "doctorNotes": [
+    {
+      "noteId": "note_1786572543668",
+      "doctorId": "DOC_usr_realdoctortest1786572508574gramcareai",
+      "text": "Take for 3 days to manage fever.",
+      "createdAt": "2026-08-12T22:09:03.668Z"
+    }
+  ],
+  "assistantNotes": [],
+  "assignedDoctorId": "DOC_usr_realdoctortest1786572508574gramcareai",
+  "bedAssignment": {
+    "ward": "Emergency Ward",
+    "room": "Room 04",
+    "bed": "Bed 2A",
+    "assignedBy": "DOC_usr_realdoctortest1786572508574gramcareai",
+    "assignedAt": "2026-08-12T22:09:03.749Z",
+    "notes": "Admitted for observation"
+  },
+  "followUp": {
+    "followUpDate": "2026-08-15",
+    "followUpTime": "10:30 AM",
+    "reason": "Review fever subsidence and blood work",
+    "setBy": "DOC_01",
+    "createdAt": "2026-08-12T22:09:03.916Z"
+  },
+  "medications": [],
+  "approvedMedications": [
+    {
+      "name": "Paracetamol 500mg",
+      "dosage": "1 tablet thrice daily after meals",
+      "status": "DOCTOR_APPROVED",
+      "approvedBy": "DOC_usr_realdoctortest1786572508574gramcareai",
+      "approvedAt": "2026-08-12T22:09:03.668Z"
+    }
+  ]
+}

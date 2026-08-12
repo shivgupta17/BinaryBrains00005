@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786578373978",
+  "recipientRole": "assistant",
+  "recipientId": "AST-YKRL7XC1",
+  "patientId": "PAT-2DPV4Y9J",
+  "caseId": "CASE-YS3F0WFZ",
+  "type": "BED_ASSIGNED",
+  "title": "🛏️ Bed Assigned",
+  "message": "Patient assigned to General Medical Ward A, Room 12, Bed B",
+  "createdAt": "2026-08-12T23:46:13.978Z",
+  "read": false,
+  "priority": "HIGH"
+}

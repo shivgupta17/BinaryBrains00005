@@ -27,6 +27,8 @@ const upload = multer({
 
 // Patient Endpoints (Protected by requireAuth)
 router.post('/', requireAuth, documentController.registerPatient);
+router.get('/lookup/:patientId', requireAuth, documentController.lookupPatientById);
+router.get('/:patientId', requireAuth, documentController.lookupPatientById);
 router.post('/:patientId/documents', requireAuth, upload.single('document'), documentController.uploadPatientDocument);
 router.get('/:patientId/documents', requireAuth, documentController.getPatientDocuments);
 router.get('/:patientId/documents/:documentId', requireAuth, documentController.getSinglePatientDocument);

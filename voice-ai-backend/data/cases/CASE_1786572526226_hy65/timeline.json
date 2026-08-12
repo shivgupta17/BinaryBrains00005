@@ -1,0 +1,50 @@
+[
+  {
+    "eventId": "evt_1786572526286_0std",
+    "timestamp": "2026-08-12T22:08:46.286Z",
+    "type": "PATIENT_REGISTERED",
+    "title": "Encounter Case Created",
+    "description": "New clinical encounter CASE_1786572526226_hy65 created for patient PAT_usr_realpatienttest1786572514556gramcareai",
+    "actor": "Clinic Assistant",
+    "actorRole": "assistant",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786572526311_jaw0",
+    "timestamp": "2026-08-12T22:08:46.311Z",
+    "type": "VITALS_ENTERED",
+    "title": "Vitals Recorded",
+    "description": "Temp: 101.4°F, BP: 130/85, Pulse: 88 bpm, SpO2: 96%",
+    "actor": "Clinic Assistant",
+    "actorRole": "assistant",
+    "data": {
+      "temp": "101.4°F",
+      "bp": "130/85",
+      "pulse": "88 bpm",
+      "spo2": "96%",
+      "weight": "Not recorded",
+      "respRate": "Not recorded",
+      "recordedAt": "2026-08-12T22:08:46.306Z"
+    }
+  },
+  {
+    "eventId": "evt_1786572526785_drjy",
+    "timestamp": "2026-08-12T22:08:46.785Z",
+    "type": "REFERRED_TO_DOCTOR",
+    "title": "Referred to Doctor",
+    "description": "Case referred to Attending Doctor (Risk Level: MEDIUM)",
+    "actor": "Clinic Assistant",
+    "actorRole": "assistant",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786572527366_mcmg",
+    "timestamp": "2026-08-12T22:08:47.366Z",
+    "type": "DOCTOR_ACCEPTED",
+    "title": "Doctor Accepted Referral",
+    "description": "Referral accepted by Attending Doctor. Consultation initiated.",
+    "actor": "Attending Doctor",
+    "actorRole": "doctor",
+    "data": {}
+  }
+]

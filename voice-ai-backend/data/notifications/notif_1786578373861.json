@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786578373861",
+  "recipientRole": "assistant",
+  "recipientId": "AST-YKRL7XC1",
+  "patientId": "PAT-2DPV4Y9J",
+  "caseId": "CASE-YS3F0WFZ",
+  "type": "DOCTOR_MESSAGE",
+  "title": "💊 Medication Prescribed & Approved",
+  "message": "Doctor approved 2 medication(s) for patient PAT-2DPV4Y9J",
+  "createdAt": "2026-08-12T23:46:13.861Z",
+  "read": false,
+  "priority": "HIGH"
+}

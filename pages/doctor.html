@@ -10,8 +10,11 @@
     <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px;position:relative;z-index:1;">
       <div style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,var(--forest),var(--forest-lt));display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:var(--shadow-glow-green);">👩‍⚕️</div>
       <div>
-        <div style="font-family:var(--font-ui);font-size:17px;font-weight:700;" id="doc-banner-name">Dr. Aarav Sharma</div>
-        <div style="font-size:12.5px;color:rgba(255,255,255,.55);" id="doc-banner-spec">MBBS, MD (Orthopedics &amp; General Medicine) · GramCare Clinical Panel</div>
+        <div style="font-family:var(--font-ui);font-size:17px;font-weight:700;" id="doc-banner-name">Attending Doctor</div>
+        <div style="font-size:12.5px;color:rgba(255,255,255,.8);margin-top:2px;">
+          YOUR DOCTOR ID: <code id="doc-id-badge" style="background:var(--saffron);color:white;padding:2px 8px;border-radius:6px;font-size:12px;font-weight:700;">DOC-PENDING</code>
+        </div>
+        <div style="font-size:12px;color:rgba(255,255,255,.55);margin-top:2px;" id="doc-banner-spec">MBBS, MD (Orthopedics &amp; General Medicine) · GramCare Clinical Panel</div>
       </div>
       <div style="margin-left:auto;display:flex;align-items:center;gap:10px;">
         <select class="form-select" id="doc-status-select" onchange="toggleDoctorOnlineStatus()" style="background:rgba(255,255,255,.15);color:white;border:1px solid rgba(255,255,255,.3);font-weight:700;padding:6px 12px;border-radius:8px;">

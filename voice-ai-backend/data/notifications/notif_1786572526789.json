@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786572526789",
+  "recipientRole": "doctor",
+  "recipientId": "DOC_usr_realdoctortest1786572508574gramcareai",
+  "patientId": "PAT_usr_realpatienttest1786572514556gramcareai",
+  "caseId": "CASE_1786572526226_hy65",
+  "type": "NEW REFERRAL",
+  "title": "🚨 NEW Referral Received",
+  "message": "Patient PAT_usr_realpatienttest1786572514556gramcareai referred for High fever and leg swelling",
+  "createdAt": "2026-08-12T22:08:46.319Z",
+  "read": false,
+  "priority": "MEDIUM"
+}

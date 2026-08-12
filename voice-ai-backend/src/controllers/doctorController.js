@@ -1,5 +1,6 @@
 const fileUtils = require('../utils/fileUtils');
 const patientContextService = require('../services/patientContextService');
+const { getDb, isDbConnected } = require('../config/db');
 
 /**
  * Doctor Directory & Decision Controller
@@ -7,16 +8,85 @@ const patientContextService = require('../services/patientContextService');
 async function getAvailableDoctors(req, res) {
   try {
     const { specialty } = req.query;
-    let doctors = fileUtils.listDoctors();
+    let doctors = [];
 
-    if (specialty) {
-      doctors = doctors.filter(d => d.specialty.toLowerCase().includes(specialty.toLowerCase()));
+    if (isDbConnected()) {
+      const db = getDb();
+      const query = specialty ? { specialty: { $regex: specialty, $options: 'i' } } : {};
+      doctors = await db.collection('doctors').find(query).toArray();
+    }
+
+    if (!doctors || doctors.length === 0) {
+      doctors = fileUtils.listDoctors();
+      if (specialty) {
+        doctors = doctors.filter(d => d.specialty.toLowerCase().includes(specialty.toLowerCase()));
+      }
     }
 
     return res.status(200).json({
       success: true,
       count: doctors.length,
       data: doctors
+    });
+  } catch (err) {
+    return res.status(500).json({ success: false, error: err.message });
+  }
+}
+
+async function getDoctorById(req, res) {
+  try {
+    const { doctorId } = req.params;
+    const cleanId = (doctorId || '').trim();
+
+    if (!cleanId) {
+      return res.status(400).json({ success: false, error: 'Doctor ID parameter is required.' });
+    }
+
+    let doctor = null;
+    if (isDbConnected()) {
+      const db = getDb();
+      doctor = await db.collection('doctors').findOne({
+        $or: [
+          { doctorId: cleanId },
+          { userId: cleanId }
+        ]
+      });
+      if (!doctor) {
+        const user = await db.collection('users').findOne({
+          role: 'doctor',
+          $or: [
+            { doctorId: cleanId },
+            { userId: cleanId }
+          ]
+        });
+        if (user) {
+          doctor = {
+            doctorId: user.doctorId || cleanId,
+            name: user.name,
+            specialty: user.specialty || 'General Medicine',
+            onlineStatus: user.onlineStatus || 'ONLINE'
+          };
+        }
+      }
+    }
+
+    if (!doctor) {
+      doctor = fileUtils.getDoctor(cleanId);
+    }
+
+    if (!doctor) {
+      return res.status(404).json({ success: false, error: `Doctor not found: ${cleanId}` });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        doctorId: doctor.doctorId || cleanId,
+        name: doctor.name || 'Dr. Attending Doctor',
+        specialty: doctor.specialty || 'General Medicine',
+        onlineStatus: doctor.onlineStatus || 'ONLINE',
+        isAvailable: doctor.onlineStatus !== 'OFFLINE'
+      }
     });
   } catch (err) {
     return res.status(500).json({ success: false, error: err.message });
@@ -75,6 +145,14 @@ async function approveMedication(req, res) {
 
     fileUtils.saveCase(caseId, caseData);
 
+    if (isDbConnected()) {
+      const db = getDb();
+      await db.collection('cases').updateOne(
+        { caseId },
+        { $set: { approvedMedications: approvedMeds, doctorNotes: caseData.doctorNotes || [] } }
+      );
+    }
+
     fileUtils.addCaseTimelineEvent(caseId, {
       type: 'MEDICATION_APPROVED',
       title: 'Doctor Approved Prescription',
@@ -130,6 +208,12 @@ async function assignBed(req, res) {
     caseData.bedAssignment = bedAssignment;
     fileUtils.saveCase(caseId, caseData);
 
+    if (isDbConnected()) {
+      const db = getDb();
+      await db.collection('cases').updateOne({ caseId }, { $set: { bedAssignment } });
+      await db.collection('bedAssignments').insertOne({ caseId, patientId: caseData.patientId, ...bedAssignment });
+    }
+
     fileUtils.addCaseTimelineEvent(caseId, {
       type: 'BED_ASSIGNED',
       title: 'Patient Bed Assigned',
@@ -167,6 +251,10 @@ async function scheduleMedicationTimes(req, res) {
     const { caseId } = req.params;
     const { medicationName, dose, times, doctorId } = req.body;
 
+    if (!medicationName || !dose) {
+      return res.status(400).json({ success: false, error: 'Medication name and dose are required to create a schedule.' });
+    }
+
     const caseData = fileUtils.getCase(caseId);
     if (!caseData) {
       return res.status(404).json({ success: false, error: `Case not found: ${caseId}` });
@@ -177,15 +265,20 @@ async function scheduleMedicationTimes(req, res) {
       scheduleId,
       caseId,
       patientId: caseData.patientId,
-      medicationName: medicationName || 'Paracetamol',
-      dose: dose || '500mg',
+      medicationName: medicationName.trim(),
+      dose: dose.trim(),
       times: times || ['08:00', '14:00', '20:00'],
       status: 'ACTIVE',
-      createdBy: doctorId || 'DOC_01',
+      createdBy: doctorId || 'Doctor',
       createdAt: new Date().toISOString()
     };
 
     fileUtils.saveSchedule(scheduleData);
+
+    if (isDbConnected()) {
+      const db = getDb();
+      await db.collection('medicationSchedules').updateOne({ scheduleId: scheduleData.scheduleId }, { $set: scheduleData }, { upsert: true });
+    }
 
     fileUtils.addCaseTimelineEvent(caseId, {
       type: 'MEDICATION_SCHEDULED',
@@ -232,12 +325,18 @@ async function setFollowUp(req, res) {
       followUpDate: followUpDate || new Date(Date.now() + 86400000 * 2).toISOString().split('T')[0],
       followUpTime: followUpTime || '10:00 AM',
       reason: reason || 'Review vitals and symptom recovery',
-      setBy: doctorId || 'DOC_01',
+      setBy: doctorId || 'Doctor',
       createdAt: new Date().toISOString()
     };
 
     caseData.followUp = followUp;
     fileUtils.saveCase(caseId, caseData);
+
+    if (isDbConnected()) {
+      const db = getDb();
+      await db.collection('cases').updateOne({ caseId }, { $set: { followUp } });
+      await db.collection('followUps').insertOne({ caseId, patientId: caseData.patientId, ...followUp });
+    }
 
     fileUtils.addCaseTimelineEvent(caseId, {
       type: 'FOLLOWUP_SCHEDULED',
@@ -273,6 +372,7 @@ async function setFollowUp(req, res) {
 
 module.exports = {
   getAvailableDoctors,
+  getDoctorById,
   updateDoctorStatus,
   approveMedication,
   assignBed,
