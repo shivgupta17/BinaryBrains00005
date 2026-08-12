@@ -17,7 +17,7 @@
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;position:relative;z-index:1;">
       <div style="background:rgba(255,255,255,.07);border-radius:12px;padding:14px;text-align:center;">
-        <div style="font-family:var(--font-ui);font-size:24px;font-weight:700;color:var(--saffron-lt);" data-count="2">0</div>
+        <div style="font-family:var(--font-ui);font-size:24px;font-weight:700;color:var(--saffron-lt);" data-count="1">0</div>
         <div style="font-size:12px;color:rgba(255,255,255,.45);margin-top:3px;">Awaiting Review</div>
       </div>
       <div style="background:rgba(255,255,255,.07);border-radius:12px;padding:14px;text-align:center;">
@@ -36,72 +36,59 @@
     <div class="card reveal">
       <div class="card-header">
         <div>
-          <div class="card-title">Patient Case — Ramesh Kumar</div>
-          <div class="card-subtitle">Encounter #RJP-2026-0847 · 26 Aug 2026, 11:32 AM · Rajpur</div>
+          <div class="card-title" id="doc-case-title">Patient Case</div>
+          <div class="card-subtitle" id="doc-case-subtitle">Active Encounter Case Packet</div>
         </div>
-        <span class="risk risk-amber"><span class="risk-dot"></span>AMBER</span>
+        <span class="risk risk-amber" id="doc-risk-badge"><span class="risk-dot"></span>CLINICAL REVIEW</span>
       </div>
       <div class="card-body">
         <div class="grid-2" style="margin-bottom:18px;gap:14px;">
           <div>
             <div class="section-label">Demographics</div>
-            <div style="font-size:13.5px;color:var(--ink-80);line-height:1.9;">
-              <strong>Name:</strong> Ramesh Kumar<br/>
-              <strong>Age:</strong> 44 yrs · Male<br/>
-              <strong>Village:</strong> Rajpur<br/>
-              <strong>Language:</strong> Hindi
+            <div style="font-size:13.5px;color:var(--ink-80);line-height:1.9;" id="doc-demographics">
+              <strong>Name:</strong> <span id="doc-p-name">Not registered</span><br/>
+              <strong>Age:</strong> <span id="doc-p-age">Not provided</span><br/>
+              <strong>Village:</strong> <span id="doc-p-village">Not provided</span><br/>
+              <strong>Language:</strong> <span id="doc-p-lang">Hindi</span>
             </div>
           </div>
           <div>
             <div class="section-label">Vitals</div>
-            <div style="font-size:13.5px;color:var(--ink-80);line-height:1.9;">
-              <strong>Temp:</strong> 101.4°F <span style="color:var(--amber);">⚠</span><br/>
-              <strong>BP:</strong> 138/88 mmHg <span style="color:var(--amber);">⚠</span><br/>
-              <strong>Pulse:</strong> 92 bpm <span style="color:var(--green);">✓</span><br/>
-              <strong>SpO₂:</strong> 97% <span style="color:var(--green);">✓</span>
+            <div style="font-size:13.5px;color:var(--ink-80);line-height:1.9;" id="doc-vitals">
+              <strong>Temp:</strong> <span id="doc-v-temp">Not recorded</span><br/>
+              <strong>BP:</strong> <span id="doc-v-bp">Not recorded</span><br/>
+              <strong>Pulse:</strong> <span id="doc-v-hr">Not recorded</span><br/>
+              <strong>SpO₂:</strong> <span id="doc-v-spo2">Not recorded</span>
             </div>
           </div>
         </div>
 
         <div class="divider"></div>
 
-        <div class="section-label">Chief Complaints</div>
-        <div style="display:flex;flex-wrap:wrap;margin-bottom:16px;">
-          <span class="pill pill-orange">🌡 Fever · 2 days</span>
-          <span class="pill pill-orange">😓 Weakness · 2 days</span>
-          <span class="pill pill-orange">🤕 Hand Injury · 1 day</span>
+        <div class="section-label">Reported Problems (Voice Intake)</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;" id="doc-problems-pills">
+          <span style="font-size:12.5px;color:var(--ink-50);font-style:italic;">No complaints recorded</span>
         </div>
 
-        <div class="section-label">Medical History</div>
-        <div style="display:flex;flex-wrap:wrap;margin-bottom:16px;">
-          <span class="pill pill-blue">Hypertension</span>
-          <span class="pill pill-blue">Amlodipine 5mg OD</span>
-          <span class="pill pill-gray">Fever — Oct 2025</span>
-        </div>
-
-        <div class="section-label">Uploaded Documents</div>
-        <div style="display:flex;gap:10px;margin-bottom:18px;">
-          <div style="background:var(--ink-10);border-radius:10px;padding:9px 14px;font-size:12.5px;font-weight:600;color:var(--ink-80);cursor:pointer;">📄 Prescription</div>
-          <div style="background:var(--ink-10);border-radius:10px;padding:9px 14px;font-size:12.5px;font-weight:600;color:var(--ink-80);cursor:pointer;">🩹 Wound Photo</div>
-          <div style="background:var(--ink-10);border-radius:10px;padding:9px 14px;font-size:12.5px;font-weight:600;color:var(--ink-80);cursor:pointer;">🧪 No Lab Report</div>
+        <div class="section-label">Document &amp; Medical History</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;" id="doc-history-pills">
+          <span style="font-size:12.5px;color:var(--ink-50);font-style:italic;">No documented history</span>
         </div>
 
         <!-- AI Summary -->
         <div class="ai-box" style="margin-bottom:18px;">
           <div class="ai-box-header">
-            <span class="ai-label">AI Clinical Summary</span>
+            <span class="ai-label">AI Unified Clinical Summary</span>
           </div>
-          <div class="ai-text">44-year-old hypertensive male with 2-day fever (101.4°F), generalised weakness, and a 1-day-old minor hand injury. On Amlodipine 5mg. Allergy status unconfirmed. Safety engine escalated to AMBER: multiple co-existing conditions + incomplete allergy data.</div>
+          <div class="ai-text" id="doc-ai-summary-text">Awaiting unified AI clinical summary generation...</div>
           <div class="ai-disclaimer">AI-generated summary for physician review. Not a diagnosis. All clinical decisions are the RMP's sole responsibility.</div>
         </div>
 
-        <!-- Why AMBER -->
+        <!-- Escalation Reason -->
         <div style="background:var(--amber-pale);border-radius:12px;padding:14px 16px;border:1px solid #FCD34D;margin-bottom:18px;">
-          <div style="font-size:12px;font-weight:700;color:var(--amber);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">Escalation Reason</div>
-          <div style="font-size:13px;color:var(--ink-80);line-height:1.65;">
-            ⚠ Rule triggered: Multiple systemic complaints<br/>
-            ⚠ Additional clinical assessment required<br/>
-            ⚠ Insufficient information (allergy unknown)
+          <div style="font-size:12px;font-weight:700;color:var(--amber);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">Clinical Triage Reason</div>
+          <div style="font-size:13px;color:var(--ink-80);line-height:1.65;" id="doc-triage-reason">
+            Triage risk calculation completed from actual patient data.
           </div>
         </div>
 
@@ -110,16 +97,12 @@
         <!-- Doctor Decision Form -->
         <div class="section-label">Doctor Decision</div>
         <div class="form-group">
-          <label class="form-label">Diagnosis / Assessment</label>
-          <textarea class="form-textarea">Viral fever with minor hand laceration. No signs of serious bacterial infection. BP slightly elevated — likely stress-related. Allergy confirmed: None known.</textarea>
+          <label class="form-label">Diagnosis / Clinical Assessment</label>
+          <textarea class="form-textarea" id="doc-diagnosis-textarea" placeholder="Enter clinical assessment based on real patient findings..."></textarea>
         </div>
         <div class="form-group">
           <label class="form-label">Approved Treatment Plan</label>
-          <textarea class="form-textarea" style="min-height:110px;">1. Tab Paracetamol 500mg TDS × 3 days (PRN fever)
-2. ORS sachets — 2–3 L/day
-3. Wound: clean &amp; dress daily, review in 3 days
-4. Continue Amlodipine 5mg OD as before
-5. Follow-up in 5 days or earlier if symptoms worsen</textarea>
+          <textarea class="form-textarea" id="doc-plan-textarea" style="min-height:110px;" placeholder="Enter treatment plan, OTC advice, or follow-up protocol..."></textarea>
         </div>
 
         <div style="display:flex;gap:10px;flex-wrap:wrap;">
@@ -132,25 +115,12 @@
 
     <!-- Right -->
     <div class="col">
-      <!-- Pending Queue -->
+      <!-- Active Patient Overview -->
       <div class="card reveal">
-        <div class="card-header"><div class="card-title">⏳ Pending Review</div></div>
-        <div>
-          <div class="patient-row" style="background:rgba(232,105,42,.04);">
-            <div class="patient-avatar" style="background:linear-gradient(135deg,#E8692A,#F4A261)">RK</div>
-            <div>
-              <div class="patient-name">Ramesh Kumar</div>
-              <div class="patient-meta">Fever + Injury</div>
-            </div>
-            <span class="risk risk-amber"><span class="risk-dot"></span>AMBER</span>
-          </div>
-          <div class="patient-row">
-            <div class="patient-avatar" style="background:linear-gradient(135deg,#7C3AED,#A78BFA)">MK</div>
-            <div>
-              <div class="patient-name">Meena Kumari</div>
-              <div class="patient-meta">Anaemia Check</div>
-            </div>
-            <span class="risk risk-amber"><span class="risk-dot"></span>AMBER</span>
+        <div class="card-header"><div class="card-title">📋 Active Encounter Overview</div></div>
+        <div style="padding:16px;">
+          <div style="font-size:13px;color:var(--ink-70);line-height:1.6;" id="doc-active-overview">
+            Active patient context loaded from current session.
           </div>
         </div>
       </div>
@@ -159,17 +129,11 @@
       <div class="card reveal delay-1">
         <div class="card-header"><div class="card-title">📹 Teleconsultation</div></div>
         <div class="card-body" style="text-align:center;">
-          <div style="font-size:52px;margin-bottom:12px;animation:floatUp 3s ease infinite;">📹</div>
+          <div style="font-size:52px;margin-bottom:12px;">📹</div>
           <div style="font-size:14px;font-weight:600;color:var(--ink-80);margin-bottom:6px;">Video Consult via eSanjeevani</div>
           <div style="font-size:12.5px;color:var(--ink-50);margin-bottom:20px;line-height:1.5;">Full patient case pre-loaded. No repeated history-taking needed.</div>
           <button class="btn btn-primary btn-full">▶ Start Video Consultation</button>
         </div>
-      </div>
-
-      <!-- Telemedicine Note -->
-      <div style="background:var(--sky-pale);border-radius:var(--radius-lg);padding:16px 18px;border:1px solid rgba(26,111,168,.2);" class="reveal delay-2">
-        <div style="font-size:12.5px;color:var(--sky);font-weight:700;margin-bottom:6px;">📜 MoHFW Compliant</div>
-        <div style="font-size:12.5px;color:var(--ink-60);line-height:1.6;">India's Telemedicine Guidelines explicitly support health-worker-to-RMP workflow: worker facilitates, RMP retains clinical judgment and responsibility.</div>
       </div>
     </div>
   </div>
@@ -177,8 +141,6 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('[data-count]').forEach(el => {
-      GramCareAnim.animateCounter(el, parseInt(el.dataset.count), 1200);
-    });
+    initDoctorPage();
   });
 </script>

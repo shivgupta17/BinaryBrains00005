@@ -1,0 +1,42 @@
+# Dependency Directories
+node_modules/
+.pnpm-store/
+
+# Environment Variables & Secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*
+!.env.example
+
+# Build & Compiled Output
+dist/
+build/
+coverage/
+.next/
+.out/
+
+# Log Files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# System & OS Files
+.DS_Store
+Thumbs.db
+
+# IDE & Editor Settings
+.vscode/
+!.vscode/extensions.json
+.idea/
+
+# Dynamic Runtime Data & Upload Storage (if located in root)
+uploads/*
+!uploads/.gitkeep
+data/conversations/*
+!data/conversations/.gitkeep
+data/patients/*
+!data/patients/.gitkeep

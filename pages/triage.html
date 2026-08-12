@@ -23,15 +23,13 @@
     <!-- Left: Main triage output -->
     <div class="col">
 
-      <!-- TRIAGE RESULT -->
-      <div class="triage-block t-amber reveal">
+      <!-- TRIAGE RESULT BLOCK -->
+      <div class="triage-block t-amber reveal" id="triage-block">
         <div class="triage-circle" id="triage-circle">⚡</div>
         <div>
-          <div class="triage-title" style="color:var(--amber);">AMBER — Doctor Review Required</div>
-          <div class="triage-desc">Multiple systemic complaints + recent injury. Allergy status unconfirmed. Insufficient information for safe remote management.</div>
-          <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
-            <span class="risk risk-amber"><span class="risk-dot"></span>Multiple symptoms</span>
-            <span class="risk risk-amber"><span class="risk-dot"></span>Allergy unconfirmed</span>
+          <div class="triage-title" id="triage-title" style="color:var(--amber);">Triage Assessment Pending</div>
+          <div class="triage-desc" id="triage-desc">Complete voice intake or document upload to generate AI summary and triage recommendation.</div>
+          <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;" id="triage-risk-pills">
           </div>
         </div>
       </div>
@@ -40,17 +38,12 @@
       <div class="ai-box reveal delay-1">
         <div class="ai-box-header">
           <span class="ai-label">AI Preliminary Assessment</span>
-          <span class="ai-confidence">Confidence: Moderate</span>
+          <span class="ai-confidence" id="triage-ai-confidence">Confidence: Real Analysis</span>
         </div>
-        <div class="ai-text">
-          44-year-old male presenting with 2-day history of fever and generalised weakness alongside a recent minor hand injury. History of Hypertension on Amlodipine. Allergy status unconfirmed.
-          <br/><br/>
-          <strong style="color:var(--saffron-lt);">Possible concerns:</strong> Acute febrile illness · Minor superficial wound · Potential secondary infection risk.
+        <div class="ai-text" id="triage-ai-text">
+          No AI clinical summary generated yet. Complete Voice Intake or Document Upload to generate unified patient summary.
         </div>
-        <div style="margin-top:14px;display:flex;flex-wrap:wrap;">
-          <span class="pill" style="background:rgba(232,105,42,.15);color:var(--saffron-lt);border:1px solid rgba(232,105,42,.3);">🌡 Fever · 2 days</span>
-          <span class="pill" style="background:rgba(232,105,42,.15);color:var(--saffron-lt);border:1px solid rgba(232,105,42,.3);">😓 Weakness</span>
-          <span class="pill" style="background:rgba(232,105,42,.15);color:var(--saffron-lt);border:1px solid rgba(232,105,42,.3);">🤕 Hand Injury</span>
+        <div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:6px;" id="triage-symptoms-pills">
         </div>
         <div class="ai-disclaimer">⚠ AI-generated preliminary assessment — not a medical diagnosis. A Registered Medical Practitioner must review and approve all clinical decisions.</div>
       </div>
@@ -63,29 +56,9 @@
         </div>
         <div class="card-body">
           <div style="display:flex;flex-direction:column;gap:9px;" id="safety-rows">
-            <div class="safety-row" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:10px;background:var(--green-pale);">
-              <span style="font-size:13px;font-weight:600;color:var(--green);">✓ No red-flag emergency signs detected</span>
-              <span class="risk risk-green">PASS</span>
-            </div>
-            <div class="safety-row" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:10px;background:var(--amber-pale);">
-              <span style="font-size:13px;font-weight:600;color:var(--amber);">⚠ Allergy status unconfirmed</span>
-              <span class="risk risk-amber">REVIEW</span>
-            </div>
-            <div class="safety-row" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:10px;background:var(--amber-pale);">
-              <span style="font-size:13px;font-weight:600;color:var(--amber);">⚠ Multiple symptoms + wound co-exist</span>
-              <span class="risk risk-amber">REVIEW</span>
-            </div>
-            <div class="safety-row" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:10px;background:var(--green-pale);">
-              <span style="font-size:13px;font-weight:600;color:var(--green);">✓ SpO₂ within safe range (97%)</span>
-              <span class="risk risk-green">PASS</span>
-            </div>
-            <div class="safety-row" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:10px;background:var(--green-pale);">
-              <span style="font-size:13px;font-weight:600;color:var(--green);">✓ Existing medication identified</span>
-              <span class="risk risk-green">PASS</span>
-            </div>
-            <div class="safety-row" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:10px;background:var(--green-pale);">
-              <span style="font-size:13px;font-weight:600;color:var(--green);">✓ No altered consciousness reported</span>
-              <span class="risk risk-green">PASS</span>
+            <div class="safety-row" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:10px;background:var(--ink-10);">
+              <span style="font-size:13px;font-weight:600;color:var(--ink-70);">Awaiting patient context input...</span>
+              <span class="risk risk-gray">PENDING</span>
             </div>
           </div>
           <div style="margin-top:14px;padding:13px;background:var(--ink-10);border-radius:10px;font-size:12.5px;color:var(--ink-60);line-height:1.6;">
@@ -102,28 +75,28 @@
         <div class="card-header"><div class="card-title">📊 Patient Vitals</div></div>
         <div class="card-body">
           <div class="grid-2" style="gap:10px;">
-            <div class="vital-card warning">
+            <div class="vital-card normal">
               <div class="vital-icon">🌡️</div>
-              <div class="vital-value">101.4</div>
-              <div class="vital-unit">°F</div>
+              <div class="vital-value" id="triage-vital-temp" style="font-size:18px;">Not recorded</div>
+              <div class="vital-unit" id="triage-vital-temp-unit">°F</div>
               <div class="vital-label">Temperature</div>
             </div>
-            <div class="vital-card warning">
+            <div class="vital-card normal">
               <div class="vital-icon">💓</div>
-              <div class="vital-value">138/88</div>
-              <div class="vital-unit">mmHg</div>
+              <div class="vital-value" id="triage-vital-bp" style="font-size:18px;">Not recorded</div>
+              <div class="vital-unit" id="triage-vital-bp-unit">mmHg</div>
               <div class="vital-label">Blood Pressure</div>
             </div>
             <div class="vital-card normal">
               <div class="vital-icon">❤️</div>
-              <div class="vital-value">92</div>
-              <div class="vital-unit">bpm</div>
+              <div class="vital-value" id="triage-vital-hr" style="font-size:18px;">Not recorded</div>
+              <div class="vital-unit" id="triage-vital-hr-unit">bpm</div>
               <div class="vital-label">Heart Rate</div>
             </div>
             <div class="vital-card normal">
               <div class="vital-icon">🫁</div>
-              <div class="vital-value">97%</div>
-              <div class="vital-unit">SpO₂</div>
+              <div class="vital-value" id="triage-vital-spo2" style="font-size:18px;">Not recorded</div>
+              <div class="vital-unit" id="triage-vital-spo2-unit">%</div>
               <div class="vital-label">Oxygen Sat.</div>
             </div>
           </div>
@@ -133,19 +106,8 @@
       <div class="card reveal delay-1">
         <div class="card-header"><div class="card-title">Recommended Actions</div></div>
         <div class="card-body">
-          <div style="display:flex;flex-direction:column;gap:9px;margin-bottom:20px;">
-            <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:10px;background:var(--forest-pale);border:1px solid rgba(27,107,74,.2);cursor:pointer;" onclick="navigateTo('protocol')">
-              <span style="font-size:18px;">📋</span>
-              <span style="font-size:13px;font-weight:600;color:var(--forest);">Apply first-aid wound protocol →</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:10px;background:var(--sky-pale);border:1px solid rgba(26,111,168,.2);cursor:pointer;" onclick="navigateTo('doctor')">
-              <span style="font-size:18px;">👨‍⚕️</span>
-              <span style="font-size:13px;font-weight:600;color:var(--sky);">Request remote doctor consultation →</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:10px;background:var(--amber-pale);border:1px solid rgba(217,119,6,.2);">
-              <span style="font-size:18px;">⚠️</span>
-              <span style="font-size:13px;font-weight:600;color:var(--amber);">Confirm allergy status urgently</span>
-            </div>
+          <div style="display:flex;flex-direction:column;gap:9px;margin-bottom:20px;" id="triage-actions-list">
+            <div style="font-size:13px;color:var(--ink-50);font-style:italic;">No custom actions generated yet. Complete patient intake.</div>
           </div>
           <button class="btn btn-primary btn-full" onclick="navigateTo('protocol')">📋 Open First-Aid Protocol</button>
           <button class="btn btn-ghost btn-full" style="margin-top:9px;" onclick="navigateTo('doctor')">👨‍⚕️ Send to Doctor Dashboard</button>
@@ -154,11 +116,9 @@
 
       <!-- Explainability Statement -->
       <div style="background:var(--ink);border-radius:var(--radius-lg);padding:18px 20px;color:white;" class="reveal delay-2">
-        <div style="font-size:11px;letter-spacing:1.3px;text-transform:uppercase;color:var(--saffron-lt);font-weight:700;margin-bottom:8px;">Why AMBER?</div>
-        <div style="font-size:13px;color:rgba(255,255,255,.7);line-height:1.65;">
-          Safety rule triggered: Multiple systemic complaints<br/>
-          Additional clinical assessment required<br/>
-          Allergy confirmation pending
+        <div style="font-size:11px;letter-spacing:1.3px;text-transform:uppercase;color:var(--saffron-lt);font-weight:700;margin-bottom:8px;" id="triage-why-title">Why Clinical Triage?</div>
+        <div style="font-size:13px;color:rgba(255,255,255,.7);line-height:1.65;" id="triage-why-text">
+          Triage recommendation calculated from real patient context and clinician-reviewed safety rules.
         </div>
         <div style="margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,.1);font-size:11.5px;color:rgba(255,255,255,.35);font-style:italic;">"Not only: Refer patient. But: why."</div>
       </div>
@@ -169,8 +129,6 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    GramCareAnim.animateTriageCircle();
-    GramCareAnim.initVitalsPulse();
     initTriagePage();
   });
 </script>

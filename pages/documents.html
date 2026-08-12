@@ -2,7 +2,7 @@
 <div class="page-enter">
   <div class="page-header">
     <h1>📄 Documents &amp; OCR Intelligence</h1>
-    <p>Photograph prescriptions, lab reports, and injury images. AI extracts structured medical data automatically using Docling OCR.</p>
+    <p>Photograph prescriptions, lab reports, and injury images. AI extracts structured medical data automatically using PaddleOCR &amp; Gemini AI.</p>
   </div>
 
   <div class="workflow-nav">
@@ -14,11 +14,9 @@
     <div class="wf-arrow">›</div>
     <div class="wf-step active"><div class="wf-num">4</div>Documents</div>
     <div class="wf-arrow">›</div>
-    <div class="wf-step"><div class="wf-num">5</div>AI Summary</div>
+    <div class="wf-step" onclick="navigateTo('triage')"><div class="wf-num">5</div>AI Summary &amp; Triage</div>
     <div class="wf-arrow">›</div>
-    <div class="wf-step" onclick="navigateTo('triage')"><div class="wf-num">6</div>Triage</div>
-    <div class="wf-arrow">›</div>
-    <div class="wf-step" onclick="navigateTo('doctor')"><div class="wf-num">7</div>Doctor</div>
+    <div class="wf-step" onclick="navigateTo('doctor')"><div class="wf-num">6</div>Doctor</div>
   </div>
 
   <div class="grid-2">
@@ -26,7 +24,7 @@
     <div class="card reveal">
       <div class="card-header">
         <div class="card-title">Upload Documents</div>
-        <div class="card-subtitle">Camera · Gallery · File — any format</div>
+        <div class="card-subtitle">Camera · Gallery · File — JPG, PNG, WEBP, PDF</div>
       </div>
       <div class="card-body">
         <div class="upload-zone" style="margin-bottom:12px;" id="upload-rx">
@@ -53,51 +51,52 @@
     </div>
 
     <!-- OCR Results -->
-    <div class="card reveal delay-1">
+    <div class="card reveal delay-1" id="ocr-results-card">
       <div class="card-header">
         <div>
-          <div class="card-title">✦ OCR Extracted Data</div>
-          <div class="card-subtitle">From: Prescription — Dr. Sharma · 15 Nov 2025</div>
+          <div class="card-title">✦ Real OCR Extracted Data</div>
+          <div class="card-subtitle" id="ocr-doc-subtitle">Upload a document to run PaddleOCR &amp; Gemini AI</div>
         </div>
-        <span class="pill pill-green">✓ Processed</span>
+        <span class="pill pill-green" id="ocr-status-badge">Ready</span>
       </div>
       <div class="card-body">
         <!-- Medications -->
         <div style="background:var(--sky-pale);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:14px;border:1px solid rgba(26,111,168,.15);">
           <div style="font-size:12.5px;font-weight:700;color:var(--sky);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;">Detected Medications</div>
-          <div style="display:flex;flex-wrap:wrap;">
-            <span class="pill pill-blue">Amlodipine 5mg</span>
-            <span class="pill pill-blue">Paracetamol 500mg</span>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;" id="ocr-medications-container">
+            <span style="font-size:12.5px;color:var(--ink-50);font-style:italic;">No medications detected in uploaded document</span>
           </div>
         </div>
 
         <!-- History -->
         <div style="background:var(--saffron-pale);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:14px;border:1px solid rgba(232,105,42,.15);">
           <div style="font-size:12.5px;font-weight:700;color:var(--saffron);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;">Detected History</div>
-          <div style="display:flex;flex-wrap:wrap;">
-            <span class="pill pill-orange">Hypertension (Stage 1)</span>
-            <span class="pill pill-gray">Fever episode — Oct 2025</span>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;" id="ocr-history-container">
+            <span style="font-size:12.5px;color:var(--ink-50);font-style:italic;">No medical history detected in uploaded document</span>
           </div>
         </div>
 
         <!-- Safety Flag -->
         <div style="background:var(--amber-pale);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:14px;border:1.5px solid #FCD34D;">
-          <div style="font-size:12.5px;font-weight:700;color:var(--amber);margin-bottom:6px;">⚠ Safety Flag Detected</div>
-          <div style="font-size:13px;color:var(--ink-80);line-height:1.6;">Allergy information not found in any uploaded document. Health worker must <strong>confirm verbally</strong> before any medication suggestion is forwarded to the Medicine Gate.</div>
+          <div style="font-size:12.5px;font-weight:700;color:var(--amber);margin-bottom:6px;">⚠ Safety Flag Status</div>
+          <div style="font-size:13px;color:var(--ink-80);line-height:1.6;" id="ocr-safety-container">
+            Allergy information not found in uploaded document. Health worker must <strong>confirm verbally</strong>.
+          </div>
         </div>
 
         <!-- Wound Vision -->
-        <div style="background:var(--forest-pale);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:14px;border:1px solid rgba(27,107,74,.15);">
+        <div style="background:var(--forest-pale);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:14px;border:1px solid rgba(27,107,74,.15);display:none;" id="ocr-wound-container">
           <div style="font-size:12.5px;font-weight:700;color:var(--forest);margin-bottom:6px;">🩹 Wound Assessment (AI Vision)</div>
-          <div style="font-size:13px;color:var(--ink-80);line-height:1.6;">Minor superficial abrasion on dorsum of right hand. No visible deep laceration, arterial bleeding, or signs of infection detected. Appropriate for wound-care protocol.</div>
+          <div style="font-size:13px;color:var(--ink-80);line-height:1.6;" id="ocr-wound-text"></div>
         </div>
 
-        <!-- Audit notice -->
-        <div style="background:var(--ink-10);border-radius:var(--radius-sm);padding:11px 14px;margin-bottom:20px;">
-          <div style="font-size:11.5px;color:var(--ink-50);line-height:1.5;">Original documents preserved alongside extracted data. Physician can verify originals during review.</div>
+        <!-- Extracted Text Preview -->
+        <div style="background:var(--ink-10);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:20px;">
+          <div style="font-size:11.5px;font-weight:700;color:var(--ink-70);margin-bottom:4px;">Full OCR Text Extracted:</div>
+          <div style="font-size:12px;color:var(--ink-80);font-family:monospace;white-space:pre-wrap;max-height:120px;overflow-y:auto;" id="ocr-text-container">No document uploaded yet.</div>
         </div>
 
-        <button class="btn btn-primary btn-full btn-lg" onclick="navigateTo('triage')">
+        <button class="btn btn-primary btn-full btn-lg" onclick="generatePatientAiSummaryAndNavigate()">
           → Generate AI Summary &amp; Triage
         </button>
       </div>

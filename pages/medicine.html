@@ -5,52 +5,18 @@
     <p>AI suggests. Doctor approves. Prescribing authority remains exclusively with the RMP as per India's Telemedicine Practice Guidelines 2020.</p>
   </div>
 
-  <div class="grid-2">
-    <!-- Medication Checks -->
-    <div class="col">
-      <!-- Paracetamol — PENDING -->
-      <div class="med-gate reveal">
-        <div class="med-gate-header">
-          <span style="font-size:20px;">💊</span>
-          <div>
-            <div class="med-gate-name">Paracetamol 500mg</div>
-            <div style="font-size:12px;color:var(--ink-50);">Antipyretic · OTC Category List O</div>
-          </div>
-          <span class="risk risk-amber" style="margin-left:auto;"><span class="risk-dot"></span>PENDING</span>
-        </div>
-        <div class="med-gate-body stagger-list">
-          <div class="check-row"><span class="check-ok">✓</span> Patient age checked — 44 yrs, no restriction</div>
-          <div class="check-row"><span class="check-warn">?</span> Allergy information — <strong>not yet confirmed</strong></div>
-          <div class="check-row"><span class="check-ok">✓</span> Not pregnant (male patient)</div>
-          <div class="check-row"><span class="check-ok">✓</span> No contraindication with Amlodipine 5mg detected</div>
-          <div class="check-row"><span class="check-ok">✓</span> No duplicate therapy detected in medication list</div>
-          <div class="check-row"><span class="check-ok">✓</span> Protocol eligibility: Fever ≥ 100.4°F → eligible</div>
-          <div style="margin-top:12px;padding:12px;background:var(--amber-pale);border-radius:8px;border:1.5px solid #FCD34D;">
-            <div style="font-size:12.5px;font-weight:700;color:var(--amber);">⏳ AWAITING DOCTOR APPROVAL</div>
-            <div style="font-size:12px;color:var(--ink-60);margin-top:4px;line-height:1.5;">Allergy status must be confirmed before administration. Forwarded to doctor dashboard.</div>
-          </div>
-        </div>
-      </div>
+  <!-- Dynamic Active Patient Banner -->
+  <div id="medicine-patient-banner" style="background:var(--sky-pale);border-radius:var(--radius-lg);padding:16px 20px;border:1.5px solid rgba(14,165,233,.2);margin-bottom:20px;" class="reveal">
+    <div style="font-size:12px;font-weight:700;color:var(--sky);letter-spacing:.05em;text-transform:uppercase;">ACTIVE CLINICAL EVALUATION</div>
+    <div id="medicine-patient-name" style="font-size:18px;font-weight:700;color:var(--ink);margin-top:2px;">Active Patient</div>
+    <div id="medicine-patient-subtitle" style="font-size:13.5px;color:var(--ink-60);margin-top:4px;">Evaluating medication safety against real patient context...</div>
+  </div>
 
-      <!-- ORS — APPROVED -->
-      <div class="med-gate reveal delay-1">
-        <div class="med-gate-header">
-          <span style="font-size:20px;">🧴</span>
-          <div>
-            <div class="med-gate-name">ORS Sachet (WHO Formula)</div>
-            <div style="font-size:12px;color:var(--ink-50);">Oral Rehydration · Protocol Support</div>
-          </div>
-          <span class="risk risk-green" style="margin-left:auto;"><span class="risk-dot"></span>APPROVED</span>
-        </div>
-        <div class="med-gate-body stagger-list">
-          <div class="check-row"><span class="check-ok">✓</span> No allergy risk</div>
-          <div class="check-row"><span class="check-ok">✓</span> No medication interaction</div>
-          <div class="check-row"><span class="check-ok">✓</span> Protocol-recommended for fever + weakness + dehydration</div>
-          <div style="margin-top:12px;padding:12px;background:var(--green-pale);border-radius:8px;border:1.5px solid #86EFAC;">
-            <div style="font-size:12.5px;font-weight:700;color:var(--green);">✓ APPROVED — ADMINISTER NOW</div>
-            <div style="font-size:12px;color:var(--ink-60);margin-top:4px;">2–3 sachets/day in clean water. Record in encounter log.</div>
-          </div>
-        </div>
+  <div class="grid-2">
+    <!-- Dynamic Medication Cards (Left Column) -->
+    <div id="medicine-cards-container" class="col">
+      <div style="padding:24px;background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--ink-10);text-align:center;color:var(--ink-50);" class="reveal">
+        ⌛ Running 6-Layer Medication Safety Engine on real patient context...
       </div>
     </div>
 

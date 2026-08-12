@@ -28,7 +28,7 @@
       <div class="card-header">
         <div>
           <div class="card-title">Voice Recording</div>
-          <div class="card-subtitle">Ramesh Kumar · 44 yrs · Hindi preferred</div>
+          <div class="card-subtitle" id="intake-patient-subtitle">Current Patient Encounter</div>
         </div>
         <span class="risk risk-green"><span class="risk-dot"></span>Ready</span>
       </div>
@@ -57,12 +57,34 @@
           </div>
         </div>
 
-        <!-- Live Transcript Box -->
+        <!-- Audio Preview Player -->
+        <div id="audio-preview-wrap" style="margin-top:16px;display:none;">
+          <audio id="audio-preview" controls style="width:100%;height:38px;border-radius:10px;"></audio>
+        </div>
+
+        <!-- Stage 1 & Stage 2 Action Buttons -->
+        <div style="margin-top:16px;display:flex;flex-direction:column;gap:10px;">
+          <button class="btn btn-forest btn-lg btn-full" id="done-btn" style="display:none;" onclick="submitVoiceIntake()">
+            ✓ Done (Submit Voice Intake)
+          </button>
+          <button class="btn btn-sky btn-lg btn-full" id="ai-suggestion-btn" style="display:none;" onclick="requestAiAnalysis()">
+            ✦ AI Suggestion (Analyze Client Problem)
+          </button>
+        </div>
+
+        <!-- Live & Original/English Transcript Box -->
         <div style="margin-top:24px;background:var(--ink-10);border-radius:var(--radius-md);padding:16px 18px;text-align:left;">
-          <div class="section-label">Live Transcription</div>
-          <p style="font-size:14px;color:var(--ink-80);line-height:1.75;font-style:italic;min-height:48px;" id="transcript-live">
-            "Patient ko do din se bukhar aur weakness hai aur haath par choti si injury hai. Koi allergy nahi pata, BP ki dawai le rahe hain..."
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div class="section-label" style="margin-bottom:0;">Live &amp; Processed Transcript</div>
+            <span class="pill pill-gray" id="lang-detected-badge" style="display:none;">Language</span>
+          </div>
+          <p style="font-size:14px;color:var(--ink-50);line-height:1.75;font-style:italic;min-height:48px;margin-top:10px;" id="transcript-live">
+            "No voice recording submitted yet. Tap the microphone button above to record."
           </p>
+          <div id="english-translation-wrap" style="display:none;margin-top:12px;padding-top:10px;border-top:1px dashed var(--ink-20);">
+            <div class="section-label" style="font-size:10px;color:var(--sky);">English Translation</div>
+            <p style="font-size:13.5px;color:var(--ink-80);line-height:1.65;" id="transcript-english"></p>
+          </div>
         </div>
 
         <!-- Vitals quick entry -->
@@ -71,74 +93,85 @@
           <div class="form-row-3" style="gap:10px;">
             <div>
               <label class="form-label">Temp °F</label>
-              <input class="form-input" value="101.4" style="text-align:center;"/>
+              <input class="form-input" id="intake-temp" placeholder="e.g. 98.6" value="" style="text-align:center;" onchange="updatePatientVitalsFromIntake()"/>
             </div>
             <div>
               <label class="form-label">BP mmHg</label>
-              <input class="form-input" value="138/88" style="text-align:center;"/>
+              <input class="form-input" id="intake-bp" placeholder="e.g. 120/80" value="" style="text-align:center;" onchange="updatePatientVitalsFromIntake()"/>
             </div>
             <div>
               <label class="form-label">SpO₂ %</label>
-              <input class="form-input" value="97" style="text-align:center;"/>
+              <input class="form-input" id="intake-spo2" placeholder="e.g. 98" value="" style="text-align:center;" onchange="updatePatientVitalsFromIntake()"/>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- AI Extracted Panel -->
-    <div class="card reveal delay-1">
+    <!-- REAL GEMINI AI PROBLEM ANALYSIS RESULT CARD -->
+    <div class="card reveal delay-1" id="ai-analysis-card" style="display:none;">
       <div class="card-header">
-        <div class="card-title">✦ AI Extracted Information</div>
-        <span class="pill pill-orange">Auto-structured</span>
+        <div class="card-title">✦ Real Gemini AI Problem Analysis</div>
+        <span class="pill pill-green">Gemini AI Output</span>
       </div>
       <div class="card-body">
-        <div class="section-label">Chief Complaints</div>
-        <div style="margin-bottom:18px;">
-          <div class="extracted-item" style="display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--ink-10);transition:background .3s;">
-            <span style="font-size:14px;color:var(--ink-80);font-weight:500;">🌡️ Fever</span>
-            <span class="pill pill-orange">2 days</span>
+        <div id="ai-analysis-results" style="padding:20px;border-radius:var(--radius-lg);background:linear-gradient(135deg,#0F1923 0%,#1A2840 100%);color:white;border:2px solid var(--saffron);">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+            <span style="font-size:10.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--saffron-lt);font-weight:700;">CLIENT PROBLEM IDENTIFIED</span>
+            <span class="risk risk-amber" id="analysis-severity-badge" style="font-size:10px;">MEDIUM</span>
           </div>
-          <div class="extracted-item" style="display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--ink-10);transition:background .3s;">
-            <span style="font-size:14px;color:var(--ink-80);font-weight:500;">😓 Weakness</span>
-            <span class="pill pill-orange">2 days</span>
+
+          <!-- VISUALLY HIGHLIGHTED MAIN PROBLEM -->
+          <div style="background:linear-gradient(135deg,rgba(232,105,42,.3),rgba(244,162,97,.15));border:1.5px solid var(--saffron);border-radius:var(--radius-md);padding:14px 16px;margin-bottom:16px;">
+            <div style="font-size:10px;color:var(--saffron-lt);font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px;">Main Client Problem</div>
+            <div style="font-family:var(--font-serif);font-size:18px;font-weight:700;color:white;" id="analysis-main-problem"></div>
           </div>
-          <div class="extracted-item" style="display:flex;align-items:center;justify-content:space-between;padding:11px 0;transition:background .3s;">
-            <span style="font-size:14px;color:var(--ink-80);font-weight:500;">🤕 Hand Injury</span>
-            <span class="pill pill-orange">1 day</span>
+
+          <!-- PROBLEM SUMMARY -->
+          <div style="margin-bottom:14px;">
+            <div class="section-label" style="color:rgba(255,255,255,.5);margin-bottom:4px;">Problem Summary</div>
+            <p style="font-size:13px;color:rgba(255,255,255,.85);line-height:1.6;" id="analysis-summary"></p>
+          </div>
+
+          <!-- CATEGORY & CONFIDENCE -->
+          <div class="form-row" style="margin-bottom:14px;gap:10px;">
+            <div style="background:rgba(255,255,255,.07);border-radius:10px;padding:10px 12px;">
+              <div style="font-size:10px;color:rgba(255,255,255,.45);">Category</div>
+              <div style="font-size:12.5px;font-weight:700;color:white;" id="analysis-category"></div>
+            </div>
+            <div style="background:rgba(255,255,255,.07);border-radius:10px;padding:10px 12px;">
+              <div style="font-size:10px;color:rgba(255,255,255,.45);">Confidence</div>
+              <div style="font-size:12.5px;font-weight:700;color:#4ADE80;" id="analysis-confidence"></div>
+            </div>
+          </div>
+
+          <!-- KEY ISSUES -->
+          <div style="margin-bottom:14px;">
+            <div class="section-label" style="color:rgba(255,255,255,.5);margin-bottom:4px;">Key Issues</div>
+            <ul style="padding-left:18px;font-size:12.5px;color:rgba(255,255,255,.85);line-height:1.7;" id="analysis-key-issues"></ul>
+          </div>
+
+          <!-- IMPORTANT DETAILS -->
+          <div style="margin-bottom:14px;">
+            <div class="section-label" style="color:rgba(255,255,255,.5);margin-bottom:4px;">Important Details</div>
+            <ul style="padding-left:18px;font-size:12.5px;color:rgba(255,255,255,.85);line-height:1.7;" id="analysis-details"></ul>
+          </div>
+
+          <!-- AI SUGGESTIONS -->
+          <div style="margin-bottom:14px;">
+            <div class="section-label" style="color:rgba(255,255,255,.5);margin-bottom:4px;">AI Suggestions</div>
+            <ul style="padding-left:18px;font-size:12.5px;color:rgba(255,255,255,.85);line-height:1.7;" id="analysis-suggestions"></ul>
+          </div>
+
+          <!-- RECOMMENDED NEXT STEP -->
+          <div style="background:rgba(27,107,74,.3);border:1px solid rgba(27,107,74,.5);border-radius:10px;padding:12px 14px;margin-bottom:16px;">
+            <div style="font-size:10px;color:#4ADE80;font-weight:700;text-transform:uppercase;margin-bottom:3px;">Recommended Next Step</div>
+            <div style="font-size:12.5px;color:white;font-weight:600;" id="analysis-next-step"></div>
           </div>
         </div>
 
-        <div class="section-label">Patient Snapshot</div>
-        <div class="form-row-3" style="margin-bottom:18px;">
-          <div style="background:var(--ink-10);border-radius:10px;padding:12px;text-align:center;">
-            <div style="font-size:10.5px;color:var(--ink-50);">Age</div>
-            <div style="font-family:var(--font-ui);font-size:20px;font-weight:700;color:var(--ink);">44</div>
-          </div>
-          <div style="background:var(--ink-10);border-radius:10px;padding:12px;text-align:center;">
-            <div style="font-size:10.5px;color:var(--ink-50);">Sex</div>
-            <div style="font-family:var(--font-ui);font-size:20px;font-weight:700;color:var(--ink);">M</div>
-          </div>
-          <div style="background:var(--ink-10);border-radius:10px;padding:12px;text-align:center;">
-            <div style="font-size:10.5px;color:var(--ink-50);">Lang</div>
-            <div style="font-family:var(--font-ui);font-size:20px;font-weight:700;color:var(--ink);">HI</div>
-          </div>
-        </div>
-
-        <div class="section-label">Flags &amp; Alerts</div>
-        <div style="display:flex;flex-wrap:wrap;margin-bottom:18px;">
-          <span class="pill pill-orange">⚠ Allergy unknown</span>
-          <span class="pill pill-green">✓ BP medication noted</span>
-          <span class="pill pill-blue">📋 History: HTN</span>
-        </div>
-
-        <div class="section-label">Additional Notes</div>
-        <div class="form-group" style="margin-bottom:20px;">
-          <textarea class="form-textarea" style="min-height:70px;">Patient also mentions mild headache since yesterday. No nausea or vomiting.</textarea>
-        </div>
-
-        <button class="btn btn-primary btn-full btn-lg" onclick="navigateTo('documents')">
-          → Proceed to Document Upload
+        <button class="btn btn-primary btn-full btn-lg" style="margin-top:16px;" onclick="askPatientDocuments()">
+          → Proceed to Document Check
         </button>
       </div>
     </div>

@@ -9,10 +9,10 @@
   <div class="card reveal" style="margin-bottom:22px;">
     <div class="card-header">
       <div>
-        <div class="card-title">✅ Encounter Completed — Ramesh Kumar</div>
-        <div class="card-subtitle">Encounter #RJP-2026-0847 · Reviewed by Dr. Priya Mehta · 11:58 AM · 26 Aug 2026</div>
+        <div class="card-title" id="records-encounter-title">✅ Encounter Packet — Current Patient</div>
+        <div class="card-subtitle" id="records-encounter-subtitle">Active encounter digital record</div>
       </div>
-      <span class="risk risk-green"><span class="risk-dot"></span>Closed</span>
+      <span class="risk risk-green" id="records-status-badge"><span class="risk-dot"></span>ACTIVE</span>
     </div>
     <div class="card-body">
       <div class="grid-2" style="gap:22px;margin-bottom:22px;">
@@ -22,27 +22,19 @@
           <div style="display:flex;flex-direction:column;gap:9px;" class="stagger-list">
             <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;background:var(--green-pale);">
               <span style="color:var(--green);font-size:16px;">✓</span>
-              <span style="font-size:13.5px;font-weight:500;">Clinical case reviewed by RMP</span>
+              <span style="font-size:13.5px;font-weight:500;">Patient Demographics Registered</span>
             </div>
             <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;background:var(--green-pale);">
               <span style="color:var(--green);font-size:16px;">✓</span>
-              <span style="font-size:13.5px;font-weight:500;">First-aid instructions recorded</span>
+              <span style="font-size:13.5px;font-weight:500;">Voice Intake Transcribed &amp; Analyzed</span>
             </div>
             <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;background:var(--green-pale);">
               <span style="color:var(--green);font-size:16px;">✓</span>
-              <span style="font-size:13.5px;font-weight:500;">Clinical decision documented</span>
+              <span style="font-size:13.5px;font-weight:500;">Document OCR Structured Extraction</span>
             </div>
             <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;background:var(--green-pale);">
               <span style="color:var(--green);font-size:16px;">✓</span>
-              <span style="font-size:13.5px;font-weight:500;">Follow-up scheduled: +5 days</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;background:var(--green-pale);">
-              <span style="color:var(--green);font-size:16px;">✓</span>
-              <span style="font-size:13.5px;font-weight:500;">Patient record updated in EHR</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;background:var(--green-pale);">
-              <span style="color:var(--green);font-size:16px;">✓</span>
-              <span style="font-size:13.5px;font-weight:500;">Digital prescription issued</span>
+              <span style="font-size:13.5px;font-weight:500;">Unified AI Summary &amp; Triage Generated</span>
             </div>
           </div>
         </div>
@@ -50,16 +42,8 @@
         <!-- Audit Timeline -->
         <div>
           <div class="section-label">Audit Timeline</div>
-          <div style="background:var(--ink-10);border-radius:var(--radius-md);padding:16px;font-family:var(--font-mono);font-size:12.5px;line-height:2.1;color:var(--ink-80);">
-            <div class="audit-line">09:20 — Patient registered</div>
-            <div class="audit-line">11:32 — Voice intake completed</div>
-            <div class="audit-line">11:34 — Documents OCR processed</div>
-            <div class="audit-line">11:35 — AI summary generated</div>
-            <div class="audit-line">11:36 — Triage: <strong style="color:var(--amber);">AMBER</strong></div>
-            <div class="audit-line">11:40 — Sent to doctor queue</div>
-            <div class="audit-line">11:50 — Dr. Mehta opened case</div>
-            <div class="audit-line">11:58 — <strong style="color:var(--green);">Doctor approved treatment</strong></div>
-            <div class="audit-line">11:59 — Digital prescription issued</div>
+          <div style="background:var(--ink-10);border-radius:var(--radius-md);padding:16px;font-family:var(--font-mono);font-size:12.5px;line-height:2.1;color:var(--ink-80);" id="records-audit-timeline">
+            <div class="audit-line">Encounter initialized...</div>
           </div>
         </div>
       </div>
@@ -71,45 +55,17 @@
       <div class="grid-2" style="gap:16px;margin-top:14px;">
         <div style="background:rgba(217,119,6,.06);border-radius:var(--radius-md);padding:18px;border:1px solid rgba(217,119,6,.18);">
           <div style="font-size:11px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;">🤖 AI Preliminary Assessment</div>
-          <div style="font-size:13px;color:var(--ink-80);line-height:1.65;">Acute febrile illness + minor superficial injury. Confidence: Moderate. Recommended doctor review due to multiple co-existing conditions and unconfirmed allergy.</div>
-          <div style="margin-top:10px;"><span class="risk risk-amber"><span class="risk-dot"></span>AMBER</span></div>
+          <div style="font-size:13px;color:var(--ink-80);line-height:1.65;" id="records-ai-text">
+            No AI summary generated yet.
+          </div>
+          <div style="margin-top:10px;" id="records-ai-risk"></div>
         </div>
         <div style="background:rgba(22,163,74,.06);border-radius:var(--radius-md);padding:18px;border:1px solid rgba(22,163,74,.18);">
           <div style="font-size:11px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;">👨‍⚕️ Doctor Decision (Final)</div>
-          <div style="font-size:13px;color:var(--ink-80);line-height:1.65;">Viral fever + minor laceration. No serious infection. Paracetamol + ORS + wound care. Continue Amlodipine. Follow-up in 5 days. Allergy confirmed: None known.</div>
-          <div style="margin-top:10px;"><span class="risk risk-green"><span class="risk-dot"></span>APPROVED</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Past Encounters -->
-  <div class="card reveal delay-1">
-    <div class="card-header">
-      <div class="card-title">All Encounters — Ramesh Kumar</div>
-      <button class="btn btn-ghost btn-sm">Export PDF</button>
-    </div>
-    <div>
-      <div class="patient-row">
-        <div style="width:38px;height:38px;border-radius:10px;background:var(--green-pale);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">✅</div>
-        <div style="flex:1;">
-          <div class="patient-name">Encounter #RJP-2026-0847</div>
-          <div class="patient-meta">Fever · Weakness · Hand Injury · Dr. Priya Mehta</div>
-        </div>
-        <div style="text-align:right;">
-          <span class="risk risk-green"><span class="risk-dot"></span>Closed</span>
-          <div class="patient-time">26 Aug 2026</div>
-        </div>
-      </div>
-      <div class="patient-row">
-        <div style="width:38px;height:38px;border-radius:10px;background:var(--forest-pale);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">🩺</div>
-        <div style="flex:1;">
-          <div class="patient-name">Encounter #RJP-2026-0412</div>
-          <div class="patient-meta">Follow-up: BP monitoring · Dr. Anand Rao</div>
-        </div>
-        <div style="text-align:right;">
-          <span class="risk risk-green"><span class="risk-dot"></span>Closed</span>
-          <div class="patient-time">10 Jul 2026</div>
+          <div style="font-size:13px;color:var(--ink-80);line-height:1.65;" id="records-doc-text">
+            Doctor review pending.
+          </div>
+          <div style="margin-top:10px;" id="records-doc-status"></div>
         </div>
       </div>
     </div>

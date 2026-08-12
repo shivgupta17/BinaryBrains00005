@@ -107,14 +107,14 @@
       </div>
       <div class="scroll-list stagger-list" style="max-height:320px;">
         <div class="patient-row" onclick="navigateTo('triage')">
-          <div class="patient-avatar" style="background:linear-gradient(135deg,#E8692A,#F4A261)">RK</div>
+          <div class="patient-avatar" style="background:linear-gradient(135deg,#E8692A,#F4A261)" id="dash-avatar">PAT</div>
           <div style="flex:1;">
-            <div class="patient-name">Ramesh Kumar, 44</div>
-            <div class="patient-meta">Fever · Weakness · Hand Injury</div>
+            <div class="patient-name" id="dash-p-name">Active Encounter</div>
+            <div class="patient-meta" id="dash-p-meta">Voice &amp; OCR clinical data</div>
           </div>
           <div class="patient-row-right">
-            <span class="risk risk-amber"><span class="risk-dot"></span>AMBER</span>
-            <div class="patient-time">11:32 AM</div>
+            <span class="risk risk-amber" id="dash-p-risk"><span class="risk-dot"></span>ACTIVE</span>
+            <div class="patient-time">Just now</div>
           </div>
         </div>
         <div class="patient-row">

@@ -16,60 +16,66 @@
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">First Name *</label>
-            <input class="form-input" placeholder="e.g. Ramesh" value="Ramesh"/>
+            <input class="form-input" id="reg-first-name" placeholder="e.g. Sunita" value=""/>
           </div>
           <div class="form-group">
             <label class="form-label">Last Name *</label>
-            <input class="form-input" placeholder="e.g. Kumar" value="Kumar"/>
+            <input class="form-input" id="reg-last-name" placeholder="e.g. Devi" value=""/>
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">Age *</label>
-            <input class="form-input" type="number" placeholder="Years" value="44"/>
+            <input class="form-input" id="reg-age" type="number" placeholder="Years" value=""/>
           </div>
           <div class="form-group">
             <label class="form-label">Sex *</label>
-            <select class="form-select">
-              <option>Male</option><option>Female</option><option>Other</option>
+            <select class="form-select" id="reg-sex">
+              <option value="Female">Female</option>
+              <option value="Male">Male</option>
+              <option value="Other">Other</option>
             </select>
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">Village / Ward *</label>
-            <input class="form-input" placeholder="e.g. Rajpur" value="Rajpur"/>
+            <input class="form-input" id="reg-village" placeholder="e.g. Rampur" value=""/>
           </div>
           <div class="form-group">
             <label class="form-label">Preferred Language</label>
-            <select class="form-select">
-              <option>Hindi</option><option>English</option><option>Marathi</option><option>Bengali</option><option>Tamil</option>
+            <select class="form-select" id="reg-language">
+              <option value="Hindi">Hindi</option>
+              <option value="English">English</option>
+              <option value="Marathi">Marathi</option>
+              <option value="Bengali">Bengali</option>
+              <option value="Tamil">Tamil</option>
             </select>
           </div>
         </div>
         <div class="form-group">
           <label class="form-label">Phone (optional)</label>
-          <input class="form-input" placeholder="+91 98765 XXXXX"/>
+          <input class="form-input" id="reg-phone" placeholder="+91 98765 XXXXX"/>
         </div>
         <div class="form-group">
           <label class="form-label">Known Allergies</label>
-          <input class="form-input" placeholder="Penicillin, Sulfa… or None known"/>
+          <input class="form-input" id="reg-allergies" placeholder="e.g. Penicillin... or leave blank if none"/>
           <div class="form-hint">⚠ Critical for medicine safety gate. Confirm verbally.</div>
         </div>
         <div class="form-group">
           <label class="form-label">Existing Conditions</label>
-          <input class="form-input" placeholder="Hypertension, Diabetes… or None" value="Hypertension"/>
+          <input class="form-input" id="reg-conditions" placeholder="e.g. Diabetes... or leave blank if none" value=""/>
         </div>
         <div class="form-group">
           <label class="form-label">Current Medications</label>
-          <textarea class="form-textarea" placeholder="List medications with dose…">Amlodipine 5mg OD</textarea>
+          <textarea class="form-textarea" id="reg-medications" placeholder="List medications with dose... or leave blank if none"></textarea>
         </div>
         <div class="form-group">
           <label class="form-label">Pregnancy Status</label>
-          <select class="form-select">
-            <option>Not applicable (Male)</option>
-            <option>Not pregnant</option>
-            <option>Pregnant — specify trimester</option>
+          <select class="form-select" id="reg-pregnancy">
+            <option value="Not applicable">Not applicable</option>
+            <option value="Not pregnant">Not pregnant</option>
+            <option value="Pregnant">Pregnant</option>
           </select>
         </div>
       </div>
@@ -83,7 +89,7 @@
           <div class="upload-zone">
             <div class="upload-icon">📷</div>
             <div class="upload-title">Capture or Upload Photo</div>
-            <div class="upload-sub">Used for patient identification & records</div>
+            <div class="upload-sub">Used for patient identification &amp; records</div>
           </div>
         </div>
       </div>
@@ -94,7 +100,7 @@
         <div class="card-body">
           <div class="form-group" style="margin-bottom:0;">
             <label class="form-label">ABHA Number (optional)</label>
-            <input class="form-input" placeholder="14-digit ABHA ID"/>
+            <input class="form-input" id="reg-abha" placeholder="14-digit ABHA ID"/>
             <div class="form-hint">Links patient to National Health Stack automatically.</div>
           </div>
         </div>
@@ -108,18 +114,14 @@
             Patient or guardian informed about teleconsultation process, AI-assisted triage, and data handling as per <strong>India's Telemedicine Practice Guidelines 2020</strong>.
           </p>
           <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;margin-bottom:10px;">
-            <input type="checkbox" checked style="width:17px;height:17px;accent-color:var(--saffron);margin-top:2px;flex-shrink:0;"/>
+            <input type="checkbox" id="reg-consent-verbal" checked style="width:17px;height:17px;accent-color:var(--saffron);margin-top:2px;flex-shrink:0;"/>
             <span style="font-size:13px;font-weight:600;color:var(--ink);">Verbal consent obtained</span>
-          </label>
-          <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;">
-            <input type="checkbox" style="width:17px;height:17px;accent-color:var(--saffron);margin-top:2px;flex-shrink:0;"/>
-            <span style="font-size:13px;font-weight:600;color:var(--ink);">Written consent form signed</span>
           </label>
         </div>
       </div>
 
-      <button class="btn btn-primary btn-lg btn-full reveal delay-4" onclick="navigateTo('intake')">
-        → Proceed to Voice Intake
+      <button class="btn btn-primary btn-lg btn-full reveal delay-4" onclick="registerNewPatientAndProceed()">
+        → Register Patient &amp; Start Voice Intake
       </button>
     </div>
   </div>
