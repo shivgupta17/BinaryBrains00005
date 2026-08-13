@@ -1,0 +1,71 @@
+{
+  "referralId": "REF-JXPF2ARK",
+  "patientId": "PAT_1786609756390_qn2i",
+  "caseId": "CASE-SBZMVMWS",
+  "doctorId": "DOC-5MP81O6J",
+  "doctorName": "ramesh",
+  "assistantId": "AST-UP081O4L",
+  "riskLevel": "medium",
+  "reason": "The patient reports experiencing a fever for the past four days.",
+  "aiSummary": {
+    "patientId": "PAT_1786609756390_qn2i",
+    "patient": {
+      "name": "Patient",
+      "age": "30",
+      "sex": "Male",
+      "patientId": "PAT_1786609756390_qn2i"
+    },
+    "mainProblem": {
+      "title": "Persistent Fever",
+      "summary": "The patient reports experiencing a fever for the past four days."
+    },
+    "reportedSymptoms": [
+      "Fever lasting for 4 days"
+    ],
+    "importantFindings": [
+      "Temperature: Not recorded",
+      "Blood Pressure: Not recorded",
+      "Pulse: Not recorded",
+      "SpO2: Not recorded",
+      "Medical History: Not recorded",
+      "Allergies: Not recorded",
+      "Lab Findings: Low platelet count"
+    ],
+    "clinicalSummary": "A 30-year-old male reports having a fever for four days. A document finding indicates a low platelet count, though exact numerical values and vitals are currently unrecorded. The combination of prolonged fever and low platelets warrants clinical evaluation to check for underlying infections such as vector-borne illnesses.",
+    "whatCanBeDoneNow": [
+      "Check and record full vital signs including temperature, pulse, blood pressure, and SpO2.",
+      "Encourage adequate oral fluid intake and rest.",
+      "Monitor closely for any signs of bleeding, severe abdominal pain, or lethargy."
+    ],
+    "redFlags": [
+      "Low platelet count associated with a 4-day fever"
+    ],
+    "medicationSuggestions": [
+      {
+        "name": "Paracetamol",
+        "reason": "Symptomatic management of fever",
+        "sourceProtocol": "Approved MoHFW / ASHA Protocol",
+        "safetyConsiderations": "Do not administer NSAIDs (e.g., Ibuprofen) due to low platelet count. Ensure proper dosage and medical oversight.",
+        "doctorApprovalRequired": true
+      }
+    ],
+    "recommendedNextStep": "Consult a healthcare provider promptly for clinical evaluation and further investigation of persistent fever with low platelet count.",
+    "triage": {
+      "level": "amber",
+      "reason": "Four-day persistent fever coupled with documented low platelets requires prompt clinical evaluation and vital sign monitoring to prevent potential complications."
+    },
+    "disclaimer": "AI-generated clinical support. Doctor/qualified clinician review and approval is required before medication is taken or administered.",
+    "summary": "A 30-year-old male reports having a fever for four days. A document finding indicates a low platelet count, though exact numerical values and vitals are currently unrecorded. The combination of prolonged fever and low platelets warrants clinical evaluation to check for underlying infections such as vector-borne illnesses.",
+    "reportedProblems": [
+      "Fever lasting for 4 days"
+    ],
+    "recommendedNextSteps": [
+      "Check and record full vital signs including temperature, pulse, blood pressure, and SpO2.",
+      "Encourage adequate oral fluid intake and rest.",
+      "Monitor closely for any signs of bleeding, severe abdominal pain, or lethargy."
+    ]
+  },
+  "status": "NEW",
+  "createdAt": "2026-08-13T08:33:25.560Z",
+  "acceptedAt": null
+}

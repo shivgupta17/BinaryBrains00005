@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786595327892",
+  "recipientRole": "doctor",
+  "recipientId": "DOC-8CCJNPP9",
+  "patientId": "PAT_1786595131587_wjl1",
+  "caseId": null,
+  "type": "NEW REFERRAL",
+  "title": "🚨 NEW Referral Received",
+  "message": "Patient PAT_1786595131587_wjl1 referred for hey",
+  "createdAt": "2026-08-13T04:28:47.579Z",
+  "read": false,
+  "priority": "MEDIUM"
+}

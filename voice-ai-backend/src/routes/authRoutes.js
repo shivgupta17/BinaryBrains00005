@@ -9,6 +9,7 @@ router.post('/verify-otp', authController.verifyOtp);
 
 router.post('/login', authController.login);
 router.post('/register', authController.register);
+router.post('/google', authController.googleAuth);
 
 // Role specific shortcuts
 router.post('/assistant/login', authController.login);

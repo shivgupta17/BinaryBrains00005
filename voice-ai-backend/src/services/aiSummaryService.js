@@ -1,8 +1,18 @@
 const fileUtils = require('../utils/fileUtils');
 const patientContextService = require('./patientContextService');
 
-async function callGeminiApiWithRetry(apiKey, payload, preferredModel = 'gemini-flash-latest') {
-  const models = [preferredModel, 'gemini-flash-latest', 'gemini-flash-lite-latest', 'gemini-3.5-flash'];
+// Valid Gemini REST API model IDs for this API key (ordered cheapest → most capable)
+const GEMINI_MODELS = [
+  'gemini-3.5-flash-lite',
+  'gemini-flash-lite-latest',
+  'gemini-3.5-flash',
+];
+
+// Max characters for aggregated findings JSON in the AI summary prompt
+const MAX_FINDINGS_CHARS = 2000;
+
+async function callGeminiApiWithRetry(apiKey, payload, preferredModel = 'gemini-3.5-flash-lite') {
+  const models = [preferredModel, ...GEMINI_MODELS.filter(m => m !== preferredModel)];
   const uniqueModels = [...new Set(models)];
   let lastErr = null;
 
@@ -21,15 +31,25 @@ async function callGeminiApiWithRetry(apiKey, payload, preferredModel = 'gemini-
         }
 
         const errText = await response.text();
+
+        // 429 = quota exhausted — stop immediately, do not retry other models
+        if (response.status === 429) {
+          throw new Error(`Gemini quota exhausted (429). Please wait and try again. Details: ${errText}`);
+        }
+
         lastErr = new Error(`Gemini API error (${response.status}) on ${model}: ${errText}`);
 
-        if (response.status === 429 || response.status === 503) {
+        if (response.status === 503) {
           console.warn(`[GeminiRetry] ${model} attempt ${attempt} returned ${response.status}. Retrying...`);
           await new Promise(r => setTimeout(r, 1200 * attempt));
         } else {
           break;
         }
       } catch (fetchErr) {
+        // Re-throw quota errors immediately
+        if (fetchErr.message && fetchErr.message.includes('quota exhausted')) {
+          throw fetchErr;
+        }
         lastErr = fetchErr;
         await new Promise(r => setTimeout(r, 1000));
       }
@@ -49,7 +69,8 @@ async function generatePatientAiSummary(patientId) {
     throw new Error('Gemini API key is required for AI summary generation. Please set GEMINI_API_KEY in .env.');
   }
 
-  const patientContext = patientContextService.getPatientContext(patientId);
+  // await is required — getPatientContext is async
+  const patientContext = await patientContextService.getPatientContext(patientId);
 
   console.log(`[AISummaryService] Generating Unified AI Clinical Report for Patient ID: ${patientId}`);
 
@@ -66,7 +87,10 @@ Unified Patient Context:
 - Voice Intake Transcript (English): "${patientContext.voiceIntake?.transcription?.english || 'None recorded'}"
 - Voice Intake AI Problem Analysis: ${JSON.stringify(patientContext.voiceIntake?.aiAnalysis || null)}
 - Uploaded Documents Count: ${patientContext.documents?.length || 0}
-- Document OCR Extracted Findings: ${JSON.stringify(patientContext.aggregatedFindings || {})}
+- Document OCR Extracted Findings: ${(() => {
+    const raw = JSON.stringify(patientContext.aggregatedFindings || {});
+    return raw.length > MAX_FINDINGS_CHARS ? raw.substring(0, MAX_FINDINGS_CHARS) + '...[truncated]' : raw;
+  })()}
 
 Tasks:
 1. Identify the Primary Main Problem first (one clear, short sentence).
@@ -133,7 +157,7 @@ Return ONLY a JSON object with this exact schema:
     }
   };
 
-  const primaryModel = process.env.GEMINI_MODEL || 'gemini-flash-latest';
+  const primaryModel = process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite';
   const result = await callGeminiApiWithRetry(apiKey, payload, primaryModel);
 
   const candidateText = result.candidates?.[0]?.content?.parts?.[0]?.text;

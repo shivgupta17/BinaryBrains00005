@@ -1,0 +1,22 @@
+{
+  "caseId": "CASE-DM7LYXH4",
+  "patientId": "PAT_1786592101435_s0jc",
+  "assistantId": "AST-L0TAWP3S",
+  "assignedDoctorId": "DOC-5R1X23UQ",
+  "caseType": "General Referral Encounter",
+  "status": "REFERRED",
+  "createdAt": "2026-08-13T03:39:45.436Z",
+  "vitals": {},
+  "aiSummary": null,
+  "timeline": [
+    {
+      "eventId": "evt_1786592385505",
+      "type": "CASE_CREATED",
+      "title": "Encounter Case Created",
+      "description": "New clinical encounter created for doctor referral.",
+      "timestamp": "2026-08-13T03:39:45.436Z",
+      "actor": "AST-L0TAWP3S"
+    }
+  ],
+  "_id": "6a7d3c81c9462e5e7fd04f13"
+}

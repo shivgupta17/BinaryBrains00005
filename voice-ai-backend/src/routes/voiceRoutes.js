@@ -20,7 +20,8 @@ const storage = multer.diskStorage({
 
 // File filter for audio MIME types
 const fileFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith('audio/') || file.mimetype === 'application/octet-stream') {
+  const mime = (file.mimetype || '').toLowerCase();
+  if (mime.startsWith('audio/') || mime === 'application/octet-stream' || mime.includes('webm') || mime.includes('ogg') || mime.includes('mp4') || mime.includes('wav')) {
     cb(null, true);
   } else {
     cb(new Error('Only audio files are allowed'), false);

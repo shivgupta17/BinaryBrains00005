@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786609821208_j87y",
+  "recipientRole": "assistant",
+  "recipientId": null,
+  "patientId": "PAT-JQ3D2P36",
+  "caseId": "CASE-JL260ZEB",
+  "type": "MEDICATION_DUE",
+  "title": "⏰ MEDICATION DUE",
+  "message": "Medication Paracetamol 500mg (500mg) is due now for patient PAT-JQ3D2P36",
+  "priority": "HIGH",
+  "read": false,
+  "createdAt": "2026-08-13T08:30:21.208Z"
+}

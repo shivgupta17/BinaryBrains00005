@@ -1,18 +1,25 @@
 const fs = require('fs');
 
+// Valid Gemini REST API model IDs for this API key
+const GEMINI_MODELS = [
+  'gemini-flash-latest',
+  'gemini-flash-lite-latest',
+  'gemini-2.5-flash',
+  'gemini-1.5-flash',
+];
+
 /**
  * Robust helper to call Gemini REST API with retry & model fallback
- * Verified active models for this API key: gemini-flash-latest, gemini-flash-lite-latest, gemini-3.5-flash
  */
 async function callGeminiAPI(promptText, apiKey, preferredModel = 'gemini-flash-latest', jsonOutput = true, inlineData = null) {
-  const models = [preferredModel, 'gemini-flash-latest', 'gemini-flash-lite-latest', 'gemini-3.5-flash'];
+  const models = [preferredModel, ...GEMINI_MODELS.filter(m => m !== preferredModel)];
   // Deduplicate models preserving order
   const uniqueModels = [...new Set(models)];
   let lastErr = null;
 
   for (const model of uniqueModels) {
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
-    
+
     const parts = [];
     if (inlineData) {
       parts.push({ inlineData });
@@ -29,7 +36,7 @@ async function callGeminiAPI(promptText, apiKey, preferredModel = 'gemini-flash-
 
     for (let attempt = 1; attempt <= 2; attempt++) {
       try {
-        console.log(`[GeminiService] Calling active model ${model} (attempt ${attempt})...`);
+        console.log(`[GeminiService] Calling model ${model} (attempt ${attempt})...`);
         const response = await fetch(url, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -52,23 +59,33 @@ async function callGeminiAPI(promptText, apiKey, preferredModel = 'gemini-flash-
         }
 
         const errorText = await response.text();
+
+        // 429 = quota exhausted — stop immediately, retrying burns the same quota
+        if (response.status === 429) {
+          throw new Error(`Gemini quota exhausted (429). Please wait and try again. Details: ${errorText}`);
+        }
+
         lastErr = new Error(`Gemini API error (${response.status}) on ${model}: ${errorText}`);
 
-        if (response.status === 429 || response.status === 503) {
-          console.warn(`[GeminiService] ${model} attempt ${attempt} returned HTTP ${response.status}. Retrying in backoff...`);
+        if (response.status === 503) {
+          console.warn(`[GeminiService] ${model} attempt ${attempt} returned HTTP 503. Retrying in backoff...`);
           await new Promise(r => setTimeout(r, 1200 * attempt));
         } else {
-          console.warn(`[GeminiService] ${model} returned HTTP ${response.status}. Trying next active model...`);
+          console.warn(`[GeminiService] ${model} returned HTTP ${response.status}. Trying next model...`);
           break;
         }
       } catch (err) {
+        // Re-throw quota errors immediately — no point retrying
+        if (err.message && err.message.includes('quota exhausted')) {
+          throw err;
+        }
         lastErr = err;
         await new Promise(r => setTimeout(r, 1000));
       }
     }
   }
 
-  throw lastErr || new Error('Gemini API call failed across all active models.');
+  throw lastErr || new Error('Gemini API call failed across all models.');
 }
 
 /**

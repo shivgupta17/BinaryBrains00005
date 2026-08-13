@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
+const { OAuth2Client } = require('google-auth-library');
 const { getDb, isDbConnected } = require('../config/db');
 const fileUtils = require('../utils/fileUtils');
 const emailService = require('../services/emailService');
@@ -393,11 +394,131 @@ async function getMe(req, res) {
   });
 }
 
+/**
+ * Google OAuth — verify Google ID token & sign in / auto-register (POST /api/auth/google)
+ * Body: { idToken, role }
+ * role is used only when creating a brand-new account (first Google login)
+ */
+async function googleAuth(req, res) {
+  try {
+    const { idToken, role } = req.body;
+
+    if (!idToken) {
+      return res.status(400).json({ success: false, error: 'Google ID token is required.' });
+    }
+
+    const clientId = process.env.GOOGLE_CLIENT_ID;
+    if (!clientId) {
+      return res.status(500).json({ success: false, error: 'Google OAuth is not configured on this server. Please set GOOGLE_CLIENT_ID in .env.' });
+    }
+
+    // Verify the token with Google
+    const client = new OAuth2Client(clientId);
+    let payload;
+    try {
+      const ticket = await client.verifyIdToken({ idToken, audience: clientId });
+      payload = ticket.getPayload();
+    } catch (verifyErr) {
+      return res.status(401).json({ success: false, error: 'Invalid or expired Google token. Please try again.' });
+    }
+
+    const googleEmail = (payload.email || '').trim().toLowerCase();
+    const googleName  = payload.name || googleEmail.split('@')[0];
+    const googleSub   = payload.sub; // unique Google user ID
+
+    if (!googleEmail) {
+      return res.status(400).json({ success: false, error: 'Google account has no email address.' });
+    }
+
+    if (!isDbConnected()) {
+      return res.status(503).json({ success: false, error: 'Database unavailable. Cannot sign in with Google right now.' });
+    }
+
+    const db = getDb();
+    const usersCollection = db.collection('users');
+
+    // Check if user already exists (by email OR by googleSub)
+    let dbUser = await usersCollection.findOne({ $or: [{ email: googleEmail }, { googleSub }] });
+
+    if (dbUser) {
+      // Existing user — link googleSub if not already linked
+      if (!dbUser.googleSub) {
+        await usersCollection.updateOne({ _id: dbUser._id }, { $set: { googleSub, updatedAt: new Date() } });
+      }
+    } else {
+      // New user — auto-register with the selected role
+      const targetRole  = (role || 'assistant').trim().toLowerCase();
+      const userId      = `usr_${googleEmail.replace(/[^a-z0-9]/g, '')}`;
+      const doctorId    = targetRole === 'doctor'    ? idGen.generateDoctorId()    : null;
+      const assistantId = targetRole === 'assistant' ? idGen.generateAssistantId() : null;
+      const patientId   = targetRole === 'patient'   ? idGen.generatePatientId()   : null;
+
+      const userDocument = {
+        userId,
+        googleSub,
+        doctorId,
+        assistantId,
+        patientId,
+        name: googleName,
+        email: googleEmail,
+        phone: '',
+        passwordHash: null, // Google users have no password
+        role: targetRole,
+        isVerified: true,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+
+      await usersCollection.insertOne(userDocument);
+
+      if (targetRole === 'doctor') {
+        await db.collection('doctors').insertOne({ userId, doctorId, name: googleName, specialty: 'General Medicine', createdAt: new Date() });
+      } else if (targetRole === 'assistant') {
+        await db.collection('assistants').insertOne({ userId, assistantId, name: googleName, phone: '', createdAt: new Date() });
+      }
+
+      dbUser = userDocument;
+      console.log(`[AuthController] Google OAuth: new ${targetRole} auto-registered -> ${googleEmail}`);
+    }
+
+    const userRole    = dbUser.role;
+    const doctorId    = userRole === 'doctor'    ? dbUser.doctorId    : null;
+    const assistantId = userRole === 'assistant' ? dbUser.assistantId : null;
+    const patientId   = userRole === 'patient'   ? dbUser.patientId   : null;
+
+    const token = jwt.sign(
+      { userId: dbUser.userId, email: googleEmail, role: userRole, doctorId, assistantId, patientId },
+      JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    console.log(`[AuthController] Google OAuth: signed in ${googleEmail} as ${userRole}`);
+
+    return res.status(200).json({
+      success: true,
+      token: `token_${userRole}_${token}`,
+      user: {
+        userId:      dbUser.userId,
+        name:        dbUser.name,
+        email:       googleEmail,
+        role:        userRole,
+        doctorId,
+        assistantId,
+        patientId
+      }
+    });
+  } catch (err) {
+    console.error('[AuthController] googleAuth error:', err.message);
+    return res.status(500).json({ success: false, error: err.message });
+  }
+}
+
 module.exports = {
   sendOtp,
   resendOtp,
   verifyOtp,
   login,
   register,
-  getMe
+  getMe,
+  googleAuth
 };

@@ -1,0 +1,14 @@
+{
+  "referralId": "REF-K9O5O3LL",
+  "patientId": "PAT_1786591277056_o25v",
+  "caseId": "CASE-L9QQESM1",
+  "doctorId": "DOC-5R1X23UQ",
+  "doctorName": "babli",
+  "assistantId": "AST-L0TAWP3S",
+  "riskLevel": "medium",
+  "reason": "Clinical referral from Assistant Panel for physician evaluation.",
+  "aiSummary": null,
+  "status": "NEW",
+  "createdAt": "2026-08-13T03:31:22.925Z",
+  "acceptedAt": null
+}

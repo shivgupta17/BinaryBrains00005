@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786609821216_fky0",
+  "recipientRole": "assistant",
+  "recipientId": null,
+  "patientId": "PAT-OSSQE9GG",
+  "caseId": "CASE-9S6LATKK",
+  "type": "MEDICATION_DUE",
+  "title": "⏰ MEDICATION DUE",
+  "message": "Medication Amoxicillin 500mg (500mg) is due now for patient PAT-OSSQE9GG",
+  "priority": "HIGH",
+  "read": false,
+  "createdAt": "2026-08-13T08:30:21.217Z"
+}

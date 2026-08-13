@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786607192351",
+  "recipientRole": "doctor",
+  "recipientId": "DOC-259ZTDQI",
+  "patientId": "PAT_1786606943528_3r8q",
+  "caseId": null,
+  "type": "NEW REFERRAL",
+  "title": "🚨 NEW Referral Received",
+  "message": "Patient PAT_1786606943528_3r8q referred for The patient reports experiencing a persistent headache for four days.",
+  "createdAt": "2026-08-13T07:46:32.040Z",
+  "read": false,
+  "priority": "MEDIUM"
+}

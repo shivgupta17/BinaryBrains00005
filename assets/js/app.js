@@ -377,8 +377,17 @@ async function toggleRecording() {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       _audioChunks = [];
-      _recordedAudioBlob = null;
-      _mediaRecorder = new MediaRecorder(stream);
+      let recOptions = {};
+      if (typeof MediaRecorder !== 'undefined' && MediaRecorder.isTypeSupported) {
+        if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
+          recOptions.mimeType = 'audio/webm;codecs=opus';
+        } else if (MediaRecorder.isTypeSupported('audio/webm')) {
+          recOptions.mimeType = 'audio/webm';
+        } else if (MediaRecorder.isTypeSupported('audio/mp4')) {
+          recOptions.mimeType = 'audio/mp4';
+        }
+      }
+      _mediaRecorder = new MediaRecorder(stream, recOptions);
 
       _mediaRecorder.ondataavailable = e => {
         if (e.data && e.data.size > 0) {
@@ -667,9 +676,11 @@ async function handleRealDocumentUpload(file, zoneElement, category) {
     formData.append('document', file, file.name);
 
     const patientId = getOrCreatePatientId();
+    const token = getAuthToken();
 
     const res = await fetch(`http://localhost:5000/api/patients/${patientId}/documents`, {
       method: 'POST',
+      headers: token ? { 'Authorization': 'Bearer ' + token } : {},
       body: formData
     });
 
@@ -808,189 +819,323 @@ function initTriagePage() {
   }
 
   const p = GramCare.patient || {};
-  const aiSummary = p.aiSummary;
 
-  // 1. Render REAL Vitals (Unified Source of Truth)
-  const tempVal = p.vitals?.temp || aiSummary?.importantFindings?.find(f => f.includes('Temp'))?.split(':')[1]?.trim() || 'Not recorded';
-  const bpVal   = p.vitals?.bp   || aiSummary?.importantFindings?.find(f => f.includes('Pressure'))?.split(':')[1]?.trim() || 'Not recorded';
-  const hrVal   = p.vitals?.pulse|| aiSummary?.importantFindings?.find(f => f.includes('Pulse'))?.split(':')[1]?.trim() || 'Not recorded';
-  const spo2Val = p.vitals?.spo2 || aiSummary?.importantFindings?.find(f => f.includes('SpO2'))?.split(':')[1]?.trim() || 'Not recorded';
-
-  const tempEl = document.getElementById('triage-vital-temp');
-  const bpEl   = document.getElementById('triage-vital-bp');
-  const hrEl   = document.getElementById('triage-vital-hr');
-  const spo2El = document.getElementById('triage-vital-spo2');
-
-  if (tempEl) tempEl.textContent = tempVal;
-  if (bpEl)   bpEl.textContent   = bpVal;
-  if (hrEl)   hrEl.textContent   = hrVal;
-  if (spo2El) spo2El.textContent = spo2Val;
-
-  // 2. Render AI Summary Box
-  const aiText = document.getElementById('triage-ai-text');
-  const pillsContainer = document.getElementById('triage-symptoms-pills');
-
-  if (aiSummary) {
-    const triageBlock = document.getElementById('triage-block');
-    const triageTitle = document.getElementById('triage-title');
-    const triageDesc  = document.getElementById('triage-desc');
-    const whyTitle    = document.getElementById('triage-why-title');
-    const whyText     = document.getElementById('triage-why-text');
-    const actionsList = document.getElementById('triage-actions-list');
-
-    const level = (aiSummary.triage?.level || 'amber').toLowerCase();
-    if (triageBlock) {
-      triageBlock.className = `triage-block t-${level} reveal`;
-    }
-
-    if (triageTitle) {
-      const levelLabel = level === 'red' ? 'RED — Critical Referral Required' : (level === 'routine' ? 'GREEN — Routine / OTC First-Aid' : 'AMBER — Doctor Review Required');
-      const levelColor = level === 'red' ? 'var(--red)' : (level === 'routine' ? 'var(--green)' : 'var(--amber)');
-      triageTitle.textContent = levelLabel;
-      triageTitle.style.color = levelColor;
-    }
-
-    if (triageDesc) {
-      triageDesc.textContent = aiSummary.triage?.reason || aiSummary.summary || 'Clinical assessment completed.';
-    }
-
+  if (p.aiSummary) {
+    _renderTriageReport(p.aiSummary);
+  } else {
+    const aiText = document.getElementById('triage-ai-text');
     if (aiText) {
-      const mainTitle = aiSummary.mainProblem?.title || aiSummary.mainProblem?.summary || aiSummary.summary || 'Patient Assessment Completed';
-      const mainSummary = aiSummary.mainProblem?.summary || aiSummary.summary || 'Clinical assessment completed.';
-      const symptoms = aiSummary.reportedSymptoms || aiSummary.reportedProblems || [];
-      const findings = aiSummary.importantFindings || [];
-      const steps = aiSummary.whatCanBeDoneNow || aiSummary.recommendedNextSteps || [];
-      const flags = aiSummary.redFlags || [];
-      const nextStep = aiSummary.recommendedNextStep || 'Forward case to doctor for review.';
-      const meds = aiSummary.medicationSuggestions || [];
-
-      aiText.innerHTML = `
-        <div style="font-family:var(--font-sans);">
-          <!-- 1. Patient Info -->
-          <div style="font-size:12px;color:var(--ink-50);margin-bottom:12px;display:flex;gap:12px;flex-wrap:wrap;border-bottom:1px solid rgba(0,0,0,.08);padding-bottom:8px;">
-            <span><strong>Patient:</strong> ${p.name || 'Not recorded'}</span>
-            <span><strong>Age:</strong> ${p.age || 'Not recorded'}</span>
-            <span><strong>Gender:</strong> ${p.sex || 'Not recorded'}</span>
-            <span><strong>ID:</strong> ${p.id || 'Not recorded'}</span>
-          </div>
-
-          <!-- 2. Main Problem Highlight -->
-          <div style="background:var(--saffron-pale);border-left:4px solid var(--saffron);padding:12px 14px;border-radius:6px;margin-bottom:14px;">
-            <div style="font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--saffron-lt);">MAIN PROBLEM</div>
-            <div style="font-size:14.5px;font-weight:700;color:var(--ink);margin-top:2px;">${mainTitle}</div>
-            <div style="font-size:13px;color:var(--ink-70);margin-top:4px;">"${mainSummary}"</div>
-          </div>
-
-          <!-- 3. Symptoms Badges -->
-          <div style="margin-bottom:14px;">
-            <div style="font-size:11px;font-weight:700;color:var(--ink-60);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">REPORTED SYMPTOMS</div>
-            <div style="display:flex;flex-wrap:wrap;gap:6px;">
-              ${symptoms.length > 0 ? symptoms.map(s => `<span class="pill" style="background:rgba(232,105,42,.12);color:var(--saffron-lt);border:1px solid rgba(232,105,42,.25);font-size:12px;">• ${s}</span>`).join('') : '<span style="font-size:12.5px;color:var(--ink-50);font-style:italic;">No symptoms recorded</span>'}
-            </div>
-          </div>
-
-          <!-- 4. Important Findings -->
-          <div style="margin-bottom:14px;">
-            <div style="font-size:11px;font-weight:700;color:var(--ink-60);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">IMPORTANT FINDINGS</div>
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:6px;">
-              ${findings.length > 0 ? findings.map(f => `<div style="background:var(--ink-10);padding:6px 10px;border-radius:6px;font-size:12px;color:var(--ink-80);">${f}</div>`).join('') : '<div style="font-size:12.5px;color:var(--ink-50);font-style:italic;">Not recorded</div>'}
-            </div>
-          </div>
-
-          <!-- 5. Clinical Summary -->
-          <div style="margin-bottom:14px;">
-            <div style="font-size:11px;font-weight:700;color:var(--ink-60);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">CLINICAL SUMMARY</div>
-            <div style="font-size:13px;color:var(--ink-80);line-height:1.6;background:var(--white);padding:10px 12px;border-radius:8px;border:1px solid var(--ink-10);">
-              ${aiSummary.clinicalSummary || aiSummary.summary || 'Clinical assessment completed.'}
-            </div>
-          </div>
-
-          <!-- 6. What Can Be Done Now -->
-          <div style="margin-bottom:14px;">
-            <div style="font-size:11px;font-weight:700;color:var(--forest);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">WHAT CAN BE DONE NOW</div>
-            <div style="display:flex;flex-direction:column;gap:5px;">
-              ${steps.map(act => `<div style="font-size:12.5px;color:var(--ink-80);display:flex;align-items:flex-start;gap:6px;"><span style="color:var(--forest);">•</span><span>${act}</span></div>`).join('')}
-            </div>
-          </div>
-
-          <!-- 7. Warning Signs / Red Flags -->
-          <div style="margin-bottom:14px;">
-            <div style="font-size:11px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">WARNING SIGNS / RED FLAGS</div>
-            <div style="background:#FEE2E2;border-radius:8px;padding:10px 12px;border:1px solid #FCA5A5;">
-              ${flags.length > 0 ? flags.map(fl => `<div style="font-size:12.5px;color:var(--red);margin-bottom:3px;">⚠ ${fl}</div>`).join('') : '<div style="font-size:12.5px;color:var(--ink-60);">No specific red flags identified from the available information.</div>'}
-            </div>
-          </div>
-
-          <!-- 8. Medication Suggestions (If any) -->
-          ${meds.length > 0 ? `
-            <div style="margin-bottom:14px;">
-              <div style="font-size:11px;font-weight:700;color:var(--sky);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">MEDICATION CONSIDERATIONS</div>
-              ${meds.map(m => `
-                <div style="background:var(--sky-pale);border:1px solid rgba(14,165,233,.3);border-radius:8px;padding:10px 12px;margin-bottom:6px;">
-                  <div style="font-size:13px;font-weight:700;color:var(--sky);">💊 ${m.name}</div>
-                  <div style="font-size:12px;color:var(--ink-70);margin-top:2px;"><strong>Reason:</strong> ${m.reason}</div>
-                  <div style="font-size:12px;color:var(--ink-60);margin-top:2px;"><strong>Safety:</strong> ${m.safetyConsiderations || 'Check allergy & history'}</div>
-                </div>
-              `).join('')}
-              <div style="background:#FEF3C7;border:1.5px solid #FCD34D;border-radius:8px;padding:10px 12px;margin-top:8px;">
-                <div style="font-size:12px;font-weight:700;color:#B45309;">⚠️ MANDATORY CLINICAL WARNING:</div>
-                <div style="font-size:11.5px;color:#92400E;margin-top:2px;line-height:1.5;">
-                  AI-generated suggestion — DO NOT take or administer this medicine until it has been reviewed and approved by the doctor/qualified clinician.<br/>
-                  <em>AI does not replace the prescribing decision of the treating doctor.</em>
-                </div>
-              </div>
-            </div>
-          ` : `
-            <div style="font-size:12.5px;color:var(--ink-50);font-style:italic;margin-bottom:14px;">
-              No medication suggestion generated from the available information.
-            </div>
-          `}
-
-          <!-- 9. Recommended Next Step -->
-          <div style="background:var(--ink);color:white;border-radius:8px;padding:12px 14px;">
-            <div style="font-size:11px;font-weight:700;color:var(--saffron-lt);letter-spacing:.05em;text-transform:uppercase;">RECOMMENDED NEXT STEP</div>
-            <div style="font-size:13px;margin-top:4px;">${nextStep}</div>
-          </div>
-        </div>
-      `;
+      aiText.innerHTML = '<div style="display:flex;align-items:center;gap:10px;color:var(--ink-50);font-size:13px;padding:14px 0;"><div class="spinner"></div> Fetching AI clinical report from backend…</div>';
     }
-
-    if (pillsContainer && aiSummary.reportedProblems) {
-      pillsContainer.innerHTML = aiSummary.reportedProblems.map(prob => `
-        <span class="pill" style="background:rgba(232,105,42,.15);color:var(--saffron-lt);border:1px solid rgba(232,105,42,.3);">${prob}</span>
-      `).join(' ');
-    }
-
-    if (whyTitle) whyTitle.textContent = `Why ${level.toUpperCase()}?`;
-    if (whyText)  whyText.textContent  = aiSummary.triage?.reason || 'Clinical safety rule triggered.';
-
-    if (actionsList && aiSummary.recommendedNextSteps) {
-      actionsList.innerHTML = aiSummary.recommendedNextSteps.map(step => `
-        <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:10px;background:var(--forest-pale);border:1px solid rgba(27,107,74,.2);">
-          <span style="font-size:18px;">📋</span>
-          <span style="font-size:13px;font-weight:600;color:var(--forest);">${step}</span>
-        </div>
-      `).join('');
-    }
-  } else if (p.voiceIntake) {
-    if (aiText) {
-      aiText.innerHTML = `
-        <strong>Voice Intake Transcript (${p.name || 'Patient'}):</strong><br/>
-        "${p.voiceIntake.transcription?.original || 'Voice recording processed'}"
-      `;
-    }
+    const patientId = getOrCreatePatientId();
+    fetch('http://localhost:5000/api/patients/' + patientId + '/ai-summary', {
+      headers: { 'Authorization': 'Bearer ' + getAuthToken() }
+    })
+      .then(function(r) { return r.json(); })
+      .then(function(result) {
+        const summary = result.data || result;
+        if (summary && (summary.triage || summary.mainProblem)) {
+          GramCare.patient.aiSummary = summary;
+          _renderTriageReport(summary);
+        } else {
+          _renderTriageVitalsOnly();
+        }
+      })
+      .catch(function() { _renderTriageVitalsOnly(); });
   }
 
-  // Animate the safety engine check rows with stagger
-  document.querySelectorAll('.safety-row').forEach((row, i) => {
+  document.querySelectorAll('.safety-row').forEach(function(row, i) {
     row.style.opacity = '0';
     row.style.transform = 'translateX(-14px)';
-    setTimeout(() => {
+    setTimeout(function() {
       row.style.transition = 'all .4s ease';
       row.style.opacity = '1';
       row.style.transform = 'translateX(0)';
     }, 300 + i * 120);
   });
+}
+
+function _renderTriageVitals() {
+  const p = GramCare.patient || {};
+  const aiSummary = p.aiSummary;
+  const tempVal = p.vitals?.temp || aiSummary?.importantFindings?.find(f => f.includes('Temp'))?.split(':')[1]?.trim() || 'Not recorded';
+  const bpVal   = p.vitals?.bp   || aiSummary?.importantFindings?.find(f => f.includes('Pressure'))?.split(':')[1]?.trim() || 'Not recorded';
+  const hrVal   = p.vitals?.pulse|| aiSummary?.importantFindings?.find(f => f.includes('Pulse'))?.split(':')[1]?.trim() || 'Not recorded';
+  const spo2Val = p.vitals?.spo2 || aiSummary?.importantFindings?.find(f => f.includes('SpO2'))?.split(':')[1]?.trim() || 'Not recorded';
+  const tempEl = document.getElementById('triage-vital-temp');
+  const bpEl   = document.getElementById('triage-vital-bp');
+  const hrEl   = document.getElementById('triage-vital-hr');
+  const spo2El = document.getElementById('triage-vital-spo2');
+  if (tempEl) tempEl.textContent = tempVal;
+  if (bpEl)   bpEl.textContent   = bpVal;
+  if (hrEl)   hrEl.textContent   = hrVal;
+  if (spo2El) spo2El.textContent = spo2Val;
+}
+
+function _renderTriageVitalsOnly() {
+  _renderTriageVitals();
+  const aiText = document.getElementById('triage-ai-text');
+  if (aiText) {
+    aiText.innerHTML = '<div style="color:var(--ink-50);font-size:13px;line-height:1.6;"><strong>No AI clinical report available yet.</strong><br/>Complete Voice Intake or Document Upload, then click <em>"Generate AI Summary"</em> to produce a triage report.</div>';
+  }
+}
+
+function _applyRiskLevelBar(level) {
+  const bar = document.getElementById('risk-level-bar');
+  const pillLow  = document.getElementById('risk-pill-low');
+  const pillMed  = document.getElementById('risk-pill-med');
+  const pillHigh = document.getElementById('risk-pill-high');
+  const levelText = document.getElementById('risk-level-text');
+  if (!bar) return;
+  bar.style.display = 'flex';
+  const DIMMED = ';opacity:0.35;transform:scale(0.95)';
+  const ACTIVE = ';opacity:1;transform:scale(1.06);box-shadow:0 2px 10px rgba(0,0,0,0.18)';
+  if (level === 'routine' || level === 'low') {
+    if (pillLow)  pillLow.style.cssText  += ACTIVE;
+    if (pillMed)  pillMed.style.cssText  += DIMMED;
+    if (pillHigh) pillHigh.style.cssText += DIMMED;
+    if (levelText) { levelText.textContent = '✅ LOW RISK — Routine care applicable'; levelText.style.color = '#065F46'; }
+  } else if (level === 'amber' || level === 'medium' || level === 'med') {
+    if (pillLow)  pillLow.style.cssText  += DIMMED;
+    if (pillMed)  pillMed.style.cssText  += ACTIVE;
+    if (pillHigh) pillHigh.style.cssText += DIMMED;
+    if (levelText) { levelText.textContent = '⚠️ MEDIUM RISK — Doctor review recommended'; levelText.style.color = '#92400E'; }
+  } else if (level === 'red' || level === 'high') {
+    if (pillLow)  pillLow.style.cssText  += DIMMED;
+    if (pillMed)  pillMed.style.cssText  += DIMMED;
+    if (pillHigh) pillHigh.style.cssText += ACTIVE;
+    if (levelText) { levelText.textContent = '🚨 HIGH RISK — Immediate doctor escalation required'; levelText.style.color = '#991B1B'; }
+  }
+}
+
+function _applyHighRiskBanner(level, reason) {
+  const banner = document.getElementById('high-risk-alert-banner');
+  const reasonEl = document.getElementById('high-risk-alert-reason');
+  const sendBtn = document.getElementById('send-to-doctor-btn');
+  if (!banner) return;
+  if (level === 'red' || level === 'high') {
+    if (reasonEl) reasonEl.textContent = reason || 'Patient condition requires immediate physician evaluation. Do not delay referral.';
+    banner.style.display = 'block';
+    if (sendBtn) {
+      sendBtn.className = 'btn btn-full';
+      sendBtn.style.cssText = 'margin-top:9px;background:#EF4444;color:white;border:2px solid #FCA5A5;border-radius:10px;font-weight:800;';
+      sendBtn.textContent = '🚨 URGENT — Send to Doctor NOW';
+    }
+    setTimeout(function() {
+      showToast('🚨 HIGH RISK detected! Please refer patient to doctor immediately.', 'error', 6000);
+    }, 800);
+  } else {
+    banner.style.display = 'none';
+  }
+}
+
+function _computeRiskScore(aiSummary, vitals) {
+  // Deterministic score 0–100 derived from triage level + vitals + red flags
+  let score = 0;
+  const level = (aiSummary.triage?.level || 'amber').toLowerCase();
+  if      (level === 'red'     || level === 'high')    score = 72;
+  else if (level === 'amber'   || level === 'medium')  score = 42;
+  else if (level === 'routine' || level === 'low')     score = 18;
+  else score = 45;
+
+  // Vitals adjustment
+  const temp = parseFloat((vitals?.temp || '').replace(/[^\d.]/g, ''));
+  if (temp >= 103)       score = Math.min(score + 15, 100);
+  else if (temp >= 100.4) score = Math.min(score + 6,  100);
+
+  const spo2 = parseFloat((vitals?.spo2 || '').replace(/[^\d.]/g, ''));
+  if (spo2 > 0 && spo2 < 90)  score = Math.min(score + 18, 100);
+  else if (spo2 < 94)          score = Math.min(score + 8,  100);
+
+  // Red flags adjustment
+  const flags = aiSummary.redFlags || [];
+  score = Math.min(score + flags.filter(f => f && !f.toLowerCase().includes('no specific')).length * 4, 100);
+
+  return Math.round(score);
+}
+
+function _renderRiskScore(aiSummary) {
+  const p = GramCare.patient || {};
+  const score = _computeRiskScore(aiSummary, p.vitals);
+  const level = (aiSummary.triage?.level || 'amber').toLowerCase();
+
+  const numEl     = document.getElementById('risk-score-number');
+  const labelEl   = document.getElementById('risk-score-label');
+  const reasonEl  = document.getElementById('risk-score-reason');
+  const badgeEl   = document.getElementById('risk-score-badge');
+  const needleEl  = document.getElementById('risk-score-needle');
+  const circleEl  = document.getElementById('risk-score-circle');
+  const factorsEl = document.getElementById('risk-score-factors');
+  if (!numEl) return;
+
+  // Colour scheme by score
+  let color, bg, borderColor, badgeText;
+  if (score >= 65) {
+    color = '#991B1B'; bg = '#FEE2E2'; borderColor = '#EF4444';
+    badgeText = '🔴 HIGH RISK';
+  } else if (score >= 35) {
+    color = '#92400E'; bg = '#FEF3C7'; borderColor = '#F59E0B';
+    badgeText = '🟡 MEDIUM RISK';
+  } else {
+    color = '#065F46'; bg = '#D1FAE5'; borderColor = '#10B981';
+    badgeText = '🟢 LOW RISK';
+  }
+
+  numEl.textContent   = score;
+  numEl.style.color   = color;
+  if (circleEl) { circleEl.style.borderColor = borderColor; circleEl.style.background = bg; }
+
+  if (labelEl) {
+    labelEl.textContent = score >= 65 ? 'High Risk — Escalate Now'
+                        : score >= 35 ? 'Moderate Risk — Monitor Closely'
+                        : 'Low Risk — Routine Care';
+    labelEl.style.color = color;
+  }
+  if (reasonEl) reasonEl.textContent = aiSummary.triage?.reason || 'Based on AI clinical assessment.';
+  if (badgeEl)  { badgeEl.textContent = badgeText; badgeEl.style.background = bg; badgeEl.style.color = color; badgeEl.style.border = `1.5px solid ${borderColor}`; }
+
+  // Needle position (score 0→100 maps to left 1%→97%)
+  if (needleEl) needleEl.style.left = `calc(${Math.min(score, 99)}% - 2px)`;
+
+  // Factor pills from symptoms + red flags
+  if (factorsEl) {
+    const symptoms = (aiSummary.reportedSymptoms || []).slice(0, 3);
+    const flags    = (aiSummary.redFlags || []).filter(f => f && !f.toLowerCase().includes('no specific')).slice(0, 2);
+    const all = [...symptoms.map(s => ({ text: s, type: 'symptom' })), ...flags.map(f => ({ text: f, type: 'flag' }))];
+    if (all.length > 0) {
+      factorsEl.innerHTML = all.map(f =>
+        `<span style="font-size:10.5px;padding:3px 8px;border-radius:12px;background:${f.type==='flag'?'#FEE2E2':'var(--ink-10)'};color:${f.type==='flag'?'#991B1B':'var(--ink-60)'};border:1px solid ${f.type==='flag'?'#FCA5A5':'var(--ink-20)'};">${f.type==='flag'?'⚠ ':'• '}${f.text}</span>`
+      ).join('');
+    } else {
+      factorsEl.innerHTML = `<span style="font-size:11px;color:var(--ink-40);font-style:italic;">No specific risk factors identified</span>`;
+    }
+  }
+}
+
+function _renderTriageReport(aiSummary) {
+  const p = GramCare.patient || {};
+  _renderTriageVitals();
+  const level = (aiSummary.triage?.level || 'amber').toLowerCase();
+  _applyRiskLevelBar(level);
+  _applyHighRiskBanner(level, aiSummary.triage?.reason);
+  _renderRiskScore(aiSummary);
+
+  const triageBlock = document.getElementById('triage-block');
+  const triageTitle = document.getElementById('triage-title');
+  const triageDesc  = document.getElementById('triage-desc');
+  const whyTitle    = document.getElementById('triage-why-title');
+  const whyText     = document.getElementById('triage-why-text');
+  const actionsList = document.getElementById('triage-actions-list');
+
+  if (triageBlock) triageBlock.className = 'triage-block t-' + level + ' reveal';
+  if (triageTitle) {
+    const levelLabel = level === 'red' ? '🔴 HIGH RISK — Critical Referral Required' : (level === 'routine' ? '🟢 LOW RISK — Routine / OTC First-Aid' : '🟡 MEDIUM RISK — Doctor Review Required');
+    const levelColor = level === 'red' ? 'var(--red)' : (level === 'routine' ? 'var(--green)' : 'var(--amber)');
+    triageTitle.textContent = levelLabel;
+    triageTitle.style.color = levelColor;
+  }
+  if (triageDesc) triageDesc.textContent = aiSummary.triage?.reason || aiSummary.summary || 'Clinical assessment completed.';
+
+  const aiText = document.getElementById('triage-ai-text');
+  const pillsContainer = document.getElementById('triage-symptoms-pills');
+
+  if (aiText) {
+    const mainTitle = aiSummary.mainProblem?.title || aiSummary.mainProblem?.summary || aiSummary.summary || 'Patient Assessment Completed';
+    const mainSummary = aiSummary.mainProblem?.summary || aiSummary.summary || 'Clinical assessment completed.';
+    const symptoms = aiSummary.reportedSymptoms || aiSummary.reportedProblems || [];
+    const findings = aiSummary.importantFindings || [];
+    const steps = aiSummary.whatCanBeDoneNow || aiSummary.recommendedNextSteps || [];
+    const flags = aiSummary.redFlags || [];
+    const nextStep = aiSummary.recommendedNextStep || 'Forward case to doctor for review.';
+    const meds = aiSummary.medicationSuggestions || [];
+
+    aiText.innerHTML = `
+      <div style="font-family:var(--font-sans);">
+        <div style="font-size:12px;color:var(--ink-50);margin-bottom:12px;display:flex;gap:12px;flex-wrap:wrap;border-bottom:1px solid rgba(0,0,0,.08);padding-bottom:8px;">
+          <span><strong>Patient:</strong> ${p.name || 'Not recorded'}</span>
+          <span><strong>Age:</strong> ${p.age || 'Not recorded'}</span>
+          <span><strong>Gender:</strong> ${p.sex || 'Not recorded'}</span>
+          <span><strong>ID:</strong> ${p.id || 'Not recorded'}</span>
+        </div>
+        <div style="background:var(--saffron-pale);border-left:4px solid var(--saffron);padding:12px 14px;border-radius:6px;margin-bottom:14px;">
+          <div style="font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--saffron-lt);">MAIN PROBLEM</div>
+          <div style="font-size:14.5px;font-weight:700;color:var(--ink);margin-top:2px;">${mainTitle}</div>
+          <div style="font-size:13px;color:var(--ink-70);margin-top:4px;">"${mainSummary}"</div>
+        </div>
+        <div style="margin-bottom:14px;">
+          <div style="font-size:11px;font-weight:700;color:var(--ink-60);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">REPORTED SYMPTOMS</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;">
+            ${symptoms.length > 0 ? symptoms.map(s => `<span class="pill" style="background:rgba(232,105,42,.12);color:var(--saffron-lt);border:1px solid rgba(232,105,42,.25);font-size:12px;">• ${s}</span>`).join('') : '<span style="font-size:12.5px;color:var(--ink-50);font-style:italic;">No symptoms recorded</span>'}
+          </div>
+        </div>
+        <div style="margin-bottom:14px;">
+          <div style="font-size:11px;font-weight:700;color:var(--ink-60);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">IMPORTANT FINDINGS</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:6px;">
+            ${findings.length > 0 ? findings.map(f => `<div style="background:var(--ink-10);padding:6px 10px;border-radius:6px;font-size:12px;color:var(--ink-80);">${f}</div>`).join('') : '<div style="font-size:12.5px;color:var(--ink-50);font-style:italic;">Not recorded</div>'}
+          </div>
+        </div>
+        <div style="margin-bottom:14px;">
+          <div style="font-size:11px;font-weight:700;color:var(--ink-60);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">CLINICAL SUMMARY</div>
+          <div style="font-size:13px;color:var(--ink-80);line-height:1.6;background:var(--white);padding:10px 12px;border-radius:8px;border:1px solid var(--ink-10);">
+            ${aiSummary.clinicalSummary || aiSummary.summary || 'Clinical assessment completed.'}
+          </div>
+        </div>
+        <div style="margin-bottom:14px;">
+          <div style="font-size:11px;font-weight:700;color:var(--forest);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">WHAT CAN BE DONE NOW</div>
+          <div style="display:flex;flex-direction:column;gap:5px;">
+            ${steps.map(act => `<div style="font-size:12.5px;color:var(--ink-80);display:flex;align-items:flex-start;gap:6px;"><span style="color:var(--forest);">•</span><span>${act}</span></div>`).join('')}
+          </div>
+        </div>
+        <div style="margin-bottom:14px;">
+          <div style="font-size:11px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">WARNING SIGNS / RED FLAGS</div>
+          <div style="background:#FEE2E2;border-radius:8px;padding:10px 12px;border:1px solid #FCA5A5;">
+            ${flags.length > 0 ? flags.map(fl => `<div style="font-size:12.5px;color:var(--red);margin-bottom:3px;">⚠ ${fl}</div>`).join('') : '<div style="font-size:12.5px;color:var(--ink-60);">No specific red flags identified from the available information.</div>'}
+          </div>
+        </div>
+        ${meds.length > 0 ? `
+          <div style="margin-bottom:14px;">
+            <div style="font-size:11px;font-weight:700;color:var(--sky);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">MEDICATION CONSIDERATIONS</div>
+            ${meds.map(m => `
+              <div style="background:var(--sky-pale);border:1px solid rgba(14,165,233,.3);border-radius:8px;padding:10px 12px;margin-bottom:6px;">
+                <div style="font-size:13px;font-weight:700;color:var(--sky);">💊 ${m.name}</div>
+                <div style="font-size:12px;color:var(--ink-70);margin-top:2px;"><strong>Reason:</strong> ${m.reason}</div>
+                <div style="font-size:12px;color:var(--ink-60);margin-top:2px;"><strong>Safety:</strong> ${m.safetyConsiderations || 'Check allergy & history'}</div>
+              </div>
+            `).join('')}
+            <div style="background:#FEF3C7;border:1.5px solid #FCD34D;border-radius:8px;padding:10px 12px;margin-top:8px;">
+              <div style="font-size:12px;font-weight:700;color:#B45309;">⚠️ MANDATORY CLINICAL WARNING:</div>
+              <div style="font-size:11.5px;color:#92400E;margin-top:2px;line-height:1.5;">
+                AI-generated suggestion — DO NOT administer until reviewed and approved by a qualified clinician.<br/>
+                <em>AI does not replace the prescribing decision of the treating doctor.</em>
+              </div>
+            </div>
+          </div>
+        ` : `<div style="font-size:12.5px;color:var(--ink-50);font-style:italic;margin-bottom:14px;">No medication suggestion generated from the available information.</div>`}
+        <div style="background:var(--ink);color:white;border-radius:8px;padding:12px 14px;">
+          <div style="font-size:11px;font-weight:700;color:var(--saffron-lt);letter-spacing:.05em;text-transform:uppercase;">RECOMMENDED NEXT STEP</div>
+          <div style="font-size:13px;margin-top:4px;">${nextStep}</div>
+        </div>
+      </div>
+    `;
+  }
+
+  if (pillsContainer && aiSummary.reportedProblems) {
+    pillsContainer.innerHTML = aiSummary.reportedProblems.map(prob => `
+      <span class="pill" style="background:rgba(232,105,42,.15);color:var(--saffron-lt);border:1px solid rgba(232,105,42,.3);">${prob}</span>
+    `).join(' ');
+  }
+
+  if (whyTitle) whyTitle.textContent = 'Why ' + level.toUpperCase() + '?';
+  if (whyText)  whyText.textContent  = aiSummary.triage?.reason || 'Clinical safety rule triggered.';
+
+  if (actionsList && aiSummary.recommendedNextSteps) {
+    actionsList.innerHTML = aiSummary.recommendedNextSteps.map(step => `
+      <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:10px;background:var(--forest-pale);border:1px solid rgba(27,107,74,.2);">
+        <span style="font-size:18px;">📋</span>
+        <span style="font-size:13px;font-weight:600;color:var(--forest);">${step}</span>
+      </div>
+    `).join('');
+  }
 }
 
 // ─── First-Aid Protocol Page (Strict Real Clinical Data) ───
@@ -2122,6 +2267,27 @@ function goToStep(pageId) {
   navigateTo(pageId);
 }
 
+
+// Patient Photo — local preview only, no OCR/API call
+function handlePatientPhotoPreview(file, zoneElement) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const icon  = zoneElement.querySelector('.upload-icon');
+    const title = zoneElement.querySelector('.upload-title');
+    const sub   = zoneElement.querySelector('.upload-sub');
+    if (icon) {
+      icon.innerHTML = `<img src="${e.target.result}" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid var(--forest);" alt="Patient Photo"/>`;
+    }
+    if (title) title.textContent = '✓ Photo captured';
+    if (sub)   sub.textContent   = file.name;
+    zoneElement.style.borderColor = 'var(--forest)';
+    zoneElement.style.background  = 'var(--forest-pale)';
+  };
+  reader.readAsDataURL(file);
+}
+
+
 function initUploadZones() {
   document.querySelectorAll('.upload-zone').forEach((zone, index) => {
     let fileInput = zone.querySelector('input[type="file"]');
@@ -2134,6 +2300,11 @@ function initUploadZones() {
 
       fileInput.addEventListener('change', e => {
         if (e.target.files && e.target.files[0]) {
+          // Patient Photo zone on new-patient page is for local preview only — skip OCR upload
+          if (GramCare.currentPage === 'new-patient') {
+            handlePatientPhotoPreview(e.target.files[0], zone);
+            return;
+          }
           handleRealDocumentUpload(e.target.files[0], zone, zone.id || 'doc');
         }
       });
@@ -2153,6 +2324,10 @@ function initUploadZones() {
       zone.style.borderColor = 'var(--forest)';
       zone.style.background = 'var(--forest-pale)';
       if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+        if (GramCare.currentPage === 'new-patient') {
+          handlePatientPhotoPreview(e.dataTransfer.files[0], zone);
+          return;
+        }
         handleRealDocumentUpload(e.dataTransfer.files[0], zone, zone.id || 'doc');
       }
     });

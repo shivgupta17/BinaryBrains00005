@@ -1,0 +1,72 @@
+{
+  "referralId": "REF-B2Z70KRN",
+  "patientId": "PAT_1786606943528_3r8q",
+  "caseId": "CASE-VXMAPXNY",
+  "doctorId": "DOC-259ZTDQI",
+  "doctorName": "saif anwar ansari",
+  "assistantId": "AST-UP081O4L",
+  "riskLevel": "medium",
+  "reason": "The patient reports experiencing a persistent headache for four days.",
+  "aiSummary": {
+    "patientId": "PAT_1786606943528_3r8q",
+    "patient": {
+      "name": "Patient",
+      "age": "30",
+      "sex": "Male",
+      "patientId": "PAT_1786606943528_3r8q"
+    },
+    "mainProblem": {
+      "title": "Persistent Headache",
+      "summary": "The patient reports experiencing a persistent headache for four days."
+    },
+    "reportedSymptoms": [
+      "Headache lasting 4 days"
+    ],
+    "importantFindings": [
+      "Temperature: Not recorded",
+      "Blood Pressure: Not recorded",
+      "Pulse: Not recorded",
+      "SpO2: Not recorded",
+      "Lab Findings: Platelet count flagged as low",
+      "Medical History: Not recorded",
+      "Allergies: Not recorded"
+    ],
+    "clinicalSummary": "A 30-year-old male presents with a persistent headache that has lasted for four days. A document review indicates a lab test showing a low platelet count. Complete vitals, past medical history, and specific headache location/intensity are currently unrecorded. Given the combination of a multi-day headache and low platelets, prompt clinician assessment is needed to determine the underlying cause and ensure patient safety.",
+    "whatCanBeDoneNow": [
+      "Measure and record baseline vital signs including body temperature, blood pressure, pulse, and SpO2.",
+      "Advise the patient to rest comfortably in a quiet room and maintain adequate hydration.",
+      "Monitor closely for any emerging warning signs such as fever, neck stiffness, nausea, or visual changes."
+    ],
+    "redFlags": [
+      "Documented low platelet count (risk of bleeding/underlying infection)",
+      "Assess for red flag symptoms: high fever, stiff neck, sudden severe pain, vision alterations, or confusion."
+    ],
+    "medicationSuggestions": [
+      {
+        "name": "Paracetamol",
+        "reason": "Symptomatic pain relief for headache; preferred over NSAIDs (like Aspirin/Ibuprofen) due to the low platelet count flag.",
+        "sourceProtocol": "MoHFW Standard Treatment Guidelines",
+        "safetyConsiderations": "Do not administer NSAIDs owing to bleeding risk associated with low platelets. Confirm hepatic function and lack of allergies before use.",
+        "doctorApprovalRequired": true
+      }
+    ],
+    "recommendedNextStep": "Schedule a clinical consultation with a medical officer for complete vital assessment and further investigation of the low platelet count.",
+    "triage": {
+      "level": "amber",
+      "reason": "Four-day duration of headache paired with a lab finding of low platelet count warrants prompt medical evaluation to rule out acute febrile illnesses or hematological complications."
+    },
+    "disclaimer": "AI-generated clinical support. Doctor/qualified clinician review and approval is required before medication is taken or administered.",
+    "summary": "A 30-year-old male presents with a persistent headache that has lasted for four days. A document review indicates a lab test showing a low platelet count. Complete vitals, past medical history, and specific headache location/intensity are currently unrecorded. Given the combination of a multi-day headache and low platelets, prompt clinician assessment is needed to determine the underlying cause and ensure patient safety.",
+    "reportedProblems": [
+      "Headache lasting 4 days"
+    ],
+    "recommendedNextSteps": [
+      "Measure and record baseline vital signs including body temperature, blood pressure, pulse, and SpO2.",
+      "Advise the patient to rest comfortably in a quiet room and maintain adequate hydration.",
+      "Monitor closely for any emerging warning signs such as fever, neck stiffness, nausea, or visual changes."
+    ]
+  },
+  "status": "NEW",
+  "createdAt": "2026-08-13T07:46:32.040Z",
+  "acceptedAt": null
+}

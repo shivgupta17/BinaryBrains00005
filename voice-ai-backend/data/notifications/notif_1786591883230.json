@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786591883230",
+  "recipientRole": "doctor",
+  "recipientId": "DOC-5R1X23UQ",
+  "patientId": "PAT_1786591277056_o25v",
+  "caseId": null,
+  "type": "NEW REFERRAL",
+  "title": "🚨 NEW Referral Received",
+  "message": "Patient PAT_1786591277056_o25v referred for Clinical referral from Assistant Panel for physician evaluation.",
+  "createdAt": "2026-08-13T03:31:22.925Z",
+  "read": false,
+  "priority": "MEDIUM"
+}

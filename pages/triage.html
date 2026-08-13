@@ -5,6 +5,44 @@
     <p>Deterministic clinical rules + AI assessment. The LLM can <strong>never</strong> override the safety gate — all escalations follow clinician-reviewed rules.</p>
   </div>
 
+  <!-- ⚠️ HIGH RISK CRITICAL ALERT BANNER (shown only when triage = red/high) -->
+  <div id="high-risk-alert-banner" style="display:none;margin-bottom:18px;background:linear-gradient(135deg,#7F1D1D,#991B1B);border-radius:14px;padding:18px 22px;border:2px solid #EF4444;box-shadow:0 4px 20px rgba(239,68,68,0.35);">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:48px;height:48px;border-radius:12px;background:rgba(239,68,68,0.25);border:2px solid #EF4444;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;">🚨</div>
+        <div>
+          <div style="font-size:16px;font-weight:800;color:#FCA5A5;letter-spacing:0.03em;">HIGH RISK — CRITICAL ESCALATION REQUIRED</div>
+          <div style="font-size:13px;color:rgba(255,255,255,0.85);margin-top:4px;line-height:1.5;" id="high-risk-alert-reason">
+            Patient condition requires immediate physician evaluation. Do not delay referral.
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;flex-shrink:0;">
+        <button class="btn" onclick="openReferDoctorModal()" style="background:#EF4444;color:white;border:2px solid #FCA5A5;border-radius:10px;padding:10px 20px;font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap;">
+          👨‍⚕️ Send to Doctor NOW
+        </button>
+      </div>
+    </div>
+    <div style="margin-top:14px;padding:10px 14px;background:rgba(0,0,0,0.3);border-radius:8px;font-size:12px;color:#FCA5A5;border:1px solid rgba(239,68,68,0.4);">
+      ⚠️ <strong>Clinical Rule Triggered:</strong> HIGH risk triage level detected. Per GramCare AI protocol, the doctor must be contacted immediately and the patient should be sent directly to the physician for urgent evaluation.
+    </div>
+  </div>
+
+  <!-- Risk Level Summary Bar -->
+  <div id="risk-level-bar" style="display:none;margin-bottom:18px;background:var(--white);border-radius:12px;padding:14px 20px;border:1px solid var(--ink-20);display:none;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span style="font-size:12px;font-weight:700;color:var(--ink-60);text-transform:uppercase;letter-spacing:0.05em;">AI Risk Assessment</span>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <div id="risk-pill-low"  style="padding:6px 16px;border-radius:20px;font-size:12.5px;font-weight:700;background:#D1FAE5;color:#065F46;border:2px solid #6EE7B7;opacity:0.4;">🟢 LOW</div>
+      <div style="font-size:16px;color:var(--ink-30);">→</div>
+      <div id="risk-pill-med"  style="padding:6px 16px;border-radius:20px;font-size:12.5px;font-weight:700;background:#FEF3C7;color:#92400E;border:2px solid #FCD34D;opacity:0.4;">🟡 MEDIUM</div>
+      <div style="font-size:16px;color:var(--ink-30);">→</div>
+      <div id="risk-pill-high" style="padding:6px 16px;border-radius:20px;font-size:12.5px;font-weight:700;background:#FEE2E2;color:#991B1B;border:2px solid #FCA5A5;opacity:0.4;">🔴 HIGH</div>
+    </div>
+    <div id="risk-level-text" style="font-size:13px;color:var(--ink-70);font-weight:600;"></div>
+  </div>
+
   <div class="workflow-nav">
     <div class="wf-step done" onclick="navigateTo('new-patient')"><div class="wf-num">✓</div>Register</div>
     <div class="wf-arrow">›</div>
@@ -69,9 +107,43 @@
 
     </div>
 
-    <!-- Right: Vitals + Actions -->
+    <!-- Right: Risk Score + Vitals + Actions -->
     <div class="col">
-      <div class="card reveal">
+
+      <!-- ── RISK SCORE WIDGET ── -->
+      <div class="card reveal" id="risk-score-card" style="margin-bottom:16px;border:2px solid var(--ink-20);">
+        <div class="card-body" style="padding:18px 20px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+            <div style="font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-60);">⚡ AI Risk Score</div>
+            <span id="risk-score-badge" style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:var(--ink-10);color:var(--ink-50);">Calculating…</span>
+          </div>
+
+          <!-- Score gauge bar -->
+          <div style="position:relative;height:12px;border-radius:8px;background:linear-gradient(to right,#D1FAE5 0%,#FEF3C7 50%,#FEE2E2 100%);overflow:hidden;margin-bottom:8px;">
+            <div id="risk-score-needle" style="position:absolute;top:-3px;width:4px;height:18px;border-radius:2px;background:var(--ink);box-shadow:0 0 6px rgba(0,0,0,.4);transition:left .6s cubic-bezier(.34,1.56,.64,1);left:50%;"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--ink-40);margin-bottom:16px;">
+            <span>0 — Safe</span><span>50</span><span>100 — Critical</span>
+          </div>
+
+          <!-- Score number + label -->
+          <div style="display:flex;align-items:center;gap:14px;">
+            <div id="risk-score-circle" style="width:64px;height:64px;border-radius:50%;border:4px solid var(--ink-20);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;transition:border-color .4s;">
+              <div id="risk-score-number" style="font-size:20px;font-weight:800;line-height:1;color:var(--ink);">—</div>
+              <div style="font-size:9px;color:var(--ink-40);font-weight:600;">/100</div>
+            </div>
+            <div>
+              <div id="risk-score-label" style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px;">Awaiting Analysis</div>
+              <div id="risk-score-reason" style="font-size:11.5px;color:var(--ink-60);line-height:1.5;">Complete voice intake or document upload to generate risk score.</div>
+            </div>
+          </div>
+
+          <!-- Factor pills -->
+          <div id="risk-score-factors" style="display:flex;flex-wrap:wrap;gap:5px;margin-top:12px;"></div>
+        </div>
+      </div>
+
+      <div class="card reveal delay-1">
         <div class="card-header"><div class="card-title">📊 Patient Vitals</div></div>
         <div class="card-body">
           <div class="grid-2" style="gap:10px;">
@@ -110,7 +182,7 @@
             <div style="font-size:13px;color:var(--ink-50);font-style:italic;">No custom actions generated yet. Complete patient intake.</div>
           </div>
           <button class="btn btn-primary btn-full" onclick="navigateTo('protocol')">📋 Open First-Aid Protocol</button>
-          <button class="btn btn-ghost btn-full" style="margin-top:9px;" onclick="openReferDoctorModal()">👨‍⚕️ Send to Doctor Dashboard</button>
+          <button id="send-to-doctor-btn" class="btn btn-ghost btn-full" style="margin-top:9px;" onclick="openReferDoctorModal()">👨‍⚕️ Send to Doctor Dashboard</button>
         </div>
       </div>
 

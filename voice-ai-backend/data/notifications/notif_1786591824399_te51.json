@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786591824399_te51",
+  "recipientRole": "assistant",
+  "recipientId": null,
+  "patientId": "PAT-15DOGL9H",
+  "caseId": "CASE-Y3M5MLZO",
+  "type": "MEDICATION_DUE",
+  "title": "⏰ MEDICATION DUE",
+  "message": "Medication Azithromycin 500mg (500mg) is due now for patient PAT-15DOGL9H",
+  "priority": "HIGH",
+  "read": false,
+  "createdAt": "2026-08-13T03:30:24.399Z"
+}

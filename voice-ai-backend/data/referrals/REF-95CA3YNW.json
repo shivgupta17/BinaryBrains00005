@@ -1,0 +1,14 @@
+{
+  "referralId": "REF-95CA3YNW",
+  "patientId": "PAT_1786595131587_wjl1",
+  "caseId": "CASE-05I1GACQ",
+  "doctorId": "DOC-8CCJNPP9",
+  "doctorName": "Ritik",
+  "assistantId": "AST-L0TAWP3S",
+  "riskLevel": "medium",
+  "reason": "hey",
+  "aiSummary": null,
+  "status": "NEW",
+  "createdAt": "2026-08-13T04:28:47.579Z",
+  "acceptedAt": null
+}

@@ -28,5 +28,55 @@
     "actor": "AST_usr_anchal123gmailcom",
     "actorRole": "assistant",
     "data": {}
+  },
+  {
+    "eventId": "evt_1786591883228_18kx",
+    "timestamp": "2026-08-13T03:31:23.228Z",
+    "type": "REFERRED_TO_DOCTOR",
+    "title": "Referred to Doctor",
+    "description": "Case referred to babli (Risk Level: MEDIUM)",
+    "actor": "AST-L0TAWP3S",
+    "actorRole": "assistant",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786592385735_ndtl",
+    "timestamp": "2026-08-13T03:39:45.735Z",
+    "type": "REFERRED_TO_DOCTOR",
+    "title": "Referred to Doctor",
+    "description": "Case referred to babli (Risk Level: MEDIUM)",
+    "actor": "AST-L0TAWP3S",
+    "actorRole": "assistant",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786595327888_r9k2",
+    "timestamp": "2026-08-13T04:28:47.888Z",
+    "type": "REFERRED_TO_DOCTOR",
+    "title": "Referred to Doctor",
+    "description": "Case referred to Ritik (Risk Level: MEDIUM)",
+    "actor": "AST-L0TAWP3S",
+    "actorRole": "assistant",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786607192347_t8lj",
+    "timestamp": "2026-08-13T07:46:32.347Z",
+    "type": "REFERRED_TO_DOCTOR",
+    "title": "Referred to Doctor",
+    "description": "Case referred to saif anwar ansari (Risk Level: MEDIUM)",
+    "actor": "AST-UP081O4L",
+    "actorRole": "assistant",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786610005893_4f1r",
+    "timestamp": "2026-08-13T08:33:25.894Z",
+    "type": "REFERRED_TO_DOCTOR",
+    "title": "Referred to Doctor",
+    "description": "Case referred to ramesh (Risk Level: MEDIUM)",
+    "actor": "AST-UP081O4L",
+    "actorRole": "assistant",
+    "data": {}
   }
 ]

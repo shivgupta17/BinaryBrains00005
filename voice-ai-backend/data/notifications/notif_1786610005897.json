@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786610005897",
+  "recipientRole": "doctor",
+  "recipientId": "DOC-5MP81O6J",
+  "patientId": "PAT_1786609756390_qn2i",
+  "caseId": null,
+  "type": "NEW REFERRAL",
+  "title": "🚨 NEW Referral Received",
+  "message": "Patient PAT_1786609756390_qn2i referred for The patient reports experiencing a fever for the past four days.",
+  "createdAt": "2026-08-13T08:33:25.560Z",
+  "read": false,
+  "priority": "MEDIUM"
+}

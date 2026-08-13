@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786591824389_0cxy",
+  "recipientRole": "assistant",
+  "recipientId": null,
+  "patientId": "PAT_DUAL_PANEL_01",
+  "caseId": "CASE_1786566594286_2akn",
+  "type": "MEDICATION_DUE",
+  "title": "⏰ MEDICATION DUE",
+  "message": "Medication Povidone-Iodine Dressing (Topical) is due now for patient PAT_DUAL_PANEL_01",
+  "priority": "HIGH",
+  "read": false,
+  "createdAt": "2026-08-13T03:30:24.389Z"
+}
