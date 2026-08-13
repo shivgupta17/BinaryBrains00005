@@ -1,0 +1,72 @@
+[
+  {
+    "eventId": "evt_1786581997865_q1tu",
+    "timestamp": "2026-08-13T00:46:37.865Z",
+    "type": "PATIENT_REGISTERED",
+    "title": "Encounter Case Created",
+    "description": "New clinical encounter CASE-SFGZ2X3L created for patient PAT-VL9OWL9W",
+    "actor": "Clinic Assistant",
+    "actorRole": "assistant",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786581998394_06ye",
+    "timestamp": "2026-08-13T00:46:38.394Z",
+    "type": "REFERRED_TO_DOCTOR",
+    "title": "Referred to Doctor",
+    "description": "Case referred to Dr. Saif 3Way (Risk Level: AMBER)",
+    "actor": "AST-4GJNEJ5O",
+    "actorRole": "assistant",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786581998963_m18w",
+    "timestamp": "2026-08-13T00:46:38.963Z",
+    "type": "DOCTOR_ACCEPTED",
+    "title": "Doctor Accepted Referral",
+    "description": "Referral accepted by Dr. Saif 3Way. Consultation initiated.",
+    "actor": "Dr. Saif 3Way",
+    "actorRole": "doctor",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786581999139_cfht",
+    "timestamp": "2026-08-13T00:46:39.139Z",
+    "type": "BED_ASSIGNED",
+    "title": "Patient Bed Assigned",
+    "description": "ICU Ward 2 · Room 105 · Bed B1",
+    "actor": "DOC-AS80TWQP",
+    "actorRole": "doctor",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786581999215_zdvx",
+    "timestamp": "2026-08-13T00:46:39.215Z",
+    "type": "MEDICATION_APPROVED",
+    "title": "Doctor Approved Prescription",
+    "description": "Medications approved: Ciprofloxacin 500mg",
+    "actor": "DOC-AS80TWQP",
+    "actorRole": "doctor",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786581999279_smc0",
+    "timestamp": "2026-08-13T00:46:39.279Z",
+    "type": "MEDICATION_SCHEDULED",
+    "title": "Medication Schedule Created",
+    "description": "Ciprofloxacin 500mg (500mg) scheduled at 08:00, 20:00",
+    "actor": "DOC-AS80TWQP",
+    "actorRole": "doctor",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786581999488_0lxf",
+    "timestamp": "2026-08-13T00:46:39.488Z",
+    "type": "DOCTOR_INSTRUCTION_SENT",
+    "title": "Doctor Instruction Sent",
+    "description": "Instruction: \"Keep patient head elevated 30 degrees and monitor temperature every 4 hours.\"",
+    "actor": "DOC-AS80TWQP",
+    "actorRole": "doctor",
+    "data": {}
+  }
+]

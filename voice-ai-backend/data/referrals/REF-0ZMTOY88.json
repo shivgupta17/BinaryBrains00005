@@ -1,0 +1,14 @@
+{
+  "referralId": "REF-0ZMTOY88",
+  "patientId": "PAT-URSEHJ9Y",
+  "caseId": "CASE-5Y190P63",
+  "doctorId": "DOC-DI3NNSS8",
+  "doctorName": "Dr. Saif Direct",
+  "assistantId": "AST-YZ2T7XCD",
+  "riskLevel": "high",
+  "reason": "High fever and mental confusion over past 2 days requiring physician assessment",
+  "aiSummary": null,
+  "status": "NEW",
+  "createdAt": "2026-08-13T01:05:24.678Z",
+  "acceptedAt": null
+}

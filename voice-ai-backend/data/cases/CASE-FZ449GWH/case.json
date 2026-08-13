@@ -1,0 +1,18 @@
+{
+  "_id": "6a7d1a0f0f1f6ad24c056cb9",
+  "caseId": "CASE-FZ449GWH",
+  "assignedDoctorId": "DOC-FML8UD3Y",
+  "assistantId": "AST-C9XGMXV0",
+  "assistantNotes": [],
+  "bedAssignment": null,
+  "caseType": "Acute High Fever & Respiratory Distress",
+  "createdAt": "2026-08-13T01:12:47.032Z",
+  "doctorNotes": [],
+  "followUp": null,
+  "imageUploads": [],
+  "medications": [],
+  "patientId": "PAT-4P7WQQ6L",
+  "status": "REFERRED",
+  "textStatements": [],
+  "videoUploads": []
+}

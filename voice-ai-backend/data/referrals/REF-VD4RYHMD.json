@@ -1,0 +1,14 @@
+{
+  "referralId": "REF-VD4RYHMD",
+  "patientId": "PAT-4P7WQQ6L",
+  "caseId": "CASE-FZ449GWH",
+  "doctorId": "DOC-FML8UD3Y",
+  "doctorName": "Dr. Saif Persist",
+  "assistantId": "AST-C9XGMXV0",
+  "riskLevel": "high",
+  "reason": "High fever, shortness of breath, and leg pain over past 2 days requiring urgent physician assessment",
+  "aiSummary": null,
+  "status": "NEW",
+  "createdAt": "2026-08-13T01:12:47.537Z",
+  "acceptedAt": null
+}

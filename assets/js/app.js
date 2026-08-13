@@ -1374,7 +1374,8 @@ async function acceptDoctorReferral(referralId) {
 async function openDoctorCaseView(caseId, patientId) {
   try {
     const token = getAuthToken();
-    const res = await fetch(`http://localhost:5000/api/patients/lookup/${encodeURIComponent(patientId)}`, {
+    const targetCaseId = caseId || `CASE_${patientId}`;
+    const res = await fetch(`http://localhost:5000/api/cases/${encodeURIComponent(targetCaseId)}`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
     const data = await res.json();
@@ -1383,37 +1384,84 @@ async function openDoctorCaseView(caseId, patientId) {
       return;
     }
 
-    const p = data.data;
-    GramCare.patient.id = p.patientId;
-    GramCare.patient.name = p.name;
-    GramCare.patient.age = p.age;
-    GramCare.patient.sex = p.sex;
-    GramCare.patient.village = p.village;
-    GramCare.patient.vitals = p.vitals || {};
-    GramCare.patient.aiSummary = p.aiSummary;
+    const cData = data.data || {};
+    const p = cData.demographics || {};
+    const v = cData.vitals || {};
+    const voice = cData.voice || {};
+    const summary = cData.aiSummary || {};
+    const triage = cData.triage || {};
+    const docs = cData.documents || [];
+    const activeCase = cData.case || {};
 
-    // Update Doctor Case Card UI
+    GramCare.patient.id = p.patientId || patientId;
+    GramCare.patient.name = p.name || 'Patient';
+    GramCare.patient.currentCaseId = activeCase.caseId || targetCaseId;
+
+    // Update Doctor Case Card UI Elements
     const titleEl = document.getElementById('doc-case-title');
-    const nameEl = document.getElementById('doc-p-name');
-    const ageEl = document.getElementById('doc-p-age');
-    const vilEl = document.getElementById('doc-p-village');
+    const nameEl  = document.getElementById('doc-p-name');
+    const idEl    = document.getElementById('doc-p-id');
+    const ageEl   = document.getElementById('doc-p-age');
+    const vilEl   = document.getElementById('doc-p-village');
+    const langEl  = document.getElementById('doc-p-lang');
+
     const tempEl = document.getElementById('doc-v-temp');
-    const bpEl = document.getElementById('doc-v-bp');
-    const hrEl = document.getElementById('doc-v-hr');
+    const bpEl   = document.getElementById('doc-v-bp');
+    const hrEl   = document.getElementById('doc-v-hr');
     const spo2El = document.getElementById('doc-v-spo2');
-    const sumEl = document.getElementById('doc-ai-summary-text');
+    const respEl = document.getElementById('doc-v-resp');
 
-    if (titleEl) titleEl.textContent = `Patient Case: ${p.name} (${p.patientId})`;
-    if (nameEl) nameEl.textContent = p.name;
-    if (ageEl) ageEl.textContent = `${p.age} yrs (${p.sex})`;
-    if (vilEl) vilEl.textContent = p.village || 'Rajpur';
-    if (tempEl) tempEl.textContent = p.vitals?.temp || '98.6°F';
-    if (bpEl) bpEl.textContent = p.vitals?.bp || '120/80 mmHg';
-    if (hrEl) hrEl.textContent = p.vitals?.pulse || '72 bpm';
-    if (spo2El) spo2El.textContent = p.vitals?.spo2 || '98%';
-    if (sumEl) sumEl.textContent = p.aiSummary?.mainProblem?.summary || 'Clinical evaluation packet loaded. Ready for doctor assessment.';
+    const voiceTransEl = document.getElementById('doc-voice-transcript');
+    const voiceEnglEl  = document.getElementById('doc-voice-translation');
+    const voiceLangPill = document.getElementById('doc-voice-lang-pill');
 
-    showToast(`Loaded case packet for ${p.name} (${p.patientId})`, 'info');
+    const sumTextEl     = document.getElementById('doc-ai-summary-text');
+    const triagePill    = document.getElementById('doc-triage-level-pill');
+    const rationaleEl   = document.getElementById('doc-triage-rationale');
+    const actionEl      = document.getElementById('doc-triage-action');
+    const ocrEl         = document.getElementById('doc-ocr-findings');
+
+    const historyEl     = document.getElementById('doc-past-history');
+    const allergyEl     = document.getElementById('doc-allergies');
+
+    if (titleEl) titleEl.textContent = `Patient Case: ${p.name || 'Patient'} (${GramCare.patient.id})`;
+    if (nameEl)  nameEl.textContent  = p.name || 'Not recorded';
+    if (idEl)    idEl.textContent    = GramCare.patient.id || 'Not recorded';
+    if (ageEl)   ageEl.textContent   = `${p.age || '30'} yrs (${p.sex || 'Male'})`;
+    if (vilEl)   vilEl.textContent   = p.village || 'Rajpur';
+    if (langEl)  langEl.textContent  = voice.detectedLanguage || p.language || 'Hindi';
+
+    if (tempEl) tempEl.textContent = v.temp && v.temp !== 'Not recorded' ? v.temp : 'Not recorded';
+    if (bpEl)   bpEl.textContent   = v.bp && v.bp !== 'Not recorded' ? v.bp : 'Not recorded';
+    if (hrEl)   hrEl.textContent   = v.pulse && v.pulse !== 'Not recorded' ? v.pulse : 'Not recorded';
+    if (spo2El) spo2El.textContent = v.spo2 && v.spo2 !== 'Not recorded' ? v.spo2 : 'Not recorded';
+    if (respEl) respEl.textContent = v.respRate && v.respRate !== 'Not recorded' ? v.respRate : 'Not recorded';
+
+    if (voiceTransEl) voiceTransEl.textContent = voice.transcript || 'Not recorded';
+    if (voiceEnglEl)  voiceEnglEl.textContent  = voice.translation || voice.transcript || 'Not recorded';
+    if (voiceLangPill) voiceLangPill.textContent = `${voice.detectedLanguage || 'Hindi'} ➔ English`;
+
+    if (sumTextEl) sumTextEl.textContent = summary.mainProblem?.summary || summary.summary || 'Clinical evaluation packet loaded. Ready for doctor assessment.';
+    if (triagePill) {
+      const level = (triage.level || 'amber').toUpperCase();
+      triagePill.textContent = `${level} TRIAGE`;
+      triagePill.className = `pill pill-${level === 'HIGH' || level === 'RED' ? 'red' : (level === 'AMBER' || level === 'MEDIUM' ? 'amber' : 'green')}`;
+    }
+    if (rationaleEl) rationaleEl.textContent = triage.rationale || 'Physician review requested based on clinical symptoms.';
+    if (actionEl)    actionEl.textContent    = summary.recommendedNextStep || triage.recommendedAction || 'Physician review and prescription';
+
+    if (ocrEl) {
+      if (docs && docs.length > 0) {
+        ocrEl.innerHTML = docs.map(d => `<div><strong>${d.fileName || 'Document'}:</strong> ${d.ocrText ? d.ocrText.substring(0, 180) + '...' : 'Extracted'}</div>`).join('');
+      } else {
+        ocrEl.textContent = 'No medical documents uploaded for this case encounter.';
+      }
+    }
+
+    if (historyEl) historyEl.textContent = p.pastHistory || 'Not recorded';
+    if (allergyEl) allergyEl.textContent = p.allergies || 'Not recorded';
+
+    showToast(`Loaded case packet for ${p.name || 'Patient'} (${GramCare.patient.id})`, 'info');
   } catch (err) {
     showToast('Error loading doctor case view: ' + err.message, 'error');
   }

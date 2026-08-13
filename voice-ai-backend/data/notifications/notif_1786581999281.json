@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786581999281",
+  "recipientRole": "assistant",
+  "recipientId": "AST-4GJNEJ5O",
+  "patientId": "PAT-VL9OWL9W",
+  "caseId": "CASE-SFGZ2X3L",
+  "type": "MEDICATION_DUE",
+  "title": "⏰ Medication Schedule Created",
+  "message": "Ciprofloxacin 500mg scheduled at 08:00, 20:00",
+  "createdAt": "2026-08-13T00:46:39.281Z",
+  "read": false,
+  "priority": "MEDIUM"
+}

@@ -1,0 +1,60 @@
+[
+  {
+    "eventId": "evt_1786583227355_mqbx",
+    "timestamp": "2026-08-13T01:07:07.355Z",
+    "type": "PATIENT_REGISTERED",
+    "title": "Encounter Case Created",
+    "description": "New clinical encounter CASE-L9XB4V42 created for patient PAT-ZN13OJBV",
+    "actor": "Clinic Assistant",
+    "actorRole": "assistant",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786583227373_hjvz",
+    "timestamp": "2026-08-13T01:07:07.373Z",
+    "type": "VITALS_ENTERED",
+    "title": "Vitals Recorded",
+    "description": "Temp: 102.4°F, BP: 130/85 mmHg, Pulse: 98 bpm, SpO2: 96%",
+    "actor": "Clinic Assistant",
+    "actorRole": "assistant",
+    "data": {
+      "temp": "102.4°F",
+      "bp": "130/85 mmHg",
+      "pulse": "98 bpm",
+      "spo2": "96%",
+      "weight": "Not recorded",
+      "respRate": "22 bpm",
+      "recordedAt": "2026-08-13T01:07:07.367Z"
+    }
+  },
+  {
+    "eventId": "evt_1786583227885_xolq",
+    "timestamp": "2026-08-13T01:07:07.885Z",
+    "type": "REFERRED_TO_DOCTOR",
+    "title": "Referred to Doctor",
+    "description": "Case referred to Dr. Saif Direct (Risk Level: HIGH)",
+    "actor": "AST-6CTU816I",
+    "actorRole": "assistant",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786583228219_lj7j",
+    "timestamp": "2026-08-13T01:07:08.219Z",
+    "type": "MEDICATION_APPROVED",
+    "title": "Doctor Approved Prescription",
+    "description": "Medications approved: Paracetamol 500mg",
+    "actor": "DOC-E0VJXN7Z",
+    "actorRole": "doctor",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786583228385_hepj",
+    "timestamp": "2026-08-13T01:07:08.385Z",
+    "type": "DOCTOR_INSTRUCTION_SENT",
+    "title": "Doctor Instruction Sent",
+    "description": "Instruction: \"Tepid sponging for fever > 102°F. Keep patient hydrated.\"",
+    "actor": "DOC-E0VJXN7Z",
+    "actorRole": "doctor",
+    "data": {}
+  }
+]

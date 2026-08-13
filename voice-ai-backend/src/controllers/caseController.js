@@ -83,7 +83,7 @@ async function getCaseDetails(req, res) {
       return res.status(404).json({ success: false, error: `Case not found: ${caseId}` });
     }
 
-    const fullContext = patientContextService.getPatientCaseContext(caseData.patientId, caseId);
+    const fullContext = await patientContextService.getPatientCaseContext(caseData.patientId, caseId);
     return res.status(200).json({
       success: true,
       data: {
@@ -234,7 +234,7 @@ async function getCaseHandoff(req, res) {
       return res.status(404).json({ success: false, error: `Case not found: ${caseId}` });
     }
 
-    const context = patientContextService.getPatientCaseContext(caseData.patientId, caseId);
+    const context = await patientContextService.getPatientCaseContext(caseData.patientId, caseId);
     const summary = await aiSummaryService.generatePatientAiSummary(caseData.patientId);
 
     const handoffBrief = {

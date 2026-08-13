@@ -1,0 +1,14 @@
+{
+  "referralId": "REF-7NFCN8A7",
+  "patientId": "PAT-7YBGLXI3",
+  "caseId": "CASE-W85AJMDV",
+  "doctorId": "DOC-P4NH5071",
+  "doctorName": "Shalu",
+  "assistantId": "AST_usr_anchal123gmailcom",
+  "riskLevel": "medium",
+  "reason": "fever hai",
+  "aiSummary": null,
+  "status": "NEW",
+  "createdAt": "2026-08-13T00:58:43.079Z",
+  "acceptedAt": null
+}

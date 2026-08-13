@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786582444884",
+  "recipientRole": "assistant",
+  "recipientId": "AST_usr_anchal123gmailcom",
+  "patientId": "PAT-WXHNZU3U",
+  "caseId": "CASE-FBXYY6TU",
+  "type": "PATIENT UPDATE",
+  "title": "✅ Referral Accepted",
+  "message": "Shalu has accepted referral for patient PAT-WXHNZU3U",
+  "createdAt": "2026-08-13T00:54:04.884Z",
+  "read": false,
+  "priority": "MEDIUM"
+}

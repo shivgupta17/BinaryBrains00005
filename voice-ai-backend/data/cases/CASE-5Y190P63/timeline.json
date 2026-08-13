@@ -1,0 +1,40 @@
+[
+  {
+    "eventId": "evt_1786583124465_rue0",
+    "timestamp": "2026-08-13T01:05:24.465Z",
+    "type": "PATIENT_REGISTERED",
+    "title": "Encounter Case Created",
+    "description": "New clinical encounter CASE-5Y190P63 created for patient PAT-URSEHJ9Y",
+    "actor": "Clinic Assistant",
+    "actorRole": "assistant",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786583124480_y9hj",
+    "timestamp": "2026-08-13T01:05:24.480Z",
+    "type": "VITALS_ENTERED",
+    "title": "Vitals Recorded",
+    "description": "Temp: 102.4°F, BP: 130/85 mmHg, Pulse: 98 bpm, SpO2: 96%",
+    "actor": "Clinic Assistant",
+    "actorRole": "assistant",
+    "data": {
+      "temp": "102.4°F",
+      "bp": "130/85 mmHg",
+      "pulse": "98 bpm",
+      "spo2": "96%",
+      "weight": "Not recorded",
+      "respRate": "22 bpm",
+      "recordedAt": "2026-08-13T01:05:24.468Z"
+    }
+  },
+  {
+    "eventId": "evt_1786583124844_uoti",
+    "timestamp": "2026-08-13T01:05:24.844Z",
+    "type": "REFERRED_TO_DOCTOR",
+    "title": "Referred to Doctor",
+    "description": "Case referred to Dr. Saif Direct (Risk Level: HIGH)",
+    "actor": "AST-YZ2T7XCD",
+    "actorRole": "assistant",
+    "data": {}
+  }
+]

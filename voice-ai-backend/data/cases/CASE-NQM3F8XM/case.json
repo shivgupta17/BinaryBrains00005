@@ -1,0 +1,60 @@
+{
+  "_id": "6a7d14120f1f6ad24c056ca2",
+  "caseId": "CASE-NQM3F8XM",
+  "assignedDoctorId": "DOC-1A233X8Q",
+  "assistantId": "AST-PL92AYNU",
+  "assistantNotes": [],
+  "bedAssignment": {
+    "bedAssignmentId": "bed_1786582035416",
+    "ward": "ICU Ward 2",
+    "room": "Room 105",
+    "bed": "Bed B1",
+    "floor": "1st Floor",
+    "department": "Pulmonology",
+    "assignedBy": "DOC-1A233X8Q",
+    "assignedAt": "2026-08-13T00:47:15.416Z",
+    "notes": "Patient under observation with oxygen support"
+  },
+  "caseType": "High Fever & Acute Evaluation",
+  "createdAt": "2026-08-13T00:47:14.279Z",
+  "doctorNotes": [
+    {
+      "noteId": "note_1786582035534",
+      "doctorId": "DOC-1A233X8Q",
+      "text": "Prescribed antibacterial coverage",
+      "createdAt": "2026-08-13T00:47:15.534Z"
+    }
+  ],
+  "followUp": null,
+  "imageUploads": [],
+  "medications": [],
+  "patientId": "PAT-OR9DN1X8",
+  "status": "IN_CONSULTATION",
+  "textStatements": [],
+  "videoUploads": [],
+  "approvedMedications": [
+    {
+      "medicationId": "med_1786582035532",
+      "name": "Ciprofloxacin 500mg",
+      "dosage": "1 Tablet (500mg)",
+      "route": "Oral",
+      "frequency": "Twice Daily (BD)",
+      "duration": "5 Days",
+      "status": "DOCTOR_APPROVED",
+      "approvedAt": "2026-08-13T00:47:15.534Z",
+      "approvedBy": "DOC-1A233X8Q"
+    }
+  ],
+  "doctorInstructions": [
+    {
+      "messageId": "msg_1786582035718",
+      "caseId": "CASE-NQM3F8XM",
+      "patientId": "PAT-OR9DN1X8",
+      "doctorId": "DOC-1A233X8Q",
+      "assistantId": "AST-PL92AYNU",
+      "message": "Keep patient head elevated 30 degrees and monitor temperature every 4 hours.",
+      "createdAt": "2026-08-13T00:47:15.718Z",
+      "status": "SENT"
+    }
+  ]
+}

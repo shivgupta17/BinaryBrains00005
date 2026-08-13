@@ -1,0 +1,12 @@
+[
+  {
+    "eventId": "evt_1786582444882_cs6t",
+    "timestamp": "2026-08-13T00:54:04.882Z",
+    "type": "DOCTOR_ACCEPTED",
+    "title": "Doctor Accepted Referral",
+    "description": "Referral accepted by Shalu. Consultation initiated.",
+    "actor": "Shalu",
+    "actorRole": "doctor",
+    "data": {}
+  }
+]

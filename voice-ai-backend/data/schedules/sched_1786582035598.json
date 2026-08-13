@@ -1,0 +1,14 @@
+{
+  "scheduleId": "sched_1786582035598",
+  "caseId": "CASE-NQM3F8XM",
+  "patientId": "PAT-OR9DN1X8",
+  "medicationName": "Ciprofloxacin 500mg",
+  "dose": "500mg",
+  "times": [
+    "08:00",
+    "20:00"
+  ],
+  "status": "ACTIVE",
+  "createdBy": "DOC-1A233X8Q",
+  "createdAt": "2026-08-13T00:47:15.598Z"
+}

@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786581999140",
+  "recipientRole": "assistant",
+  "recipientId": "AST-4GJNEJ5O",
+  "patientId": "PAT-VL9OWL9W",
+  "caseId": "CASE-SFGZ2X3L",
+  "type": "BED_ASSIGNED",
+  "title": "🛏️ Bed Assigned",
+  "message": "Patient assigned to ICU Ward 2, Room 105, Bed B1",
+  "createdAt": "2026-08-13T00:46:39.140Z",
+  "read": false,
+  "priority": "HIGH"
+}

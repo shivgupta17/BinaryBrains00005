@@ -77,6 +77,11 @@ async function completeVoiceIntake(req, res) {
     if (isDbConnected()) {
       const db = getDb();
       await db.collection('conversations').updateOne({ conversationId }, { $set: conversationData }, { upsert: true });
+      await db.collection('voice').updateOne(
+        { $or: [{ conversationId }, { patientId }] },
+        { $set: { conversationId, patientId, language: result.language, transcription: result.transcription, createdAt } },
+        { upsert: true }
+      );
     }
 
     return res.status(200).json({
@@ -141,6 +146,38 @@ async function analyzeVoiceConversation(req, res) {
     if (isDbConnected()) {
       const db = getDb();
       await db.collection('conversations').updateOne({ conversationId }, { $set: { aiAnalysis: aiAnalysisResult } });
+      await db.collection('voice').updateOne(
+        { $or: [{ conversationId }, { patientId }] },
+        { $set: { aiAnalysis: aiAnalysisResult, transcription: conversation.transcription, language: conversation.language, updatedAt: new Date().toISOString() } },
+        { upsert: true }
+      );
+
+      // Save real AI Summary & Triage directly into cases collection in MongoDB Atlas
+      const identifiedProb = aiAnalysisResult?.clientProblem?.identifiedProblem || aiAnalysisResult?.identifiedProblem || 'Clinical Evaluation';
+      const probSummary = aiAnalysisResult?.clientProblem?.problemSummary || aiAnalysisResult?.summary || 'Voice intake clinical summary.';
+      const triageLevel = (aiAnalysisResult?.triageLevel || aiAnalysisResult?.triage?.level || 'amber').toLowerCase();
+
+      const aiSummaryDoc = {
+        summary: probSummary,
+        mainProblem: {
+          title: identifiedProb,
+          summary: probSummary
+        },
+        reportedSymptoms: aiAnalysisResult?.clientProblem?.reportedSymptoms || [],
+        keyIssues: aiAnalysisResult?.clientProblem?.keyIssues || [],
+        recommendedNextStep: aiAnalysisResult?.recommendedNextStep || 'Physician consultation and review'
+      };
+
+      const triageDoc = {
+        level: triageLevel,
+        rationale: aiAnalysisResult?.triageRationale || 'Physician consultation requested based on clinical symptoms.',
+        recommendedAction: aiAnalysisResult?.recommendedNextStep || 'Physician review and prescription'
+      };
+
+      await db.collection('cases').updateMany(
+        { $or: [{ patientId }, { caseId: req.body.caseId }] },
+        { $set: { aiSummary: aiSummaryDoc, triage: triageDoc, updatedAt: new Date().toISOString() } }
+      );
     }
 
     return res.status(200).json({

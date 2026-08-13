@@ -1,0 +1,14 @@
+{
+  "referralId": "REF-WEOTS516",
+  "patientId": "PAT-WXHNZU3U",
+  "caseId": "CASE-FBXYY6TU",
+  "doctorId": "DOC-P4NH5071",
+  "doctorName": "Shalu",
+  "assistantId": "AST_usr_anchal123gmailcom",
+  "riskLevel": "medium",
+  "reason": "fever hai",
+  "aiSummary": null,
+  "status": "ACCEPTED",
+  "createdAt": "2026-08-13T00:53:33.250Z",
+  "acceptedAt": "2026-08-13T00:54:04.768Z"
+}

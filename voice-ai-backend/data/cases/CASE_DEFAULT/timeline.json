@@ -8,5 +8,25 @@
     "actor": "AST-WIUNQP2L",
     "actorRole": "assistant",
     "data": {}
+  },
+  {
+    "eventId": "evt_1786582413490_03zh",
+    "timestamp": "2026-08-13T00:53:33.490Z",
+    "type": "REFERRED_TO_DOCTOR",
+    "title": "Referred to Doctor",
+    "description": "Case referred to Shalu (Risk Level: MEDIUM)",
+    "actor": "AST_usr_anchal123gmailcom",
+    "actorRole": "assistant",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786582723325_yrj9",
+    "timestamp": "2026-08-13T00:58:43.325Z",
+    "type": "REFERRED_TO_DOCTOR",
+    "title": "Referred to Doctor",
+    "description": "Case referred to Shalu (Risk Level: MEDIUM)",
+    "actor": "AST_usr_anchal123gmailcom",
+    "actorRole": "assistant",
+    "data": {}
   }
 ]

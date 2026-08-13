@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786583567731",
+  "recipientRole": "doctor",
+  "recipientId": "DOC-FML8UD3Y",
+  "patientId": "PAT-4P7WQQ6L",
+  "caseId": "CASE-FZ449GWH",
+  "type": "NEW REFERRAL",
+  "title": "🚨 HIGH RISK Referral Received",
+  "message": "Patient PAT-4P7WQQ6L referred for High fever, shortness of breath, and leg pain over past 2 days requiring urgent physician assessment",
+  "createdAt": "2026-08-13T01:12:47.537Z",
+  "read": false,
+  "priority": "HIGH"
+}

@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786583228221",
+  "recipientRole": "assistant",
+  "recipientId": "AST-6CTU816I",
+  "patientId": "PAT-ZN13OJBV",
+  "caseId": "CASE-L9XB4V42",
+  "type": "DOCTOR_MESSAGE",
+  "title": "💊 Medication Prescribed & Approved",
+  "message": "Doctor approved 1 medication(s) for patient PAT-ZN13OJBV",
+  "createdAt": "2026-08-13T01:07:08.221Z",
+  "read": false,
+  "priority": "HIGH"
+}

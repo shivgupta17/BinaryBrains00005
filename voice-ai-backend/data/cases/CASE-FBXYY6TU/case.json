@@ -1,0 +1,22 @@
+{
+  "caseId": "CASE-FBXYY6TU",
+  "patientId": "PAT-WXHNZU3U",
+  "assistantId": "AST_usr_anchal123gmailcom",
+  "assignedDoctorId": "DOC-P4NH5071",
+  "caseType": "General Referral Encounter",
+  "status": "IN_CONSULTATION",
+  "createdAt": "2026-08-13T00:53:33.250Z",
+  "vitals": {},
+  "aiSummary": null,
+  "timeline": [
+    {
+      "eventId": "evt_1786582413303",
+      "type": "CASE_CREATED",
+      "title": "Encounter Case Created",
+      "description": "New clinical encounter created for doctor referral.",
+      "timestamp": "2026-08-13T00:53:33.250Z",
+      "actor": "AST_usr_anchal123gmailcom"
+    }
+  ],
+  "_id": "6a7d158d1483ebbabc35ab36"
+}

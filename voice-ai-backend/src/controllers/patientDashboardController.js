@@ -44,7 +44,7 @@ async function getPatientDashboardData(req, res) {
     }
 
     const pId = patientDoc?.patientId || cleanPatientId;
-    const context = patientContextService.getPatientCaseContext(pId, caseData?.caseId || req.query.caseId || `CASE_${pId}`);
+    const context = await patientContextService.getPatientCaseContext(pId, caseData?.caseId || req.query.caseId || `CASE_${pId}`);
     if (!caseData) {
       caseData = context.case || {};
     }
@@ -124,14 +124,38 @@ async function sendPatientReminderRequest(req, res) {
     const { caseId } = req.params;
     const { patientId, requestType, message } = req.body;
 
-    const caseData = fileUtils.getCase(caseId);
-    const context  = patientContextService.getPatientCaseContext(patientId || caseData?.patientId, caseId);
+    let caseData = null;
+    if (isDbConnected()) {
+      const db = getDb();
+      caseData = await db.collection('cases').findOne({ caseId });
+    }
+    if (!caseData) {
+      caseData = fileUtils.getCase(caseId) || {};
+    }
 
-    const assistantEmail = process.env.ASSISTANT_EMAIL || 'assistant@gramcare.ai';
-    const patientName    = context.demographics?.name || 'Patient';
+    const targetPatientId = patientId || caseData?.patientId || 'PAT_DEFAULT';
+    const context = await patientContextService.getPatientCaseContext(targetPatientId, caseId);
 
+    let assistantEmail = process.env.ASSISTANT_EMAIL || 'assistant@gramcare.ai';
+    if (isDbConnected() && caseData?.assistantId) {
+      const db = getDb();
+      const asstId = caseData.assistantId;
+      const asstUser = await db.collection('users').findOne({
+        role: 'assistant',
+        $or: [
+          { assistantId: asstId },
+          { userId: asstId },
+          { email: asstId }
+        ]
+      });
+      if (asstUser?.email) {
+        assistantEmail = asstUser.email;
+      }
+    }
+
+    const patientName   = context.demographics?.name || 'Patient';
     const reminderTitle = `⏰ Patient Reminder Request: ${requestType || 'Medication Guidance'}`;
-    const reminderMsg   = `Patient ${patientName} (${patientId}) sent a reminder request: "${message || 'Please check my medication schedule and instructions.'}"`;
+    const reminderMsg   = `Patient ${patientName} (${targetPatientId}) sent a reminder request: "${message || 'Please check my medication schedule and instructions.'}"`;
 
     // 1. Save Notification targeted to assigned assistant ONLY
     notificationService.sendNotification({

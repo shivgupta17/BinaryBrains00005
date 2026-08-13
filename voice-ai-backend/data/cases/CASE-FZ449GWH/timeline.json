@@ -1,0 +1,40 @@
+[
+  {
+    "eventId": "evt_1786583567092_0vuv",
+    "timestamp": "2026-08-13T01:12:47.092Z",
+    "type": "PATIENT_REGISTERED",
+    "title": "Encounter Case Created",
+    "description": "New clinical encounter CASE-FZ449GWH created for patient PAT-4P7WQQ6L",
+    "actor": "Clinic Assistant",
+    "actorRole": "assistant",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786583567109_eufv",
+    "timestamp": "2026-08-13T01:12:47.109Z",
+    "type": "VITALS_ENTERED",
+    "title": "Vitals Recorded",
+    "description": "Temp: 103.1°F, BP: 135/88 mmHg, Pulse: 104 bpm, SpO2: 94%",
+    "actor": "Clinic Assistant",
+    "actorRole": "assistant",
+    "data": {
+      "temp": "103.1°F",
+      "bp": "135/88 mmHg",
+      "pulse": "104 bpm",
+      "spo2": "94%",
+      "weight": "Not recorded",
+      "respRate": "24 bpm",
+      "recordedAt": "2026-08-13T01:12:47.107Z"
+    }
+  },
+  {
+    "eventId": "evt_1786583567729_xonv",
+    "timestamp": "2026-08-13T01:12:47.729Z",
+    "type": "REFERRED_TO_DOCTOR",
+    "title": "Referred to Doctor",
+    "description": "Case referred to Dr. Saif Persist (Risk Level: HIGH)",
+    "actor": "AST-C9XGMXV0",
+    "actorRole": "assistant",
+    "data": {}
+  }
+]

@@ -1,0 +1,14 @@
+{
+  "referralId": "REF-QJ9BATO0",
+  "patientId": "PAT-OR9DN1X8",
+  "caseId": "CASE-NQM3F8XM",
+  "doctorId": "DOC-1A233X8Q",
+  "doctorName": "Dr. Saif 3Way",
+  "assistantId": "AST-PL92AYNU",
+  "riskLevel": "amber",
+  "reason": "Persistent high fever and respiratory distress requiring physician evaluation",
+  "aiSummary": null,
+  "status": "ACCEPTED",
+  "createdAt": "2026-08-13T00:47:14.724Z",
+  "acceptedAt": "2026-08-13T00:47:15.249Z"
+}

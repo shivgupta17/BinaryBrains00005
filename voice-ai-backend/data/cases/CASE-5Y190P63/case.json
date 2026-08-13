@@ -1,0 +1,18 @@
+{
+  "_id": "6a7d18540f1f6ad24c056cb4",
+  "caseId": "CASE-5Y190P63",
+  "assignedDoctorId": "DOC-DI3NNSS8",
+  "assistantId": "AST-YZ2T7XCD",
+  "assistantNotes": [],
+  "bedAssignment": null,
+  "caseType": "Acute High Fever & Confusion",
+  "createdAt": "2026-08-13T01:05:24.405Z",
+  "doctorNotes": [],
+  "followUp": null,
+  "imageUploads": [],
+  "medications": [],
+  "patientId": "PAT-URSEHJ9Y",
+  "status": "REFERRED",
+  "textStatements": [],
+  "videoUploads": []
+}

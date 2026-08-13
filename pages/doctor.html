@@ -2,7 +2,7 @@
 <div class="page-enter">
   <div class="page-header">
     <h1>👨‍⚕️ Remote Doctor Dashboard</h1>
-    <p>Structured case packet delivered in under 20 seconds. No repeated history-taking. Review, modify, and approve from anywhere.</p>
+    <p>Structured clinical case packet delivered from Assistant Voice Intake &amp; AI Triage Engine.</p>
   </div>
 
   <!-- Doctor Banner -->
@@ -14,7 +14,7 @@
         <div style="font-size:12.5px;color:rgba(255,255,255,.8);margin-top:2px;">
           YOUR DOCTOR ID: <code id="doc-id-badge" style="background:var(--saffron);color:white;padding:2px 8px;border-radius:6px;font-size:12px;font-weight:700;">DOC-PENDING</code>
         </div>
-        <div style="font-size:12px;color:rgba(255,255,255,.55);margin-top:2px;" id="doc-banner-spec">MBBS, MD (Orthopedics &amp; General Medicine) · GramCare Clinical Panel</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.55);margin-top:2px;" id="doc-banner-spec">MBBS, MD · GramCare Clinical Panel</div>
       </div>
       <div style="margin-left:auto;display:flex;align-items:center;gap:10px;">
         <select class="form-select" id="doc-status-select" onchange="toggleDoctorOnlineStatus()" style="background:rgba(255,255,255,.15);color:white;border:1px solid rgba(255,255,255,.3);font-weight:700;padding:6px 12px;border-radius:8px;">
@@ -41,7 +41,7 @@
   </div>
 
   <div class="grid-7-5">
-    <!-- Left Column: Patient Case & Decisions -->
+    <!-- Left Column: Case Review & Clinical Data -->
     <div class="col">
 
       <!-- INCOMING REFERRAL QUEUE CARD -->
@@ -52,92 +52,118 @@
         </div>
         <div class="card-body">
           <div id="doctor-referral-queue-list" style="display:flex;flex-direction:column;gap:10px;">
-            <div style="font-size:13px;color:var(--ink-50);font-style:italic;padding:12px 0;">No active referrals in queue. Assistant will send incoming patient cases.</div>
+            <div style="font-size:13px;color:var(--ink-50);font-style:italic;padding:12px 0;">No active referrals in queue. Clinic assistant referrals will appear here.</div>
           </div>
         </div>
       </div>
 
-      <!-- AI HANDOFF BRIEF CARD -->
-      <div class="card reveal" style="margin-bottom:20px;background:linear-gradient(135deg,#0F1923,#1E293B);color:white;">
-        <div class="card-header" style="border-bottom:1px solid rgba(255,255,255,.1);">
-          <div class="card-title" style="color:var(--saffron-lt);">⚡ AI Handoff Brief</div>
-          <span class="pill pill-sky" style="font-size:10px;">Assistant ➔ Doctor</span>
-        </div>
-        <div class="card-body" id="doc-ai-handoff-body">
-          <div style="font-size:13px;color:rgba(255,255,255,.7);">Select a patient case to generate concise AI handoff brief.</div>
-        </div>
-      </div>
-
-      <!-- Patient Case Card -->
-      <div class="card reveal">
+      <!-- MAIN PATIENT CLINICAL CASE CARD -->
+      <div class="card reveal" id="doctor-active-case-card">
         <div class="card-header">
           <div>
-            <div class="card-title" id="doc-case-title">Patient Case</div>
+            <div class="card-title" id="doc-case-title">Patient Case: Select a Case</div>
             <div class="card-subtitle" id="doc-case-subtitle">Active Encounter Case Packet</div>
           </div>
           <span class="risk risk-amber" id="doc-risk-badge"><span class="risk-dot"></span>CLINICAL REVIEW</span>
         </div>
         <div class="card-body">
+
+          <!-- 1. Demographics & Vitals -->
           <div class="grid-2" style="margin-bottom:18px;gap:14px;">
-            <div>
-              <div class="section-label">Demographics</div>
-              <div style="font-size:13.5px;color:var(--ink-80);line-height:1.9;" id="doc-demographics">
-                <strong>Name:</strong> <span id="doc-p-name">Not registered</span><br/>
-                <strong>Age:</strong> <span id="doc-p-age">Not provided</span><br/>
-                <strong>Village:</strong> <span id="doc-p-village">Not provided</span><br/>
+            <div style="background:var(--ink-05);padding:14px;border-radius:12px;">
+              <div class="section-label">👤 Patient Demographics</div>
+              <div style="font-size:13px;color:var(--ink-80);line-height:1.9;">
+                <strong>Name:</strong> <span id="doc-p-name">Not recorded</span><br/>
+                <strong>Patient ID:</strong> <span id="doc-p-id">Not recorded</span><br/>
+                <strong>Age / Sex:</strong> <span id="doc-p-age">Not recorded</span><br/>
+                <strong>Village:</strong> <span id="doc-p-village">Not recorded</span><br/>
                 <strong>Language:</strong> <span id="doc-p-lang">Hindi</span>
               </div>
             </div>
-            <div>
-              <div class="section-label">Vitals</div>
-              <div style="font-size:13.5px;color:var(--ink-80);line-height:1.9;" id="doc-vitals">
-                <strong>Temp:</strong> <span id="doc-v-temp">Not recorded</span><br/>
-                <strong>BP:</strong> <span id="doc-v-bp">Not recorded</span><br/>
-                <strong>Pulse:</strong> <span id="doc-v-hr">Not recorded</span><br/>
-                <strong>SpO₂:</strong> <span id="doc-v-spo2">Not recorded</span>
+            <div style="background:var(--ink-05);padding:14px;border-radius:12px;">
+              <div class="section-label">🩺 Actual Vitals</div>
+              <div style="font-size:13px;color:var(--ink-80);line-height:1.9;">
+                <strong>Temperature:</strong> <span id="doc-v-temp">Not recorded</span><br/>
+                <strong>Blood Pressure:</strong> <span id="doc-v-bp">Not recorded</span><br/>
+                <strong>Pulse / Heart Rate:</strong> <span id="doc-v-hr">Not recorded</span><br/>
+                <strong>SpO₂:</strong> <span id="doc-v-spo2">Not recorded</span><br/>
+                <strong>Resp Rate:</strong> <span id="doc-v-resp">Not recorded</span>
               </div>
             </div>
           </div>
 
           <div class="divider"></div>
 
-          <div class="section-label">Reported Problems (Voice Intake)</div>
-          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;" id="doc-problems-pills">
-            <span style="font-size:12.5px;color:var(--ink-50);font-style:italic;">No complaints recorded</span>
+          <!-- 2. Voice Intake Findings -->
+          <div style="margin-bottom:18px;background:linear-gradient(135deg,#1E293B,#0F1923);color:white;padding:16px;border-radius:12px;">
+            <div style="font-family:var(--font-ui);font-size:14px;font-weight:700;color:var(--saffron-lt);margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;">
+              <span>🎙️ Voice Intake &amp; Language Translation</span>
+              <span class="pill pill-sky" id="doc-voice-lang-pill" style="font-size:10px;">Hindi ➔ English</span>
+            </div>
+            <div style="margin-bottom:10px;">
+              <div style="font-size:11px;text-transform:uppercase;color:rgba(255,255,255,.5);font-weight:700;margin-bottom:2px;">Original Patient Transcript</div>
+              <div style="font-size:13px;color:rgba(255,255,255,.9);font-style:italic;" id="doc-voice-transcript">Not recorded</div>
+            </div>
+            <div>
+              <div style="font-size:11px;text-transform:uppercase;color:rgba(255,255,255,.5);font-weight:700;margin-bottom:2px;">English Clinical Translation</div>
+              <div style="font-size:13px;color:#38BDF8;font-weight:500;" id="doc-voice-translation">Not recorded</div>
+            </div>
           </div>
 
-          <div class="section-label">Document &amp; Medical History</div>
-          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;" id="doc-history-pills">
-            <span style="font-size:12.5px;color:var(--ink-50);font-style:italic;">No documented history</span>
-          </div>
-
-          <!-- AI Summary -->
+          <!-- 3. AI Clinical Summary & Triage Engine -->
           <div class="ai-box" style="margin-bottom:18px;">
             <div class="ai-box-header">
-              <span class="ai-label">AI Unified Clinical Summary</span>
+              <span class="ai-label">⚡ AI Clinical Summary &amp; Triage Assessment</span>
+              <span class="pill pill-amber" id="doc-triage-level-pill">AMBER TRIAGE</span>
             </div>
-            <div class="ai-text" id="doc-ai-summary-text">Awaiting unified AI clinical summary generation...</div>
-            <div class="ai-disclaimer">AI-generated summary for physician review. Not a diagnosis. All clinical decisions are the RMP's sole responsibility.</div>
+            <div style="margin-bottom:10px;">
+              <strong>Main Clinical Problem:</strong>
+              <div class="ai-text" id="doc-ai-summary-text" style="margin-top:4px;">Awaiting case selection...</div>
+            </div>
+            <div style="margin-bottom:10px;">
+              <strong>Risk Assessment &amp; Rationale:</strong>
+              <div style="font-size:13px;color:var(--ink-70);margin-top:4px;" id="doc-triage-rationale">Not recorded</div>
+            </div>
+            <div>
+              <strong>Recommended Clinical Action:</strong>
+              <div style="font-size:13px;color:var(--forest);font-weight:600;margin-top:4px;" id="doc-triage-action">Physician review requested</div>
+            </div>
+            <div class="ai-disclaimer" style="margin-top:12px;">AI-generated assessment for physician review. All clinical decisions are the attending RMP's responsibility.</div>
           </div>
 
-          <!-- Doctor Decision Form -->
-          <div class="section-label">Doctor Decision &amp; Prescription</div>
-          <div class="form-group">
-            <label class="form-label">Doctor Clinical Notes &amp; Diagnosis</label>
-            <textarea class="form-textarea" id="doc-diagnosis-textarea" placeholder="Enter clinical assessment based on real patient findings..."></textarea>
+          <!-- 4. Document / OCR Findings -->
+          <div style="margin-bottom:18px;">
+            <div class="section-label">📄 Document &amp; OCR Intelligence</div>
+            <div style="font-size:13px;color:var(--ink-70);background:var(--ink-05);padding:12px;border-radius:10px;" id="doc-ocr-findings">
+              No medical documents uploaded for this case encounter.
+            </div>
           </div>
 
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;">
-            <button class="btn btn-sky btn-lg" onclick="openDoctorMedicineModal()">💊 Add / Approve Medicine</button>
-            <button class="btn btn-forest btn-lg" onclick="openDoctorBedModal()">🛏️ Assign Bed &amp; Ward</button>
-            <button class="btn btn-saffron btn-lg" onclick="openDoctorScheduleModal()">⏰ Configure Schedule</button>
-            <button class="btn btn-primary btn-lg" onclick="openDoctorInstructionModal()">📝 Send Instruction</button>
+          <!-- 5. History & Allergies -->
+          <div class="grid-2" style="margin-bottom:18px;gap:14px;">
+            <div>
+              <div class="section-label">📋 Medical History</div>
+              <div style="font-size:13px;color:var(--ink-70);" id="doc-past-history">Not recorded</div>
+            </div>
+            <div>
+              <div class="section-label">⚠️ Allergies</div>
+              <div style="font-size:13px;color:var(--ink-70);" id="doc-allergies">Not recorded</div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- 6. Doctor Decision & Actions -->
+          <div class="section-label">👨‍⚕️ Doctor Assessment &amp; Clinical Actions</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px;">
+            <button class="btn btn-sky btn-lg" onclick="openDoctorMedicineModal()" style="font-size:13.5px;">💊 Add / Approve Prescription</button>
+            <button class="btn btn-primary btn-lg" onclick="openDoctorInstructionModal()" style="font-size:13.5px;">📝 Send Clinical Instruction</button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Right Column: Case Intelligence Timeline & Bed/Schedule -->
+    <!-- Right Column: Case Intelligence Timeline & Video Consult -->
     <div class="col">
       <!-- CASE INTELLIGENCE TIMELINE -->
       <div class="card reveal">

@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786581998396",
+  "recipientRole": "doctor",
+  "recipientId": "DOC-AS80TWQP",
+  "patientId": "PAT-VL9OWL9W",
+  "caseId": "CASE-SFGZ2X3L",
+  "type": "NEW REFERRAL",
+  "title": "🚨 NEW Referral Received",
+  "message": "Patient PAT-VL9OWL9W referred for Persistent high fever and respiratory distress requiring physician evaluation",
+  "createdAt": "2026-08-13T00:46:38.224Z",
+  "read": false,
+  "priority": "MEDIUM"
+}

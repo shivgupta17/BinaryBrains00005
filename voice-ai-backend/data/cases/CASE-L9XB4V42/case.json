@@ -1,0 +1,49 @@
+{
+  "_id": "6a7d18bb0f1f6ad24c056cb7",
+  "caseId": "CASE-L9XB4V42",
+  "assignedDoctorId": "DOC-E0VJXN7Z",
+  "assistantId": "AST-6CTU816I",
+  "assistantNotes": [],
+  "bedAssignment": null,
+  "caseType": "Acute High Fever & Confusion",
+  "createdAt": "2026-08-13T01:07:07.293Z",
+  "doctorNotes": [
+    {
+      "noteId": "note_1786583228162",
+      "doctorId": "DOC-E0VJXN7Z",
+      "text": "Fever management and hydration",
+      "createdAt": "2026-08-13T01:07:08.162Z"
+    }
+  ],
+  "followUp": null,
+  "imageUploads": [],
+  "medications": [],
+  "patientId": "PAT-ZN13OJBV",
+  "status": "REFERRED",
+  "textStatements": [],
+  "videoUploads": [],
+  "approvedMedications": [
+    {
+      "medicationId": "med_1786583228161",
+      "name": "Paracetamol 500mg",
+      "dosage": "1 Tablet",
+      "route": "Oral",
+      "frequency": "TDS",
+      "status": "DOCTOR_APPROVED",
+      "approvedBy": "DOC-E0VJXN7Z",
+      "approvedAt": "2026-08-13T01:07:08.162Z"
+    }
+  ],
+  "doctorInstructions": [
+    {
+      "messageId": "msg_1786583228278",
+      "caseId": "CASE-L9XB4V42",
+      "patientId": "PAT-ZN13OJBV",
+      "doctorId": "DOC-E0VJXN7Z",
+      "assistantId": "AST-6CTU816I",
+      "message": "Tepid sponging for fever > 102°F. Keep patient hydrated.",
+      "createdAt": "2026-08-13T01:07:08.278Z",
+      "status": "SENT"
+    }
+  ]
+}

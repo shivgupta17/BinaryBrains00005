@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786582036265_bjgz",
+  "recipientRole": "assistant",
+  "recipientId": "AST-PL92AYNU",
+  "patientId": "PAT-OR9DN1X8",
+  "caseId": "CASE-NQM3F8XM",
+  "type": "REMINDER_REQUEST",
+  "title": "⏰ Patient Reminder Request: Medication Schedule Guidance",
+  "message": "Patient Patient Ramesh 3Way (PAT-OR9DN1X8) sent a reminder request: \"Please assist me with my 20:00 dose schedule.\"",
+  "priority": "HIGH",
+  "read": false,
+  "createdAt": "2026-08-13T00:47:16.265Z"
+}

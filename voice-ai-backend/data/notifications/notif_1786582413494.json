@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786582413494",
+  "recipientRole": "doctor",
+  "recipientId": "DOC-P4NH5071",
+  "patientId": "PAT-WXHNZU3U",
+  "caseId": null,
+  "type": "NEW REFERRAL",
+  "title": "🚨 NEW Referral Received",
+  "message": "Patient PAT-WXHNZU3U referred for fever hai",
+  "createdAt": "2026-08-13T00:53:33.250Z",
+  "read": false,
+  "priority": "MEDIUM"
+}

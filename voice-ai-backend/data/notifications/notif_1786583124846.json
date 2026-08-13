@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786583124846",
+  "recipientRole": "doctor",
+  "recipientId": "DOC-DI3NNSS8",
+  "patientId": "PAT-URSEHJ9Y",
+  "caseId": "CASE-5Y190P63",
+  "type": "NEW REFERRAL",
+  "title": "🚨 HIGH RISK Referral Received",
+  "message": "Patient PAT-URSEHJ9Y referred for High fever and mental confusion over past 2 days requiring physician assessment",
+  "createdAt": "2026-08-13T01:05:24.678Z",
+  "read": false,
+  "priority": "HIGH"
+}
