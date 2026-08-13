@@ -1,0 +1,72 @@
+[
+  {
+    "eventId": "evt_1786580156091_uycl",
+    "timestamp": "2026-08-13T00:15:56.091Z",
+    "type": "PATIENT_REGISTERED",
+    "title": "Encounter Case Created",
+    "description": "New clinical encounter CASE-JL260ZEB created for patient PAT-JQ3D2P36",
+    "actor": "Clinic Assistant",
+    "actorRole": "assistant",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786580156712_qjki",
+    "timestamp": "2026-08-13T00:15:56.712Z",
+    "type": "REFERRED_TO_DOCTOR",
+    "title": "Referred to Doctor",
+    "description": "Case referred to Dr. Saif Anwar (Risk Level: AMBER)",
+    "actor": "AST-2AHBKQUG",
+    "actorRole": "assistant",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786580157357_z8je",
+    "timestamp": "2026-08-13T00:15:57.357Z",
+    "type": "DOCTOR_ACCEPTED",
+    "title": "Doctor Accepted Referral",
+    "description": "Referral accepted by Dr. Saif Anwar. Consultation initiated.",
+    "actor": "Dr. Saif Anwar",
+    "actorRole": "doctor",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786580157512_q2j6",
+    "timestamp": "2026-08-13T00:15:57.512Z",
+    "type": "BED_ASSIGNED",
+    "title": "Patient Bed Assigned",
+    "description": "Emergency Ward · Room 12 · Bed B",
+    "actor": "DOC-3O4ADL00",
+    "actorRole": "doctor",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786580157573_hh36",
+    "timestamp": "2026-08-13T00:15:57.574Z",
+    "type": "MEDICATION_APPROVED",
+    "title": "Doctor Approved Prescription",
+    "description": "Medications approved: Paracetamol 500mg",
+    "actor": "Dr. Aarav Sharma",
+    "actorRole": "doctor",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786580157974_3r78",
+    "timestamp": "2026-08-13T00:15:57.974Z",
+    "type": "MEDICATION_SCHEDULED",
+    "title": "Medication Schedule Created",
+    "description": "Paracetamol 500mg (500mg) scheduled at 08:00, 14:00, 20:00",
+    "actor": "DOC-3O4ADL00",
+    "actorRole": "doctor",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786580158124_6tjj",
+    "timestamp": "2026-08-13T00:15:58.124Z",
+    "type": "FOLLOWUP_SCHEDULED",
+    "title": "Follow-Up Scheduled",
+    "description": "Follow-up set for 2026-08-15 at 10:00 AM",
+    "actor": "DOC-3O4ADL00",
+    "actorRole": "doctor",
+    "data": {}
+  }
+]

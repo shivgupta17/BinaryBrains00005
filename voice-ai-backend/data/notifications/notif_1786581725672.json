@@ -1,0 +1,12 @@
+{
+  "notificationId": "notif_1786581725672",
+  "recipientRole": "doctor",
+  "recipientId": "DOC-IN4Y25LP",
+  "patientId": "PAT-Q2K2FZWO",
+  "type": "NEW REFERRAL",
+  "title": "🚨 HIGH RISK Referral Received",
+  "message": "Patient PAT-Q2K2FZWO referred for Urgent consultation for persistent fever",
+  "createdAt": "2026-08-13T00:42:05.455Z",
+  "read": false,
+  "priority": "HIGH"
+}

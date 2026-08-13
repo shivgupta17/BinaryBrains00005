@@ -1,0 +1,22 @@
+[
+  {
+    "eventId": "evt_1786579438478_ab7m",
+    "timestamp": "2026-08-13T00:03:58.478Z",
+    "type": "PATIENT_REGISTERED",
+    "title": "Encounter Case Created",
+    "description": "New clinical encounter CASE-P4UEK4ZP created for patient PAT-JMBA17ZC",
+    "actor": "Clinic Assistant",
+    "actorRole": "assistant",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786579439439_3kix",
+    "timestamp": "2026-08-13T00:03:59.439Z",
+    "type": "REFERRED_TO_DOCTOR",
+    "title": "Referred to Doctor",
+    "description": "Case referred to saif anwar (Risk Level: AMBER)",
+    "actor": "AST-26MXJMP8",
+    "actorRole": "assistant",
+    "data": {}
+  }
+]

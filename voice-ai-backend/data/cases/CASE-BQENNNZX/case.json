@@ -1,0 +1,17 @@
+{
+  "caseId": "CASE-BQENNNZX",
+  "patientId": "PAT-MK8PQHPH",
+  "assistantId": "AST-603XUDSM",
+  "createdAt": "2026-08-13T00:04:24.443Z",
+  "status": "IN_CONSULTATION",
+  "caseType": "Fever Consultation",
+  "textStatements": [],
+  "imageUploads": [],
+  "videoUploads": [],
+  "doctorNotes": [],
+  "assistantNotes": [],
+  "assignedDoctorId": "DOC-J9M6PB27",
+  "bedAssignment": null,
+  "followUp": null,
+  "medications": []
+}

@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786580808708",
+  "recipientRole": "assistant",
+  "recipientId": "AST-PMBWTTWZ",
+  "patientId": "PAT-15DOGL9H",
+  "caseId": "CASE-Y3M5MLZO",
+  "type": "DOCTOR_INSTRUCTION",
+  "title": "📝 New Doctor Instruction",
+  "message": "Monitor SPO2 every 2 hours and inform immediately if SPO2 drops below 94%.",
+  "createdAt": "2026-08-13T00:26:48.708Z",
+  "read": false,
+  "priority": "HIGH"
+}

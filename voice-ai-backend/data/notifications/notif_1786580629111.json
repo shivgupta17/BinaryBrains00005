@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786580629111",
+  "recipientRole": "assistant",
+  "recipientId": "AST-NUAP6CVQ",
+  "patientId": "PAT-OSSQE9GG",
+  "caseId": "CASE-9S6LATKK",
+  "type": "DOCTOR_MESSAGE",
+  "title": "💊 Medication Prescribed & Approved",
+  "message": "Doctor approved 1 medication(s) for patient PAT-OSSQE9GG",
+  "createdAt": "2026-08-13T00:23:49.111Z",
+  "read": false,
+  "priority": "HIGH"
+}

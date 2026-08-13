@@ -1,0 +1,32 @@
+[
+  {
+    "eventId": "evt_1786579464526_967z",
+    "timestamp": "2026-08-13T00:04:24.526Z",
+    "type": "PATIENT_REGISTERED",
+    "title": "Encounter Case Created",
+    "description": "New clinical encounter CASE-BQENNNZX created for patient PAT-MK8PQHPH",
+    "actor": "Clinic Assistant",
+    "actorRole": "assistant",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786579465279_m790",
+    "timestamp": "2026-08-13T00:04:25.279Z",
+    "type": "REFERRED_TO_DOCTOR",
+    "title": "Referred to Doctor",
+    "description": "Case referred to Dr. Saif Anwar Real (Risk Level: AMBER)",
+    "actor": "AST-603XUDSM",
+    "actorRole": "assistant",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786579465644_ie88",
+    "timestamp": "2026-08-13T00:04:25.644Z",
+    "type": "DOCTOR_ACCEPTED",
+    "title": "Doctor Accepted Referral",
+    "description": "Referral accepted by Dr. Saif Anwar Real. Consultation initiated.",
+    "actor": "Dr. Saif Anwar Real",
+    "actorRole": "doctor",
+    "data": {}
+  }
+]

@@ -1,0 +1,17 @@
+{
+  "caseId": "CASE-ECGR9ZOS",
+  "patientId": "PAT-NR5ECC2X",
+  "assistantId": "AST-3GAV5TYX",
+  "createdAt": "2026-08-13T00:04:09.630Z",
+  "status": "REFERRED",
+  "caseType": "Fever Consultation",
+  "textStatements": [],
+  "imageUploads": [],
+  "videoUploads": [],
+  "doctorNotes": [],
+  "assistantNotes": [],
+  "assignedDoctorId": "DOC-3N8E4ZJQ",
+  "bedAssignment": null,
+  "followUp": null,
+  "medications": []
+}

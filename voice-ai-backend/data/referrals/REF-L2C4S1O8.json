@@ -1,0 +1,14 @@
+{
+  "referralId": "REF-L2C4S1O8",
+  "patientId": "PAT-MK8PQHPH",
+  "caseId": "CASE-BQENNNZX",
+  "doctorId": "DOC-J9M6PB27",
+  "doctorName": "Dr. Saif Anwar Real",
+  "assistantId": "AST-603XUDSM",
+  "riskLevel": "amber",
+  "reason": "Fever and cough requiring physician assessment",
+  "aiSummary": null,
+  "status": "ACCEPTED",
+  "createdAt": "2026-08-13T00:04:25.153Z",
+  "acceptedAt": "2026-08-13T00:04:25.500Z"
+}

@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786580629190",
+  "recipientRole": "assistant",
+  "recipientId": "AST-NUAP6CVQ",
+  "patientId": "PAT-OSSQE9GG",
+  "caseId": "CASE-9S6LATKK",
+  "type": "MEDICATION_DUE",
+  "title": "⏰ Medication Schedule Created",
+  "message": "Amoxicillin 500mg scheduled at 08:00, 14:00, 20:00",
+  "createdAt": "2026-08-13T00:23:49.190Z",
+  "read": false,
+  "priority": "MEDIUM"
+}

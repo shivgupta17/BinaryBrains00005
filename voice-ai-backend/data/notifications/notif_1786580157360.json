@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786580157360",
+  "recipientRole": "assistant",
+  "recipientId": "AST-2AHBKQUG",
+  "patientId": "PAT-JQ3D2P36",
+  "caseId": "CASE-JL260ZEB",
+  "type": "PATIENT UPDATE",
+  "title": "✅ Referral Accepted",
+  "message": "Dr. Saif Anwar has accepted referral for patient PAT-JQ3D2P36",
+  "createdAt": "2026-08-13T00:15:57.360Z",
+  "read": false,
+  "priority": "MEDIUM"
+}

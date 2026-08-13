@@ -1,0 +1,60 @@
+{
+  "_id": "6a7d0f470f1f6ad24c056c97",
+  "caseId": "CASE-Y3M5MLZO",
+  "assignedDoctorId": "DOC-JD1912T1",
+  "assistantId": "AST-PMBWTTWZ",
+  "assistantNotes": [],
+  "bedAssignment": {
+    "bedAssignmentId": "bed_1786580808287",
+    "ward": "Special Care Unit",
+    "room": "Room 201",
+    "bed": "Bed A2",
+    "floor": "2nd Floor",
+    "department": "Pulmonology",
+    "assignedBy": "DOC-JD1912T1",
+    "assignedAt": "2026-08-13T00:26:48.287Z",
+    "notes": "Monitored under nasal cannula 3L/min"
+  },
+  "caseType": "Acute Respiratory Evaluation",
+  "createdAt": "2026-08-13T00:26:47.688Z",
+  "doctorNotes": [
+    {
+      "noteId": "note_1786580808406",
+      "doctorId": "DOC-JD1912T1",
+      "text": "Initiated broad-spectrum coverage and anti-pyretic",
+      "createdAt": "2026-08-13T00:26:48.406Z"
+    }
+  ],
+  "followUp": null,
+  "imageUploads": [],
+  "medications": [],
+  "patientId": "PAT-15DOGL9H",
+  "status": "IN_CONSULTATION",
+  "textStatements": [],
+  "videoUploads": [],
+  "approvedMedications": [
+    {
+      "medicationId": "med_1786580808402",
+      "name": "Azithromycin 500mg",
+      "dosage": "1 Tablet (500mg)",
+      "route": "Oral",
+      "frequency": "Once Daily (OD)",
+      "duration": "5 Days",
+      "status": "DOCTOR_APPROVED",
+      "approvedAt": "2026-08-13T00:26:48.406Z",
+      "approvedBy": "DOC-JD1912T1"
+    }
+  ],
+  "doctorInstructions": [
+    {
+      "messageId": "msg_1786580808592",
+      "caseId": "CASE-Y3M5MLZO",
+      "patientId": "PAT-15DOGL9H",
+      "doctorId": "DOC-JD1912T1",
+      "assistantId": "AST-PMBWTTWZ",
+      "message": "Monitor SPO2 every 2 hours and inform immediately if SPO2 drops below 94%.",
+      "createdAt": "2026-08-13T00:26:48.592Z",
+      "status": "SENT"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "caseId": "CASE-4QVLE6M9",
+  "patientId": "PAT-769W0Z2Z",
+  "assistantId": "AST-H4US2Z0K",
+  "createdAt": "2026-08-12T23:58:15.197Z",
+  "status": "REFERRED",
+  "caseType": "Severe Chest Congestion & High Fever",
+  "textStatements": [],
+  "imageUploads": [],
+  "videoUploads": [],
+  "doctorNotes": [],
+  "assistantNotes": [],
+  "assignedDoctorId": "DOC-3N8E4ZJQ",
+  "bedAssignment": null,
+  "followUp": null,
+  "medications": []
+}

@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786580697642",
+  "recipientRole": "assistant",
+  "recipientId": "AST-U2319PCU",
+  "patientId": "PAT-G9POXH0H",
+  "caseId": "CASE-PNRDMCZH",
+  "type": "DOCTOR_MESSAGE",
+  "title": "💊 Medication Prescribed & Approved",
+  "message": "Doctor approved 1 medication(s) for patient PAT-G9POXH0H",
+  "createdAt": "2026-08-13T00:24:57.642Z",
+  "read": false,
+  "priority": "HIGH"
+}

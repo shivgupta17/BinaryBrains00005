@@ -1,0 +1,52 @@
+[
+  {
+    "eventId": "evt_1786580628244_k6kz",
+    "timestamp": "2026-08-13T00:23:48.244Z",
+    "type": "PATIENT_REGISTERED",
+    "title": "Encounter Case Created",
+    "description": "New clinical encounter CASE-9S6LATKK created for patient PAT-OSSQE9GG",
+    "actor": "Clinic Assistant",
+    "actorRole": "assistant",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786580628734_1w4c",
+    "timestamp": "2026-08-13T00:23:48.734Z",
+    "type": "BED_ASSIGNED",
+    "title": "Patient Bed Assigned",
+    "description": "ICU Ward 3 · Room 304 · Bed C1",
+    "actor": "DOC-DV1G06I0",
+    "actorRole": "doctor",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786580629110_xs77",
+    "timestamp": "2026-08-13T00:23:49.110Z",
+    "type": "MEDICATION_APPROVED",
+    "title": "Doctor Approved Prescription",
+    "description": "Medications approved: Amoxicillin 500mg",
+    "actor": "DOC-DV1G06I0",
+    "actorRole": "doctor",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786580629189_mbqf",
+    "timestamp": "2026-08-13T00:23:49.189Z",
+    "type": "MEDICATION_SCHEDULED",
+    "title": "Medication Schedule Created",
+    "description": "Amoxicillin 500mg (500mg) scheduled at 08:00, 14:00, 20:00",
+    "actor": "DOC-DV1G06I0",
+    "actorRole": "doctor",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786580629384_yrq0",
+    "timestamp": "2026-08-13T00:23:49.384Z",
+    "type": "DOCTOR_INSTRUCTION_SENT",
+    "title": "Doctor Instruction Sent",
+    "description": "Instruction: \"Monitor temperature every 4 hours. Keep patient head elevated 30 degrees.\"",
+    "actor": "DOC-DV1G06I0",
+    "actorRole": "doctor",
+    "data": {}
+  }
+]

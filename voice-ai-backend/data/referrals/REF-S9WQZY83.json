@@ -1,0 +1,14 @@
+{
+  "referralId": "REF-S9WQZY83",
+  "patientId": "PAT-JQ3D2P36",
+  "caseId": "CASE-JL260ZEB",
+  "doctorId": "DOC-3O4ADL00",
+  "doctorName": "Dr. Saif Anwar",
+  "assistantId": "AST-2AHBKQUG",
+  "riskLevel": "amber",
+  "reason": "High fever and severe headache for 2 days",
+  "aiSummary": null,
+  "status": "ACCEPTED",
+  "createdAt": "2026-08-13T00:15:56.550Z",
+  "acceptedAt": "2026-08-13T00:15:57.241Z"
+}

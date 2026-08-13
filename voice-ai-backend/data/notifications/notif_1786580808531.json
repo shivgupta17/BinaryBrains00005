@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786580808531",
+  "recipientRole": "assistant",
+  "recipientId": "AST-PMBWTTWZ",
+  "patientId": "PAT-15DOGL9H",
+  "caseId": "CASE-Y3M5MLZO",
+  "type": "MEDICATION_DUE",
+  "title": "⏰ Medication Schedule Created",
+  "message": "Azithromycin 500mg scheduled at 09:00, 21:00",
+  "createdAt": "2026-08-13T00:26:48.531Z",
+  "read": false,
+  "priority": "MEDIUM"
+}

@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786580628735",
+  "recipientRole": "assistant",
+  "recipientId": "AST-NUAP6CVQ",
+  "patientId": "PAT-OSSQE9GG",
+  "caseId": "CASE-9S6LATKK",
+  "type": "BED_ASSIGNED",
+  "title": "🛏️ Bed Assigned",
+  "message": "Patient assigned to ICU Ward 3, Room 304, Bed C1",
+  "createdAt": "2026-08-13T00:23:48.735Z",
+  "read": false,
+  "priority": "HIGH"
+}

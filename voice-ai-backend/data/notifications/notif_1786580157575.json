@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786580157575",
+  "recipientRole": "assistant",
+  "recipientId": "AST-2AHBKQUG",
+  "patientId": "PAT-JQ3D2P36",
+  "caseId": "CASE-JL260ZEB",
+  "type": "DOCTOR_MESSAGE",
+  "title": "💊 Medication Prescribed & Approved",
+  "message": "Doctor approved 1 medication(s) for patient PAT-JQ3D2P36",
+  "createdAt": "2026-08-13T00:15:57.575Z",
+  "read": false,
+  "priority": "HIGH"
+}

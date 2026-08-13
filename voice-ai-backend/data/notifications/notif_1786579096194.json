@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786579096194",
+  "recipientRole": "doctor",
+  "recipientId": "DOC-3N8E4ZJQ",
+  "patientId": "PAT-769W0Z2Z",
+  "caseId": "CASE-4QVLE6M9",
+  "type": "NEW REFERRAL",
+  "title": "🚨 NEW Referral Received",
+  "message": "Patient PAT-769W0Z2Z referred for Patient presents with severe chest congestion and high fever.",
+  "createdAt": "2026-08-12T23:58:16.061Z",
+  "read": false,
+  "priority": "MEDIUM"
+}

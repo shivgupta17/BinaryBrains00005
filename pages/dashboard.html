@@ -78,7 +78,7 @@
         <label class="form-label" style="font-size:11.5px;font-weight:700;color:var(--ink-80);">2. Refer Active Case to Doctor by Unique ID</label>
         <div style="display:flex;gap:8px;margin-top:6px;">
           <input type="text" id="asst-refer-doctor-id" class="form-input" placeholder="e.g. DOC-77291045" style="font-size:12px;text-transform:uppercase;"/>
-          <button class="btn btn-forest btn-sm" onclick="asstReferToDoctorById()" style="white-space:nowrap;">Refer to Doctor</button>
+          <button class="btn btn-forest btn-sm" onclick="openReferDoctorModal()" style="white-space:nowrap;">👨‍⚕️ Send to Doctor Modal</button>
         </div>
         <div id="asst-doctor-refer-result" style="margin-top:8px;font-size:12px;color:var(--ink-70);"></div>
       </div>
@@ -118,6 +118,58 @@
       <div class="stat-value" style="font-size:20px;padding-top:6px;">Online</div>
       <div class="stat-label">Network Status</div>
       <div class="stat-delta info">↑ eSanjeevani linked</div>
+    </div>
+  </div>
+
+  <!-- DYNAMIC CLINICAL CARE PANEL (BED, MEDS, INSTRUCTIONS, FOLLOW-UP) -->
+  <div class="card reveal" style="margin-bottom:26px;background:var(--white);border:1.5px solid var(--ink-20);border-radius:var(--radius-xl);padding:20px 22px;">
+    <div style="font-weight:700;font-size:15.5px;color:var(--ink);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span>🏥</span> Active Case Doctor Orders &amp; Clinical Tasks
+      </div>
+      <span class="pill pill-sky" id="asst-care-case-badge">Case ID: CASE-PATIENT</span>
+    </div>
+    
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+      <!-- Bed Assignment Card -->
+      <div style="background:var(--forest-pale);border:1px solid var(--forest);border-radius:12px;padding:14px;">
+        <div style="font-weight:700;font-size:13px;color:var(--ink);margin-bottom:6px;display:flex;align-items:center;gap:6px;">
+          <span>🛏️</span> Bed Assignment
+        </div>
+        <div id="asst-bed-assignment-display" style="font-size:12.5px;color:var(--ink-80);">
+          <span style="color:var(--ink-50);font-style:italic;">No bed assigned</span>
+        </div>
+      </div>
+
+      <!-- Doctor Instructions Card -->
+      <div style="background:var(--sky-pale);border:1px solid var(--sky);border-radius:12px;padding:14px;">
+        <div style="font-weight:700;font-size:13px;color:var(--ink);margin-bottom:6px;display:flex;align-items:center;gap:6px;">
+          <span>📝</span> Doctor Instructions
+        </div>
+        <div id="asst-doctor-instructions-display" style="font-size:12.5px;color:var(--ink-80);">
+          <span style="color:var(--ink-50);font-style:italic;">No doctor instructions</span>
+        </div>
+      </div>
+
+      <!-- Medication Tasks Card -->
+      <div style="background:var(--saffron-pale);border:1px solid var(--saffron);border-radius:12px;padding:14px;">
+        <div style="font-weight:700;font-size:13px;color:var(--ink);margin-bottom:6px;display:flex;align-items:center;gap:6px;">
+          <span>💊</span> Medication Tasks &amp; Administration
+        </div>
+        <div id="asst-medication-tasks-display" style="font-size:12.5px;color:var(--ink-80);">
+          <span style="color:var(--ink-50);font-style:italic;">No medication scheduled</span>
+        </div>
+      </div>
+
+      <!-- Follow-Up Schedule Card -->
+      <div style="background:var(--amber-pale);border:1px solid var(--amber);border-radius:12px;padding:14px;">
+        <div style="font-weight:700;font-size:13px;color:var(--ink);margin-bottom:6px;display:flex;align-items:center;gap:6px;">
+          <span>📅</span> Scheduled Follow-Up
+        </div>
+        <div id="asst-followup-display" style="font-size:12.5px;color:var(--ink-80);">
+          <span style="color:var(--ink-50);font-style:italic;">No follow-up scheduled</span>
+        </div>
+      </div>
     </div>
   </div>
 

@@ -1,0 +1,12 @@
+[
+  {
+    "eventId": "evt_1786581725671_7ueg",
+    "timestamp": "2026-08-13T00:42:05.671Z",
+    "type": "REFERRED_TO_DOCTOR",
+    "title": "Referred to Doctor",
+    "description": "Case referred to Dr. Saif Real (Risk Level: HIGH)",
+    "actor": "AST-WIUNQP2L",
+    "actorRole": "assistant",
+    "data": {}
+  }
+]

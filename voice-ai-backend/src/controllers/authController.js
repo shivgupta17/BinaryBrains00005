@@ -349,9 +349,9 @@ async function login(req, res) {
     }
 
     const userRole = dbUser.role;
-    const doctorId    = userRole === 'doctor' ? `DOC_${dbUser.userId}` : null;
-    const assistantId = userRole === 'assistant' ? `AST_${dbUser.userId}` : null;
-    const patientId   = userRole === 'patient' ? `PAT_${dbUser.userId}` : null;
+    const doctorId    = userRole === 'doctor' ? (dbUser.doctorId || `DOC_${dbUser.userId}`) : null;
+    const assistantId = userRole === 'assistant' ? (dbUser.assistantId || `AST_${dbUser.userId}`) : null;
+    const patientId   = userRole === 'patient' ? (dbUser.patientId || `PAT_${dbUser.userId}`) : null;
 
     const token = jwt.sign(
       { userId: dbUser.userId, email: cleanEmail, role: userRole, doctorId, assistantId, patientId },

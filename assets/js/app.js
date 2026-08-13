@@ -319,6 +319,7 @@ function initDashboard() {
     GramCareAnim.initActivityFeed();
     GramCareAnim.initHeroParticles();
   }
+  loadAssistantCarePanel();
 
   // Update Recent Patient widget from active patient
   const p = GramCare.patient;
@@ -1299,7 +1300,14 @@ async function fetchDoctorReferrals() {
   const countPending = document.getElementById('doc-count-pending');
 
   try {
-    const res = await fetch(`http://localhost:5000/api/referrals`);
+    const token = getAuthToken();
+    const user = getAuthUser();
+    if (!user || user.role !== 'doctor') return;
+
+    const docId = user.doctorId || user.userId;
+    const res = await fetch(`http://localhost:5000/api/referrals/doctor/referrals?doctorId=${encodeURIComponent(docId)}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
     const result = await res.json();
     if (!res.ok || !result.success) return;
 
@@ -1314,35 +1322,100 @@ async function fetchDoctorReferrals() {
       }
 
       queueList.innerHTML = referrals.map(r => `
-        <div style="background:var(--white);border:1px solid var(--ink-10);border-radius:10px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;">
-          <div>
-            <div style="font-weight:700;font-size:14px;color:var(--ink);">${r.patientName} (${r.patientId})</div>
-            <div style="font-size:12px;color:var(--ink-60);margin-top:2px;">Reason: "${r.reason}"</div>
-            <div style="font-size:11px;color:var(--ink-50);margin-top:2px;">Referred by ${r.assistantId} · Status: <strong>${r.status}</strong></div>
+        <div style="background:var(--white);border:1px solid var(--ink-10);border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;box-shadow:var(--shadow-sm);">
+          <div style="flex:1;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="font-weight:700;font-size:15px;color:var(--ink);">${r.patientName}</span>
+              <code style="font-size:11.5px;background:var(--ink-10);padding:2px 6px;border-radius:4px;">${r.patientId}</code>
+              <code style="font-size:11.5px;background:var(--sky-pale);color:var(--sky);padding:2px 6px;border-radius:4px;">${r.caseId}</code>
+            </div>
+            <div style="font-size:12.5px;color:var(--ink-70);margin-top:4px;"><strong>Reason:</strong> "${r.reason || 'Clinical evaluation requested'}"</div>
+            <div style="font-size:11.5px;color:var(--ink-50);margin-top:3px;">
+              Referred by Assistant <strong>${r.assistantId || 'AST-CLINIC'}</strong> · ${new Date(r.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+            </div>
           </div>
-          <div style="display:flex;gap:6px;align-items:center;">
-            <span class="risk risk-${(r.riskLevel || 'amber').toLowerCase()}" style="font-size:10px;">${(r.riskLevel || 'amber').toUpperCase()}</span>
-            ${r.status === 'NEW' ? `<button class="btn btn-forest btn-sm" onclick="acceptDoctorReferral('${r.referralId}')">✓ Accept</button>` : `<span style="font-size:11px;color:var(--forest);font-weight:700;">✓ Accepted</span>`}
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
+            <span class="risk risk-${(r.riskLevel || 'amber').toLowerCase()}" style="font-size:10.5px;">${(r.riskLevel || 'amber').toUpperCase()}</span>
+            <div style="display:flex;gap:6px;">
+              <button class="btn btn-sky btn-sm" onclick="openDoctorCaseView('${r.caseId}', '${r.patientId}')">📖 Open Case</button>
+              ${r.status === 'NEW' ? `<button class="btn btn-forest btn-sm" onclick="acceptDoctorReferral('${r.referralId}')">✓ Accept</button>` : `<span style="font-size:11px;color:var(--forest);font-weight:700;padding:4px 8px;background:var(--forest-pale);border-radius:6px;">✓ Accepted</span>`}
+            </div>
           </div>
         </div>
       `).join('');
     }
   } catch (err) {
-    console.warn('Failed to fetch referrals:', err.message);
+    console.warn('Failed to fetch doctor referrals:', err.message);
   }
 }
 
 async function acceptDoctorReferral(referralId) {
   try {
-    const res = await fetch(`http://localhost:5000/api/referrals/${referralId}/accept`, { method: 'POST' });
+    const token = getAuthToken();
+    const res = await fetch(`http://localhost:5000/api/referrals/${referralId}/accept`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
     const result = await res.json();
     if (result.success) {
-      showToast('Referral accepted! Case loaded for doctor consultation.', 'success');
+      showToast('Referral accepted! Case is now IN_CONSULTATION.', 'success');
       fetchDoctorReferrals();
-      initDoctorPage();
+      if (result.data?.caseId && result.data?.patientId) {
+        openDoctorCaseView(result.data.caseId, result.data.patientId);
+      }
+    } else {
+      showToast(result.error || 'Failed to accept referral.', 'error');
     }
   } catch (err) {
     showToast('Failed to accept referral: ' + err.message, 'error');
+  }
+}
+
+async function openDoctorCaseView(caseId, patientId) {
+  try {
+    const token = getAuthToken();
+    const res = await fetch(`http://localhost:5000/api/patients/lookup/${encodeURIComponent(patientId)}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await res.json();
+    if (!res.ok || !data.success) {
+      showToast('Could not load case details.', 'error');
+      return;
+    }
+
+    const p = data.data;
+    GramCare.patient.id = p.patientId;
+    GramCare.patient.name = p.name;
+    GramCare.patient.age = p.age;
+    GramCare.patient.sex = p.sex;
+    GramCare.patient.village = p.village;
+    GramCare.patient.vitals = p.vitals || {};
+    GramCare.patient.aiSummary = p.aiSummary;
+
+    // Update Doctor Case Card UI
+    const titleEl = document.getElementById('doc-case-title');
+    const nameEl = document.getElementById('doc-p-name');
+    const ageEl = document.getElementById('doc-p-age');
+    const vilEl = document.getElementById('doc-p-village');
+    const tempEl = document.getElementById('doc-v-temp');
+    const bpEl = document.getElementById('doc-v-bp');
+    const hrEl = document.getElementById('doc-v-hr');
+    const spo2El = document.getElementById('doc-v-spo2');
+    const sumEl = document.getElementById('doc-ai-summary-text');
+
+    if (titleEl) titleEl.textContent = `Patient Case: ${p.name} (${p.patientId})`;
+    if (nameEl) nameEl.textContent = p.name;
+    if (ageEl) ageEl.textContent = `${p.age} yrs (${p.sex})`;
+    if (vilEl) vilEl.textContent = p.village || 'Rajpur';
+    if (tempEl) tempEl.textContent = p.vitals?.temp || '98.6°F';
+    if (bpEl) bpEl.textContent = p.vitals?.bp || '120/80 mmHg';
+    if (hrEl) hrEl.textContent = p.vitals?.pulse || '72 bpm';
+    if (spo2El) spo2El.textContent = p.vitals?.spo2 || '98%';
+    if (sumEl) sumEl.textContent = p.aiSummary?.mainProblem?.summary || 'Clinical evaluation packet loaded. Ready for doctor assessment.';
+
+    showToast(`Loaded case packet for ${p.name} (${p.patientId})`, 'info');
+  } catch (err) {
+    showToast('Error loading doctor case view: ' + err.message, 'error');
   }
 }
 
@@ -1372,81 +1445,483 @@ async function sendReferralToDoctor() {
   }
 }
 
-// ─── Doctor Decision Handlers ──────────────────────────
-async function doctorApproveCurrentCase() {
-  const patientId = getOrCreatePatientId();
-  const caseId = `CASE_${patientId}`;
-  const notes = document.getElementById('doc-diagnosis-textarea')?.value || 'Approved for treatment under clinical protocol.';
+// ─── DOCTOR DECISION MODAL HANDLERS (NO ALERTS, PROMPTS, OR DUMMY DATA) ─────
 
-  try {
-    const res = await fetch(`http://localhost:5000/api/doctors/cases/${caseId}/medications`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        doctorId: 'DOC_01',
-        doctorNote: notes,
-        medications: [
-          { name: 'Approved OTC Support', dosage: 'As per protocol', reason: notes }
-        ]
-      })
-    });
-    const result = await res.json();
-    if (result.success) {
-      showToast('Prescription and treatment plan approved by Doctor!', 'success');
-      initDoctorPage();
-    }
-  } catch (err) {
-    showToast('Error approving case: ' + err.message, 'error');
+// 1. Bed Assignment Modal
+function openDoctorBedModal() {
+  const overlay = document.getElementById('doctor-assign-bed-modal-overlay');
+  if (!overlay) return;
+
+  const patientId = GramCare.patient.id || sessionStorage.getItem('gc_patient_id') || 'PAT_DEFAULT';
+  const caseId = `CASE_${patientId}`;
+  const subEl = document.getElementById('bed-modal-case-sub');
+  if (subEl) subEl.textContent = `Patient ID: ${patientId} · Case ID: ${caseId}`;
+
+  // Clear inputs unless existing saved data is present for this case
+  const wardInput = document.getElementById('bed-input-ward');
+  const roomInput = document.getElementById('bed-input-room');
+  const bedInput = document.getElementById('bed-input-bed');
+  const floorInput = document.getElementById('bed-input-floor');
+  const deptInput = document.getElementById('bed-input-department');
+  const notesInput = document.getElementById('bed-input-notes');
+
+  const existingBed = GramCare.patient?.bedAssignment;
+  if (existingBed) {
+    if (wardInput) wardInput.value = existingBed.ward || '';
+    if (roomInput) roomInput.value = existingBed.room || '';
+    if (bedInput) bedInput.value = existingBed.bed || '';
+    if (floorInput) floorInput.value = existingBed.floor || '';
+    if (deptInput) deptInput.value = existingBed.department || 'General Medicine';
+    if (notesInput) notesInput.value = existingBed.notes || '';
+  } else {
+    if (wardInput) wardInput.value = '';
+    if (roomInput) roomInput.value = '';
+    if (bedInput) bedInput.value = '';
+    if (floorInput) floorInput.value = '';
+    if (deptInput) deptInput.value = '';
+    if (notesInput) notesInput.value = '';
   }
+
+  overlay.style.display = 'flex';
+  setTimeout(() => wardInput?.focus(), 100);
 }
 
-async function showDoctorAssignBedModal() {
-  const ward = prompt('Enter Ward Name (e.g., Emergency Ward, General Ward):', 'Emergency Ward');
-  if (!ward) return;
-  const room = prompt('Enter Room Number:', 'Room 12');
-  const bed  = prompt('Enter Bed Number:', 'Bed B');
+function closeDoctorBedModal() {
+  const overlay = document.getElementById('doctor-assign-bed-modal-overlay');
+  if (overlay) overlay.style.display = 'none';
+}
 
-  const patientId = getOrCreatePatientId();
+async function submitDoctorBedAssignment() {
+  const ward = document.getElementById('bed-input-ward')?.value.trim();
+  const room = document.getElementById('bed-input-room')?.value.trim();
+  const bed = document.getElementById('bed-input-bed')?.value.trim();
+  const floor = document.getElementById('bed-input-floor')?.value.trim();
+  const dept = document.getElementById('bed-input-department')?.value.trim();
+  const notes = document.getElementById('bed-input-notes')?.value.trim();
+
+  if (!ward || !room || !bed) {
+    showToast('Please enter Ward, Room, and Bed numbers.', 'warning');
+    return;
+  }
+
+  const btn = document.getElementById('btn-save-bed-assignment');
+  if (btn) { btn.disabled = true; btn.textContent = 'Saving Bed...'; }
+
+  const patientId = GramCare.patient.id || sessionStorage.getItem('gc_patient_id') || 'PAT_DEFAULT';
   const caseId = `CASE_${patientId}`;
+  const user = getAuthUser();
+  const token = getAuthToken();
 
   try {
     const res = await fetch(`http://localhost:5000/api/doctors/cases/${caseId}/bed-assignment`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ward, room, bed, doctorId: 'DOC_01' })
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        ward, room, bed, floor, department: dept, notes,
+        doctorId: user?.doctorId || user?.userId || 'Doctor'
+      })
     });
     const result = await res.json();
-    if (result.success) {
-      showToast(`Bed Assigned: ${ward}, ${room}, ${bed}`, 'success');
-      initDoctorPage();
+    if (!res.ok || !result.success) {
+      showToast(result.error || 'Failed to assign bed.', 'error');
+      if (btn) { btn.disabled = false; btn.textContent = '🛏️ Assign & Save Bed'; }
+      return;
     }
+
+    showToast(`✓ Bed assigned successfully: ${ward}, ${room}, ${bed}`, 'success');
+    GramCare.patient.bedAssignment = result.data;
+    closeDoctorBedModal();
+    initDoctorPage();
+    loadAssistantCarePanel();
   } catch (err) {
-    showToast('Bed assignment error: ' + err.message, 'error');
+    showToast('Error assigning bed: ' + err.message, 'error');
+    if (btn) { btn.disabled = false; btn.textContent = '🛏️ Assign & Save Bed'; }
   }
 }
 
-async function showDoctorScheduleMedModal() {
-  const medName = prompt('Enter Medication Name to Schedule:', 'Paracetamol 500mg');
-  if (!medName) return;
-  const timesStr = prompt('Enter Schedule Times (comma separated, e.g. 08:00, 14:00, 20:00):', '08:00, 14:00, 20:00');
-  const times = timesStr ? timesStr.split(',').map(t => t.trim()) : ['08:00', '14:00', '20:00'];
+// 2. Add / Approve Medicine Modal
+let activeAiMedSuggestion = null;
 
-  const patientId = getOrCreatePatientId();
+function openDoctorMedicineModal() {
+  const overlay = document.getElementById('doctor-add-medicine-modal-overlay');
+  if (!overlay) return;
+
+  const nameInput = document.getElementById('med-input-name');
+  const doseInput = document.getElementById('med-input-dosage');
+  const durInput = document.getElementById('med-input-duration');
+  const reasonInput = document.getElementById('med-input-reason');
+  const aiSugBox = document.getElementById('med-modal-ai-suggestion');
+  const aiSugText = document.getElementById('med-ai-sug-text');
+
+  if (nameInput) nameInput.value = '';
+  if (doseInput) doseInput.value = '';
+  if (durInput) durInput.value = '';
+  if (reasonInput) reasonInput.value = '';
+
+  const aiSug = GramCare.patient?.aiSummary?.treatmentSuggestions?.[0] || GramCare.patient?.aiSummary?.mainProblem?.suggestedMeds?.[0];
+  if (aiSug && aiSugBox && aiSugText) {
+    activeAiMedSuggestion = typeof aiSug === 'string' ? aiSug : (aiSug.name || aiSug.medicine || JSON.stringify(aiSug));
+    aiSugText.textContent = activeAiMedSuggestion;
+    aiSugBox.style.display = 'block';
+  } else if (aiSugBox) {
+    aiSugBox.style.display = 'none';
+  }
+
+  overlay.style.display = 'flex';
+  setTimeout(() => nameInput?.focus(), 100);
+}
+
+function closeDoctorMedicineModal() {
+  const overlay = document.getElementById('doctor-add-medicine-modal-overlay');
+  if (overlay) overlay.style.display = 'none';
+}
+
+function useAiMedSuggestion() {
+  if (!activeAiMedSuggestion) return;
+  const nameInput = document.getElementById('med-input-name');
+  if (nameInput) nameInput.value = activeAiMedSuggestion;
+  showToast('AI suggestion copied to prescription form.', 'info');
+}
+
+async function submitDoctorApproveMedicine() {
+  const name = document.getElementById('med-input-name')?.value.trim();
+  const dosage = document.getElementById('med-input-dosage')?.value.trim();
+  const route = document.getElementById('med-input-route')?.value;
+  const frequency = document.getElementById('med-input-frequency')?.value;
+  const duration = document.getElementById('med-input-duration')?.value.trim();
+  const reason = document.getElementById('med-input-reason')?.value.trim();
+
+  if (!name || !dosage) {
+    showToast('Medicine Name and Dosage are required fields.', 'warning');
+    return;
+  }
+
+  const btn = document.getElementById('btn-save-medicine');
+  if (btn) { btn.disabled = true; btn.textContent = 'Approving Medicine...'; }
+
+  const patientId = GramCare.patient.id || sessionStorage.getItem('gc_patient_id') || 'PAT_DEFAULT';
   const caseId = `CASE_${patientId}`;
+  const user = getAuthUser();
+  const token = getAuthToken();
+
+  try {
+    const res = await fetch(`http://localhost:5000/api/doctors/cases/${caseId}/medications`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        doctorId: user?.doctorId || user?.userId || 'Doctor',
+        doctorNote: reason || `Prescribed ${name} (${dosage})`,
+        medications: [
+          {
+            medicationId: `med_${Date.now()}`,
+            name,
+            dosage,
+            route,
+            frequency,
+            duration,
+            instructions: duration,
+            reason,
+            status: 'DOCTOR_APPROVED',
+            approvedAt: new Date().toISOString()
+          }
+        ]
+      })
+    });
+    const result = await res.json();
+    if (!res.ok || !result.success) {
+      showToast(result.error || 'Failed to approve medication.', 'error');
+      if (btn) { btn.disabled = false; btn.textContent = '💊 Approve & Add Prescription'; }
+      return;
+    }
+
+    showToast(`✓ Prescription approved: ${name} (${dosage})`, 'success');
+    closeDoctorMedicineModal();
+    initDoctorPage();
+    loadAssistantCarePanel();
+  } catch (err) {
+    showToast('Error approving medication: ' + err.message, 'error');
+    if (btn) { btn.disabled = false; btn.textContent = '💊 Approve & Add Prescription'; }
+  }
+}
+
+// 3. Configure Medication Schedule Modal
+let selectedScheduleTimes = [];
+
+function openDoctorScheduleModal() {
+  const overlay = document.getElementById('doctor-schedule-med-modal-overlay');
+  if (!overlay) return;
+
+  const medSelect = document.getElementById('sched-input-med-select');
+  const doseInput = document.getElementById('sched-input-dose');
+  const container = document.getElementById('sched-time-badges-container');
+
+  selectedScheduleTimes = [];
+  if (container) {
+    container.innerHTML = `<span style="font-size:12px;color:var(--ink-50);font-style:italic;" id="sched-no-times-hint">No times added yet. Pick time above and click + Add.</span>`;
+  }
+  if (doseInput) doseInput.value = '';
+
+  if (medSelect) {
+    medSelect.innerHTML = '<option value="">-- Choose Approved Medicine --</option>';
+    const approvedMeds = GramCare.patient?.approvedMedications || GramCare.patient?.medications || [];
+    if (approvedMeds.length > 0) {
+      approvedMeds.forEach(m => {
+        const opt = document.createElement('option');
+        opt.value = m.name;
+        opt.textContent = `${m.name} (${m.dosage || 'Standard dose'})`;
+        medSelect.appendChild(opt);
+      });
+    } else {
+      const opt = document.createElement('option');
+      opt.value = 'General Administration';
+      opt.textContent = 'General Administration / Medication';
+      medSelect.appendChild(opt);
+    }
+  }
+
+  overlay.style.display = 'flex';
+}
+
+function closeDoctorScheduleModal() {
+  const overlay = document.getElementById('doctor-schedule-med-modal-overlay');
+  if (overlay) overlay.style.display = 'none';
+}
+
+function addScheduleTimeBadge() {
+  const timePicker = document.getElementById('sched-input-time-picker');
+  const val = timePicker?.value;
+  if (!val) {
+    showToast('Please pick a valid time (HH:MM).', 'warning');
+    return;
+  }
+
+  if (selectedScheduleTimes.includes(val)) {
+    showToast(`Time ${val} is already added to schedule.`, 'info');
+    return;
+  }
+
+  selectedScheduleTimes.push(val);
+  selectedScheduleTimes.sort();
+
+  const container = document.getElementById('sched-time-badges-container');
+  if (container) {
+    container.innerHTML = selectedScheduleTimes.map(t => `
+      <span class="pill pill-sky" style="font-size:12px;display:inline-flex;align-items:center;gap:6px;padding:4px 10px;">
+        ⏰ ${t}
+        <button type="button" onclick="removeScheduleTimeBadge('${t}')" style="background:none;border:none;color:var(--ink);cursor:pointer;font-weight:700;padding:0 2px;">✕</button>
+      </span>
+    `).join('');
+  }
+}
+
+function removeScheduleTimeBadge(t) {
+  selectedScheduleTimes = selectedScheduleTimes.filter(x => x !== t);
+  const container = document.getElementById('sched-time-badges-container');
+  if (container) {
+    if (selectedScheduleTimes.length === 0) {
+      container.innerHTML = `<span style="font-size:12px;color:var(--ink-50);font-style:italic;" id="sched-no-times-hint">No times added yet. Pick time above and click + Add.</span>`;
+    } else {
+      container.innerHTML = selectedScheduleTimes.map(timeStr => `
+        <span class="pill pill-sky" style="font-size:12px;display:inline-flex;align-items:center;gap:6px;padding:4px 10px;">
+          ⏰ ${timeStr}
+          <button type="button" onclick="removeScheduleTimeBadge('${timeStr}')" style="background:none;border:none;color:var(--ink);cursor:pointer;font-weight:700;padding:0 2px;">✕</button>
+        </span>
+      `).join('');
+    }
+  }
+}
+
+async function submitDoctorScheduleMedication() {
+  const medName = document.getElementById('sched-input-med-select')?.value;
+  const dose = document.getElementById('sched-input-dose')?.value.trim();
+
+  if (!medName) {
+    showToast('Please select a medication.', 'warning');
+    return;
+  }
+
+  if (selectedScheduleTimes.length === 0) {
+    showToast('Please add at least one specific administration time (HH:MM).', 'warning');
+    return;
+  }
+
+  const btn = document.getElementById('btn-save-med-schedule');
+  if (btn) { btn.disabled = true; btn.textContent = 'Saving Schedule...'; }
+
+  const patientId = GramCare.patient.id || sessionStorage.getItem('gc_patient_id') || 'PAT_DEFAULT';
+  const caseId = `CASE_${patientId}`;
+  const user = getAuthUser();
+  const token = getAuthToken();
 
   try {
     const res = await fetch(`http://localhost:5000/api/doctors/cases/${caseId}/medication-schedule`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ medicationName: medName, dose: '1 Tablet', times, doctorId: 'DOC_01' })
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        medicationName: medName,
+        dose: dose || 'Standard dose',
+        times: selectedScheduleTimes,
+        doctorId: user?.doctorId || user?.userId || 'Doctor'
+      })
     });
     const result = await res.json();
-    if (result.success) {
-      showToast(`Medication Schedule Created for ${medName} at ${times.join(', ')}`, 'success');
-      initDoctorPage();
+    if (!res.ok || !result.success) {
+      showToast(result.error || 'Failed to save medication schedule.', 'error');
+      if (btn) { btn.disabled = false; btn.textContent = '⏰ Save Medication Schedule'; }
+      return;
     }
+
+    showToast(`✓ Medication schedule saved for ${medName} at ${selectedScheduleTimes.join(', ')}`, 'success');
+    closeDoctorScheduleModal();
+    initDoctorPage();
+    loadAssistantCarePanel();
   } catch (err) {
-    showToast('Schedule error: ' + err.message, 'error');
+    showToast('Error saving schedule: ' + err.message, 'error');
+    if (btn) { btn.disabled = false; btn.textContent = '⏰ Save Medication Schedule'; }
+  }
+}
+
+// 4. Send Doctor Instruction Modal
+function openDoctorInstructionModal() {
+  const overlay = document.getElementById('doctor-instruction-modal-overlay');
+  if (!overlay) return;
+  const txtInput = document.getElementById('doctor-instruction-textarea');
+  if (txtInput) txtInput.value = '';
+  overlay.style.display = 'flex';
+  setTimeout(() => txtInput?.focus(), 100);
+}
+
+function closeDoctorInstructionModal() {
+  const overlay = document.getElementById('doctor-instruction-modal-overlay');
+  if (overlay) overlay.style.display = 'none';
+}
+
+async function submitDoctorInstruction() {
+  const msg = document.getElementById('doctor-instruction-textarea')?.value.trim();
+  if (!msg) {
+    showToast('Please enter an instruction message for the assistant.', 'warning');
+    return;
+  }
+
+  const patientId = GramCare.patient.id || sessionStorage.getItem('gc_patient_id') || 'PAT_DEFAULT';
+  const caseId = `CASE_${patientId}`;
+  const user = getAuthUser();
+  const token = getAuthToken();
+
+  try {
+    const res = await fetch(`http://localhost:5000/api/doctors/cases/${caseId}/instruction`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        message: msg,
+        doctorId: user?.doctorId || user?.userId || 'Doctor'
+      })
+    });
+    const result = await res.json();
+    if (!res.ok || !result.success) {
+      showToast(result.error || 'Failed to send instruction.', 'error');
+      return;
+    }
+
+    showToast('✓ Doctor instruction sent to Assistant!', 'success');
+    closeDoctorInstructionModal();
+    initDoctorPage();
+    loadAssistantCarePanel();
+  } catch (err) {
+    showToast('Error sending instruction: ' + err.message, 'error');
+  }
+}
+
+// Helper to load Assistant Care Panel from MongoDB Atlas
+async function loadAssistantCarePanel() {
+  const patientId = GramCare.patient.id || sessionStorage.getItem('gc_patient_id');
+  if (!patientId) return;
+
+  const caseBadge = document.getElementById('asst-care-case-badge');
+  const bedEl = document.getElementById('asst-bed-assignment-display');
+  const instEl = document.getElementById('asst-doctor-instructions-display');
+  const medsEl = document.getElementById('asst-medication-tasks-display');
+  const followEl = document.getElementById('asst-followup-display');
+
+  try {
+    const token = getAuthToken();
+    const res = await fetch(`http://localhost:5000/api/patients/lookup/${encodeURIComponent(patientId)}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await res.json();
+    if (!res.ok || !data.success) return;
+
+    const p = data.data;
+    const caseId = p.currentCaseId || `CASE_${p.patientId}`;
+    if (caseBadge) caseBadge.textContent = `Case ID: ${caseId}`;
+
+    // Bed Assignment Display
+    if (bedEl) {
+      if (p.bedAssignment && p.bedAssignment.ward) {
+        bedEl.innerHTML = `
+          <strong>Ward:</strong> ${p.bedAssignment.ward} | <strong>Room:</strong> ${p.bedAssignment.room} | <strong>Bed:</strong> ${p.bedAssignment.bed}<br/>
+          <span style="font-size:11.5px;color:var(--ink-60);">${p.bedAssignment.floor || ''} ${p.bedAssignment.department ? '· ' + p.bedAssignment.department : ''}</span>
+        `;
+      } else {
+        bedEl.innerHTML = `<span style="color:var(--ink-50);font-style:italic;">No bed assigned</span>`;
+      }
+    }
+
+    // Doctor Instructions Display
+    if (instEl) {
+      const instructions = p.doctorInstructions || [];
+      if (instructions.length > 0) {
+        const latest = instructions[instructions.length - 1];
+        instEl.innerHTML = `
+          <strong>Instruction:</strong> "${latest.message}"<br/>
+          <span style="font-size:11px;color:var(--ink-50);">Sent by Doctor · ${new Date(latest.createdAt).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span>
+        `;
+      } else {
+        instEl.innerHTML = `<span style="color:var(--ink-50);font-style:italic;">No doctor instructions</span>`;
+      }
+    }
+
+    // Medication Tasks Display
+    if (medsEl) {
+      const approvedMeds = p.approvedMedications || [];
+      if (approvedMeds.length > 0) {
+        medsEl.innerHTML = approvedMeds.map(m => `
+          <div style="margin-bottom:4px;">
+            <strong>💊 ${m.name}</strong> (${m.dosage || ''}) — <span class="pill pill-green" style="font-size:10px;">DOCTOR APPROVED</span><br/>
+            <span style="font-size:11.5px;color:var(--ink-60);">${m.frequency || 'As prescribed'} ${m.instructions ? '· ' + m.instructions : ''}</span>
+          </div>
+        `).join('');
+      } else {
+        medsEl.innerHTML = `<span style="color:var(--ink-50);font-style:italic;">No medication scheduled</span>`;
+      }
+    }
+
+    // Follow-Up Display
+    if (followEl) {
+      if (p.followUp && p.followUp.followUpDate) {
+        followEl.innerHTML = `
+          <strong>Date:</strong> ${p.followUp.followUpDate} at ${p.followUp.followUpTime || '10:00 AM'}<br/>
+          <span style="font-size:11.5px;color:var(--ink-60);">Reason: "${p.followUp.reason || 'Clinical review'}"</span>
+        `;
+      } else {
+        followEl.innerHTML = `<span style="color:var(--ink-50);font-style:italic;">No follow-up scheduled</span>`;
+      }
+    }
+
+  } catch (err) {
+    console.warn('Failed to load assistant care panel:', err.message);
   }
 }
 
@@ -1966,17 +2441,23 @@ function checkAuthStateAndRender() {
   }
 
   // Authenticated User
+  const user = getAuthUser();
+  if (!user || !user.role) {
+    handleLogout();
+    return;
+  }
+
   if (gateScreen) gateScreen.style.display = 'none';
   if (mainLayout) mainLayout.style.display = 'flex';
 
-  const user = getAuthUser();
   populateSidebarUser();
   updateSidebarForRole(user.role);
 
   const targetPage = user.role === 'doctor' ? 'doctor' : (user.role === 'patient' ? 'patient-dashboard' : 'dashboard');
   const page = currentHash || targetPage;
 
-  if (ROLE_ALLOWED_PAGES[user.role].includes(page)) {
+  const allowedPages = ROLE_ALLOWED_PAGES[user.role] || [];
+  if (allowedPages.includes(page)) {
     navigateTo(page);
   } else {
     navigateTo(targetPage);
@@ -2066,33 +2547,162 @@ async function asstSearchPatientById() {
   }
 }
 
-async function asstReferToDoctorById() {
-  const doctorIdInput = document.getElementById('asst-refer-doctor-id')?.value.trim();
-  const resEl = document.getElementById('asst-doctor-refer-result');
+let currentVerifiedDoctor = null;
+
+function openReferDoctorModal(patientId) {
+  const modalOverlay = document.getElementById('refer-doctor-modal-overlay');
+  if (!modalOverlay) return;
+
+  const patId = patientId || GramCare.patient.id || sessionStorage.getItem('gc_patient_id') || 'PAT_DEFAULT';
+  const patName = GramCare.patient.name || 'Rahul Sharma';
+  const patRisk = GramCare.patient.risk || 'AMBER';
+  const caseId  = GramCare.patient.currentCaseId || GramCare.patient.caseId || `Case Encounter for ${patId}`;
+
+  const nameEl = document.getElementById('modal-patient-name-display');
+  const metaEl = document.getElementById('modal-patient-meta-display');
+  const riskPill = document.getElementById('modal-patient-risk-pill');
+  const inputEl = document.getElementById('modal-doctor-id-input');
+  const statusEl = document.getElementById('modal-doctor-search-status');
+  const cardEl = document.getElementById('modal-doctor-verified-card');
+  const confirmBtn = document.getElementById('btn-modal-confirm-referral');
+
+  if (nameEl) nameEl.textContent = patName;
+  if (metaEl) metaEl.textContent = `Patient ID: ${patId} ${caseId ? '· ' + caseId : ''}`;
+  if (riskPill) {
+    riskPill.textContent = (patRisk || 'AMBER').toUpperCase();
+    riskPill.className = `pill pill-${(patRisk || 'amber').toLowerCase() === 'high' ? 'red' : 'amber'}`;
+  }
+
+  // Initial State: NO doctor selected, input cleared, verified card hidden
+  if (inputEl) inputEl.value = '';
+  if (statusEl) { statusEl.style.display = 'none'; statusEl.innerHTML = ''; }
+  if (cardEl) cardEl.style.display = 'none';
+  if (confirmBtn) { confirmBtn.style.display = 'none'; confirmBtn.disabled = false; confirmBtn.textContent = '🚀 Confirm & Send Referral'; }
+
+  currentVerifiedDoctor = null;
+  modalOverlay.style.display = 'flex';
+  setTimeout(() => inputEl?.focus(), 100);
+}
+
+function closeReferDoctorModal() {
+  const modalOverlay = document.getElementById('refer-doctor-modal-overlay');
+  if (modalOverlay) modalOverlay.style.display = 'none';
+  currentVerifiedDoctor = null;
+}
+
+async function modalSearchDoctor() {
+  const doctorIdInput = document.getElementById('modal-doctor-id-input')?.value.trim();
+  const statusEl = document.getElementById('modal-doctor-search-status');
+  const cardEl = document.getElementById('modal-doctor-verified-card');
+  const confirmBtn = document.getElementById('btn-modal-confirm-referral');
+
   if (!doctorIdInput) {
-    showToast('Please enter a Doctor ID (e.g. DOC-77291045)', 'warning');
+    if (statusEl) {
+      statusEl.style.display = 'block';
+      statusEl.innerHTML = `<div style="color:var(--amber);font-weight:600;font-size:13px;background:#FEF3C7;padding:8px 12px;border-radius:8px;border:1px solid #FCD34D;">⚠️ Please enter a Doctor ID (e.g. DOC-3N8E4ZJQ) or Doctor Email.</div>`;
+    }
     return;
   }
 
-  const patientId = GramCare.patient.id || sessionStorage.getItem('gc_patient_id') || 'PAT_DEFAULT';
-  const caseId    = `CASE_${patientId}`;
-  const user      = getAuthUser();
+  if (statusEl) {
+    statusEl.style.display = 'block';
+    statusEl.innerHTML = `<div style="color:var(--sky);font-weight:600;font-size:13px;background:var(--sky-pale);padding:8px 12px;border-radius:8px;border:1px solid var(--sky);">⏳ Searching for doctor...</div>`;
+  }
+  if (cardEl) cardEl.style.display = 'none';
+  if (confirmBtn) confirmBtn.style.display = 'none';
 
   try {
     const token = getAuthToken();
-    const docRes = await fetch(`http://localhost:5000/api/doctors/lookup/${encodeURIComponent(doctorIdInput)}`, {
+    const res = await fetch(`http://localhost:5000/api/doctors/lookup/${encodeURIComponent(doctorIdInput)}`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
-    const docData = await docRes.json();
-    if (!docRes.ok || !docData.success) {
-      if (resEl) resEl.innerHTML = `<span style="color:var(--red);">❌ Doctor not found. Please check Doctor ID.</span>`;
-      showToast(docData.error || 'Doctor not found.', 'error');
+    const data = await res.json();
+
+    if (res.status === 404) {
+      if (statusEl) {
+        statusEl.style.display = 'block';
+        statusEl.innerHTML = `<div style="color:#B91C1C;font-weight:600;font-size:13px;background:#FEE2E2;padding:8px 12px;border-radius:8px;border:1px solid #FCA5A5;">❌ Doctor not found. Please verify Doctor ID.</div>`;
+      }
       return;
     }
 
-    const doc = docData.data;
+    if (res.status === 401) {
+      if (statusEl) {
+        statusEl.style.display = 'block';
+        statusEl.innerHTML = `<div style="color:#B91C1C;font-weight:600;font-size:13px;background:#FEE2E2;padding:8px 12px;border-radius:8px;border:1px solid #FCA5A5;">❌ Session expired. Please log in again.</div>`;
+      }
+      return;
+    }
 
-    const refRes = await fetch('http://localhost:5000/api/referrals', {
+    if (res.status === 403) {
+      if (statusEl) {
+        statusEl.style.display = 'block';
+        statusEl.innerHTML = `<div style="color:#B91C1C;font-weight:600;font-size:13px;background:#FEE2E2;padding:8px 12px;border-radius:8px;border:1px solid #FCA5A5;">❌ Permission denied. Assistant role required.</div>`;
+      }
+      return;
+    }
+
+    if (!res.ok || !data.success) {
+      if (statusEl) {
+        statusEl.style.display = 'block';
+        statusEl.innerHTML = `<div style="color:#B91C1C;font-weight:600;font-size:13px;background:#FEE2E2;padding:8px 12px;border-radius:8px;border:1px solid #FCA5A5;">❌ ${data.error || 'Unable to verify doctor. Please try again.'}</div>`;
+      }
+      return;
+    }
+
+    const doc = data.data;
+    currentVerifiedDoctor = doc;
+
+    if (statusEl) {
+      statusEl.style.display = 'block';
+      statusEl.innerHTML = `<div style="color:#15803D;font-weight:600;font-size:13px;background:#DCFCE7;padding:8px 12px;border-radius:8px;border:1px solid #86EFAC;">✓ Doctor found &amp; verified! Review details below.</div>`;
+    }
+
+    // Populate Doctor Details Card
+    const nameEl = document.getElementById('modal-doc-verified-name');
+    const specEl = document.getElementById('modal-doc-verified-spec');
+    const idEl   = document.getElementById('modal-doc-verified-id');
+    const statusBadge = document.getElementById('modal-doc-status-badge');
+
+    if (nameEl) nameEl.textContent = doc.name || 'Attending Doctor';
+    if (specEl) specEl.textContent = `${doc.specialty || 'General Medicine'} · Clinical Panel`;
+    if (idEl) idEl.textContent = doc.doctorId;
+    if (statusBadge) {
+      statusBadge.textContent = doc.onlineStatus === 'OFFLINE' ? '🔴 OFFLINE' : (doc.onlineStatus === 'BUSY' ? '🟡 BUSY' : '🟢 ONLINE');
+    }
+
+    if (cardEl) cardEl.style.display = 'block';
+    if (confirmBtn) { confirmBtn.style.display = 'inline-block'; confirmBtn.disabled = false; confirmBtn.textContent = '🚀 Confirm & Send Referral'; }
+
+  } catch (err) {
+    if (statusEl) {
+      statusEl.style.display = 'block';
+      statusEl.innerHTML = `<div style="color:#B91C1C;font-weight:600;font-size:13px;background:#FEE2E2;padding:8px 12px;border-radius:8px;border:1px solid #FCA5A5;">❌ Unable to verify doctor. Connection issue: ${err.message}</div>`;
+    }
+  }
+}
+
+async function modalConfirmSendReferral() {
+  if (!currentVerifiedDoctor) {
+    showToast('Please search and verify a doctor first.', 'warning');
+    return;
+  }
+
+  const confirmBtn = document.getElementById('btn-modal-confirm-referral');
+  const reasonInput = document.getElementById('modal-referral-reason-input')?.value.trim();
+
+  const patientId = GramCare.patient.id || sessionStorage.getItem('gc_patient_id') || 'PAT_DEFAULT';
+  const caseId    = GramCare.patient.currentCaseId || GramCare.patient.caseId || null;
+  const user      = getAuthUser();
+
+  if (confirmBtn) {
+    confirmBtn.disabled = true;
+    confirmBtn.textContent = '🚀 Sending Referral...';
+  }
+
+  try {
+    const token = getAuthToken();
+    const res = await fetch('http://localhost:5000/api/referrals', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -2101,30 +2711,30 @@ async function asstReferToDoctorById() {
       body: JSON.stringify({
         patientId,
         caseId,
-        doctorId: doc.doctorId,
+        doctorId: currentVerifiedDoctor.doctorId,
         assistantId: user?.assistantId || 'AST_DEFAULT',
         riskLevel: GramCare.patient.risk || 'medium',
-        reason: 'Clinical referral from Assistant Panel'
+        reason: reasonInput || GramCare.patient?.aiSummary?.mainProblem?.summary || 'Clinical referral from Assistant Panel for physician evaluation.',
+        aiSummary: GramCare.patient?.aiSummary || null
       })
     });
-    const refData = await refRes.json();
-    if (!refRes.ok || !refData.success) {
-      showToast(refData.error || 'Referral failed.', 'error');
+
+    const data = await res.json();
+    if (!res.ok || !data.success) {
+      showToast(data.error || 'Failed to send referral.', 'error');
+      if (confirmBtn) { confirmBtn.disabled = false; confirmBtn.textContent = '🚀 Confirm & Send Referral'; }
       return;
     }
 
-    if (resEl) {
-      resEl.innerHTML = `
-        <div style="background:var(--sky-pale);border:1px solid var(--sky);border-radius:8px;padding:8px 10px;margin-top:6px;">
-          <strong>✓ Referred to Doctor:</strong> ${doc.name} (${doc.specialty})<br/>
-          <strong>Doctor ID:</strong> <code>${doc.doctorId}</code> | <strong>Referral ID:</strong> <code>${refData.referralId}</code><br/>
-          <span class="pill pill-amber" style="font-size:10px;margin-top:4px;">Status: NEW</span>
-        </div>
-      `;
-    }
-    showToast(`Referral sent to ${doc.name} (${doc.doctorId})!`, 'success');
+    showToast(`✓ Referral sent successfully to ${currentVerifiedDoctor.name} (${currentVerifiedDoctor.doctorId})!`, 'success');
+    closeReferDoctorModal();
+
+    // If on doctor queue or dashboard, refresh view
+    if (typeof loadDoctorReferralQueue === 'function') loadDoctorReferralQueue();
+
   } catch (err) {
-    showToast('Error referring to doctor: ' + err.message, 'error');
+    showToast('Network error sending referral: ' + err.message, 'error');
+    if (confirmBtn) { confirmBtn.disabled = false; confirmBtn.textContent = '🚀 Confirm & Send Referral'; }
   }
 }
 

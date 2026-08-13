@@ -8,8 +8,8 @@ const idGen = require('../utils/idGenerator');
 async function createReferral(req, res) {
   try {
     const { patientId, caseId, doctorId, assistantId, riskLevel, reason, aiSummary } = req.body;
-    if (!patientId || !caseId || !doctorId) {
-      return res.status(400).json({ success: false, error: 'patientId, caseId, and doctorId are required' });
+    if (!patientId || !doctorId) {
+      return res.status(400).json({ success: false, error: 'patientId and doctorId are required' });
     }
 
     const cleanDoctorId = doctorId.trim();
@@ -18,19 +18,28 @@ async function createReferral(req, res) {
     let doctorDoc = null;
     if (isDbConnected()) {
       const db = getDb();
-      doctorDoc = await db.collection('doctors').findOne({
-        $or: [{ doctorId: cleanDoctorId }, { userId: cleanDoctorId }]
-      });
+      const escapeRegex = (str) => str.replace(/[-[\]{}()*+?.:\\^$|#\s]/g, '\\$&');
+      const searchRegex = new RegExp(`^${escapeRegex(cleanDoctorId)}$`, 'i');
+
+      const queryOr = [
+        { doctorId: searchRegex },
+        { doctorId: cleanDoctorId.toUpperCase() },
+        { userId: searchRegex },
+        { email: searchRegex },
+        { email: cleanDoctorId.toLowerCase() }
+      ];
+
+      doctorDoc = await db.collection('doctors').findOne({ $or: queryOr });
       if (!doctorDoc) {
         doctorDoc = await db.collection('users').findOne({
           role: 'doctor',
-          $or: [{ doctorId: cleanDoctorId }, { userId: cleanDoctorId }]
+          $or: queryOr
         });
       }
     }
 
     if (!doctorDoc) {
-      doctorDoc = fileUtils.getDoctor(cleanDoctorId);
+      doctorDoc = fileUtils.getDoctor(cleanDoctorId) || fileUtils.getDoctor(cleanDoctorId.toUpperCase());
     }
 
     if (!doctorDoc) {
@@ -40,13 +49,61 @@ async function createReferral(req, res) {
     const targetDoctorId = doctorDoc.doctorId || cleanDoctorId;
     const referralId = idGen.generateReferralId();
     const createdAt = new Date().toISOString();
+    const cleanPatientId = patientId.trim();
+    let targetCaseId = caseId ? caseId.trim() : null;
 
-    const caseData = fileUtils.getCase(caseId);
+    // Ensure a REAL case document exists in MongoDB Atlas for this patientId
+    let caseData = null;
+    if (isDbConnected()) {
+      const db = getDb();
+      if (targetCaseId && !targetCaseId.startsWith('CASE_PAT_')) {
+        caseData = await db.collection('cases').findOne({ caseId: targetCaseId });
+      }
+
+      if (!caseData) {
+        // Search for open/referred case by patientId
+        caseData = await db.collection('cases').findOne({
+          patientId: cleanPatientId,
+          status: { $in: ['OPEN', 'REFERRED', 'IN_CONSULTATION'] }
+        });
+      }
+
+      if (caseData) {
+        targetCaseId = caseData.caseId;
+      } else {
+        // Create a real case document in cases collection in MongoDB Atlas
+        targetCaseId = idGen.generateCaseId();
+        caseData = {
+          caseId: targetCaseId,
+          patientId: cleanPatientId,
+          assistantId: (assistantId || 'ASSISTANT_DEFAULT').trim(),
+          assignedDoctorId: targetDoctorId,
+          caseType: 'General Referral Encounter',
+          status: 'REFERRED',
+          createdAt,
+          vitals: {},
+          aiSummary: aiSummary || null,
+          timeline: [{
+            eventId: `evt_${Date.now()}`,
+            type: 'CASE_CREATED',
+            title: 'Encounter Case Created',
+            description: 'New clinical encounter created for doctor referral.',
+            timestamp: createdAt,
+            actor: assistantId || 'Clinic Assistant'
+          }]
+        };
+        await db.collection('cases').insertOne(caseData);
+      }
+    }
+
+    if (!caseData) {
+      caseData = fileUtils.getCase(targetCaseId) || fileUtils.getCase(patientId);
+    }
 
     const referral = {
       referralId,
-      patientId: patientId.trim(),
-      caseId: caseId.trim(),
+      patientId: cleanPatientId,
+      caseId: targetCaseId,
       doctorId: targetDoctorId,
       doctorName: doctorDoc.name || 'Attending Doctor',
       assistantId: (assistantId || 'ASSISTANT_DEFAULT').trim(),
@@ -63,13 +120,13 @@ async function createReferral(req, res) {
     if (caseData) {
       caseData.status = 'REFERRED';
       caseData.assignedDoctorId = targetDoctorId;
-      fileUtils.saveCase(caseId, caseData);
+      fileUtils.saveCase(targetCaseId, caseData);
     }
 
     if (isDbConnected()) {
       const db = getDb();
       await db.collection('referrals').updateOne({ referralId }, { $set: referral }, { upsert: true });
-      await db.collection('cases').updateOne({ caseId }, { $set: { status: 'REFERRED', assignedDoctorId: targetDoctorId, assistantId: referral.assistantId } });
+      await db.collection('cases').updateOne({ caseId: targetCaseId }, { $set: { status: 'REFERRED', assignedDoctorId: targetDoctorId, assistantId: referral.assistantId } });
     }
 
     fileUtils.addCaseTimelineEvent(caseId, {
@@ -105,37 +162,48 @@ async function createReferral(req, res) {
   }
 }
 
-async function listReferrals(req, res) {
+async function getDoctorReferrals(req, res) {
   try {
-    const { doctorId, status, assistantId } = req.query;
-    let referrals = [];
+    const docId = req.user?.doctorId || req.user?.userId || req.query.doctorId;
+    if (!docId) {
+      return res.status(400).json({ success: false, error: 'Doctor ID missing from authenticated user session.' });
+    }
 
+    const cleanDocId = docId.trim();
+    const escapeRegex = (str) => str.replace(/[-[\]{}()*+?.:\\^$|#\s]/g, '\\$&');
+    const docRegex = new RegExp(`^${escapeRegex(cleanDocId)}$`, 'i');
+
+    let referrals = [];
     if (isDbConnected()) {
       const db = getDb();
-      const query = {};
-      if (doctorId) query.doctorId = doctorId;
-      if (assistantId) query.assistantId = assistantId;
-      if (status) query.status = { $regex: new RegExp(`^${status}$`, 'i') };
-
-      referrals = await db.collection('referrals').find(query).toArray();
+      referrals = await db.collection('referrals').find({
+        $or: [
+          { doctorId: docRegex },
+          { doctorId: cleanDocId.toUpperCase() }
+        ]
+      }).sort({ createdAt: -1 }).toArray();
     }
 
     if (!referrals || referrals.length === 0) {
-      referrals = fileUtils.listReferrals();
-      if (doctorId) referrals = referrals.filter(r => r.doctorId === doctorId);
-      if (assistantId) referrals = referrals.filter(r => r.assistantId === assistantId);
-      if (status) referrals = referrals.filter(r => r.status.toUpperCase() === status.toUpperCase());
+      referrals = fileUtils.listReferrals().filter(r => 
+        r.doctorId && (r.doctorId.toLowerCase() === cleanDocId.toLowerCase() || r.doctorId === cleanDocId.toUpperCase())
+      );
     }
 
-    // Enrich with patient profile, vitals, summary, case info
     const enriched = await Promise.all(referrals.map(async (r) => {
-      let p = fileUtils.getPatient(r.patientId);
-      let c = fileUtils.getCase(r.caseId);
+      let p = null;
+      let c = null;
       if (isDbConnected()) {
         const db = getDb();
-        if (!p) p = await db.collection('patients').findOne({ patientId: r.patientId });
-        if (!c) c = await db.collection('cases').findOne({ caseId: r.caseId });
+        p = await db.collection('patients').findOne({ $or: [{ patientId: r.patientId }, { userId: r.patientId }] });
+        if (!p) {
+          p = await db.collection('users').findOne({ role: 'patient', $or: [{ patientId: r.patientId }, { userId: r.patientId }] });
+        }
+        c = await db.collection('cases').findOne({ caseId: r.caseId });
       }
+
+      if (!p) p = fileUtils.getPatient(r.patientId);
+      if (!c) c = fileUtils.getCase(r.caseId);
 
       const s = fileUtils.getPatientSummary(r.patientId);
       const v = fileUtils.getPatientVitals(r.patientId);
@@ -145,6 +213,88 @@ async function listReferrals(req, res) {
         patientName: p ? p.name : 'Patient',
         patientAge: p ? p.age : '30',
         patientSex: p ? p.sex : 'Male',
+        village: p ? p.village : 'Rajpur',
+        vitals: v || (c ? c.vitals : {}),
+        aiSummary: s || r.aiSummary || null,
+        caseStatus: c ? c.status : r.status
+      };
+    }));
+
+    return res.status(200).json({
+      success: true,
+      count: enriched.length,
+      data: enriched
+    });
+  } catch (err) {
+    return res.status(500).json({ success: false, error: err.message });
+  }
+}
+
+async function listReferrals(req, res) {
+  try {
+    const doctorId = req.query.doctorId || (req.user?.role === 'doctor' ? (req.user.doctorId || req.user.userId) : null);
+    const assistantId = req.query.assistantId || (req.user?.role === 'assistant' ? (req.user.assistantId || req.user.userId) : null);
+    const { status } = req.query;
+
+    let referrals = [];
+    const escapeRegex = (str) => str.replace(/[-[\]{}()*+?.:\\^$|#\s]/g, '\\$&');
+
+    if (isDbConnected()) {
+      const db = getDb();
+      const query = {};
+      if (doctorId) {
+        const dReg = new RegExp(`^${escapeRegex(doctorId.trim())}$`, 'i');
+        query.$or = [{ doctorId: dReg }, { doctorId: doctorId.trim().toUpperCase() }];
+      }
+      if (assistantId) {
+        const aReg = new RegExp(`^${escapeRegex(assistantId.trim())}$`, 'i');
+        query.assistantId = { $in: [aReg, assistantId.trim().toUpperCase()] };
+      }
+      if (status) {
+        query.status = { $regex: new RegExp(`^${status}$`, 'i') };
+      }
+
+      referrals = await db.collection('referrals').find(query).sort({ createdAt: -1 }).toArray();
+    }
+
+    if (!referrals || referrals.length === 0) {
+      referrals = fileUtils.listReferrals();
+      if (doctorId) {
+        referrals = referrals.filter(r => r.doctorId && r.doctorId.toLowerCase() === doctorId.trim().toLowerCase());
+      }
+      if (assistantId) {
+        referrals = referrals.filter(r => r.assistantId && r.assistantId.toLowerCase() === assistantId.trim().toLowerCase());
+      }
+      if (status) {
+        referrals = referrals.filter(r => r.status.toUpperCase() === status.toUpperCase());
+      }
+    }
+
+    // Enrich with patient profile, vitals, summary, case info
+    const enriched = await Promise.all(referrals.map(async (r) => {
+      let p = null;
+      let c = null;
+      if (isDbConnected()) {
+        const db = getDb();
+        p = await db.collection('patients').findOne({ $or: [{ patientId: r.patientId }, { userId: r.patientId }] });
+        if (!p) {
+          p = await db.collection('users').findOne({ role: 'patient', $or: [{ patientId: r.patientId }, { userId: r.patientId }] });
+        }
+        c = await db.collection('cases').findOne({ caseId: r.caseId });
+      }
+
+      if (!p) p = fileUtils.getPatient(r.patientId);
+      if (!c) c = fileUtils.getCase(r.caseId);
+
+      const s = fileUtils.getPatientSummary(r.patientId);
+      const v = fileUtils.getPatientVitals(r.patientId);
+
+      return {
+        ...r,
+        patientName: p ? p.name : 'Patient',
+        patientAge: p ? p.age : '30',
+        patientSex: p ? p.sex : 'Male',
+        village: p ? p.village : 'Rajpur',
         vitals: v || (c ? c.vitals : {}),
         aiSummary: s || r.aiSummary || null,
         caseStatus: c ? c.status : r.status
@@ -227,6 +377,7 @@ async function acceptReferral(req, res) {
 
 module.exports = {
   createReferral,
+  getDoctorReferrals,
   listReferrals,
   acceptReferral
 };

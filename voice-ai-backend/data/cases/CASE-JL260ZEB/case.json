@@ -1,0 +1,39 @@
+{
+  "caseId": "CASE-JL260ZEB",
+  "patientId": "PAT-JQ3D2P36",
+  "assistantId": "AST-2AHBKQUG",
+  "createdAt": "2026-08-13T00:15:56.018Z",
+  "status": "IN_CONSULTATION",
+  "caseType": "Acute Fever & Headache",
+  "textStatements": [],
+  "imageUploads": [],
+  "videoUploads": [],
+  "doctorNotes": [],
+  "assistantNotes": [],
+  "assignedDoctorId": "DOC-3O4ADL00",
+  "bedAssignment": {
+    "ward": "Emergency Ward",
+    "room": "Room 12",
+    "bed": "Bed B",
+    "assignedBy": "DOC-3O4ADL00",
+    "assignedAt": "2026-08-13T00:15:57.377Z",
+    "notes": "Patient admitted for 24h observation"
+  },
+  "followUp": {
+    "followUpDate": "2026-08-15",
+    "followUpTime": "10:00 AM",
+    "reason": "Review fever recovery and vital stability",
+    "setBy": "DOC-3O4ADL00",
+    "createdAt": "2026-08-13T00:15:57.978Z"
+  },
+  "medications": [],
+  "approvedMedications": [
+    {
+      "name": "Paracetamol 500mg",
+      "dosage": "1 tablet 3x daily after meals",
+      "status": "DOCTOR_APPROVED",
+      "approvedBy": "DOC_01",
+      "approvedAt": "2026-08-13T00:15:57.517Z"
+    }
+  ]
+}

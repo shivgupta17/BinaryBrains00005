@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786580157975",
+  "recipientRole": "assistant",
+  "recipientId": "AST-2AHBKQUG",
+  "patientId": "PAT-JQ3D2P36",
+  "caseId": "CASE-JL260ZEB",
+  "type": "MEDICATION_DUE",
+  "title": "⏰ Medication Schedule Created",
+  "message": "Paracetamol 500mg scheduled at 08:00, 14:00, 20:00",
+  "createdAt": "2026-08-13T00:15:57.975Z",
+  "read": false,
+  "priority": "MEDIUM"
+}

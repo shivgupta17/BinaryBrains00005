@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786580698049",
+  "recipientRole": "assistant",
+  "recipientId": "AST-U2319PCU",
+  "patientId": "PAT-G9POXH0H",
+  "caseId": "CASE-PNRDMCZH",
+  "type": "DOCTOR_INSTRUCTION",
+  "title": "📝 New Doctor Instruction",
+  "message": "Monitor temperature every 4 hours. Keep patient head elevated 30 degrees.",
+  "createdAt": "2026-08-13T00:24:58.049Z",
+  "read": false,
+  "priority": "HIGH"
+}

@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786580807920",
+  "recipientRole": "doctor",
+  "recipientId": "DOC-JD1912T1",
+  "patientId": "PAT-15DOGL9H",
+  "caseId": "CASE-Y3M5MLZO",
+  "type": "NEW REFERRAL",
+  "title": "🚨 NEW Referral Received",
+  "message": "Patient PAT-15DOGL9H referred for Fever and dyspnea for 2 days requiring physician evaluation",
+  "createdAt": "2026-08-13T00:26:47.801Z",
+  "read": false,
+  "priority": "MEDIUM"
+}

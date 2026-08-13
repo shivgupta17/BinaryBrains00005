@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786580158124",
+  "recipientRole": "assistant",
+  "recipientId": "AST-2AHBKQUG",
+  "patientId": "PAT-JQ3D2P36",
+  "caseId": "CASE-JL260ZEB",
+  "type": "FOLLOW-UP DUE",
+  "title": "📅 Follow-Up Scheduled",
+  "message": "Follow-up set for 2026-08-15 at 10:00 AM",
+  "createdAt": "2026-08-13T00:15:58.124Z",
+  "read": false,
+  "priority": "LOW"
+}

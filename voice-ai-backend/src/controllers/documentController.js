@@ -383,7 +383,11 @@ async function lookupPatientById(req, res) {
         currentCaseId: activeCase ? activeCase.caseId : null,
         caseStatus: activeCase ? activeCase.status : 'NO_ACTIVE_CASE',
         assignedDoctorId: activeCase ? activeCase.assignedDoctorId : null,
-        assignedAssistantId: activeCase ? activeCase.assistantId : null
+        assignedAssistantId: activeCase ? activeCase.assistantId : null,
+        bedAssignment: activeCase ? activeCase.bedAssignment : null,
+        approvedMedications: activeCase ? (activeCase.approvedMedications || activeCase.medications || []) : [],
+        doctorInstructions: activeCase ? (activeCase.doctorInstructions || []) : [],
+        followUp: activeCase ? activeCase.followUp : null
       }
     });
   } catch (err) {

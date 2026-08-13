@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786580156713",
+  "recipientRole": "doctor",
+  "recipientId": "DOC-3O4ADL00",
+  "patientId": "PAT-JQ3D2P36",
+  "caseId": "CASE-JL260ZEB",
+  "type": "NEW REFERRAL",
+  "title": "🚨 NEW Referral Received",
+  "message": "Patient PAT-JQ3D2P36 referred for High fever and severe headache for 2 days",
+  "createdAt": "2026-08-13T00:15:56.550Z",
+  "read": false,
+  "priority": "MEDIUM"
+}

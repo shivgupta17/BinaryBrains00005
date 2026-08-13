@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786580196505",
+  "recipientRole": "assistant",
+  "recipientId": "AST_usr_anchal123gmailcom",
+  "patientId": "PAT_usr_mrshivop170gmailcom",
+  "caseId": "CASE_PAT_usr_mrshivop170gmailcom",
+  "type": "PATIENT UPDATE",
+  "title": "✅ Referral Accepted",
+  "message": "saif anwar has accepted referral for patient PAT_usr_mrshivop170gmailcom",
+  "createdAt": "2026-08-13T00:16:36.505Z",
+  "read": false,
+  "priority": "MEDIUM"
+}

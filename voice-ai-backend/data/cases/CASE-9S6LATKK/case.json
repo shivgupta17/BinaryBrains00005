@@ -1,0 +1,60 @@
+{
+  "_id": "6a7d0e940f1f6ad24c056c90",
+  "caseId": "CASE-9S6LATKK",
+  "assignedDoctorId": null,
+  "assistantId": "AST-NUAP6CVQ",
+  "assistantNotes": [],
+  "bedAssignment": {
+    "bedAssignmentId": "bed_1786580628620",
+    "ward": "ICU Ward 3",
+    "room": "Room 304",
+    "bed": "Bed C1",
+    "floor": "3rd Floor",
+    "department": "Critical Care Unit",
+    "assignedBy": "DOC-DV1G06I0",
+    "assignedAt": "2026-08-13T00:23:48.620Z",
+    "notes": "Monitored under oxygen support 2L/min"
+  },
+  "caseType": "High Fever & Observation",
+  "createdAt": "2026-08-13T00:23:48.186Z",
+  "doctorNotes": [
+    {
+      "noteId": "note_1786580628746",
+      "doctorId": "DOC-DV1G06I0",
+      "text": "Prescribed antibiotic coverage and fever control",
+      "createdAt": "2026-08-13T00:23:48.746Z"
+    }
+  ],
+  "followUp": null,
+  "imageUploads": [],
+  "medications": [],
+  "patientId": "PAT-OSSQE9GG",
+  "status": "OPEN",
+  "textStatements": [],
+  "videoUploads": [],
+  "approvedMedications": [
+    {
+      "medicationId": "med_1786580628741",
+      "name": "Amoxicillin 500mg",
+      "dosage": "1 Capsule (500mg)",
+      "route": "Oral",
+      "frequency": "Thrice Daily (TDS)",
+      "duration": "7 Days after meals",
+      "status": "DOCTOR_APPROVED",
+      "approvedAt": "2026-08-13T00:23:48.746Z",
+      "approvedBy": "DOC-DV1G06I0"
+    }
+  ],
+  "doctorInstructions": [
+    {
+      "messageId": "msg_1786580629248",
+      "caseId": "CASE-9S6LATKK",
+      "patientId": "PAT-OSSQE9GG",
+      "doctorId": "DOC-DV1G06I0",
+      "assistantId": "AST-NUAP6CVQ",
+      "message": "Monitor temperature every 4 hours. Keep patient head elevated 30 degrees.",
+      "createdAt": "2026-08-13T00:23:49.248Z",
+      "status": "SENT"
+    }
+  ]
+}

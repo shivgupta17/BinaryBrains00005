@@ -62,7 +62,23 @@ async function createCase(req, res) {
 async function getCaseDetails(req, res) {
   try {
     const { caseId } = req.params;
-    const caseData = fileUtils.getCase(caseId);
+    let caseData = null;
+    if (isDbConnected()) {
+      const db = getDb();
+      caseData = await db.collection('cases').findOne({ caseId });
+      if (!caseData) {
+        // Fallback search by patientId or legacy case ID
+        caseData = await db.collection('cases').findOne({
+          $or: [
+            { patientId: caseId },
+            { caseId: { $regex: new RegExp(caseId.replace(/^CASE_/, ''), 'i') } }
+          ]
+        });
+      }
+    }
+    if (!caseData) {
+      caseData = fileUtils.getCase(caseId);
+    }
     if (!caseData) {
       return res.status(404).json({ success: false, error: `Case not found: ${caseId}` });
     }
@@ -70,7 +86,10 @@ async function getCaseDetails(req, res) {
     const fullContext = patientContextService.getPatientCaseContext(caseData.patientId, caseId);
     return res.status(200).json({
       success: true,
-      data: fullContext
+      data: {
+        ...fullContext,
+        case: caseData
+      }
     });
   } catch (err) {
     return res.status(500).json({ success: false, error: err.message });

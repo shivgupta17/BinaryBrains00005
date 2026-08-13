@@ -1,0 +1,15 @@
+{
+  "scheduleId": "sched_1786580157581",
+  "caseId": "CASE-JL260ZEB",
+  "patientId": "PAT-JQ3D2P36",
+  "medicationName": "Paracetamol 500mg",
+  "dose": "500mg",
+  "times": [
+    "08:00",
+    "14:00",
+    "20:00"
+  ],
+  "status": "ACTIVE",
+  "createdBy": "DOC-3O4ADL00",
+  "createdAt": "2026-08-13T00:15:57.581Z"
+}

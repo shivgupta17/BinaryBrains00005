@@ -1,0 +1,14 @@
+{
+  "referralId": "REF-EFKM0WMR",
+  "patientId": "PAT-769W0Z2Z",
+  "caseId": "CASE-4QVLE6M9",
+  "doctorId": "DOC-3N8E4ZJQ",
+  "doctorName": "saif anwar",
+  "assistantId": "AST-H4US2Z0K",
+  "riskLevel": "amber",
+  "reason": "Patient presents with severe chest congestion and high fever.",
+  "aiSummary": null,
+  "status": "NEW",
+  "createdAt": "2026-08-12T23:58:16.061Z",
+  "acceptedAt": null
+}

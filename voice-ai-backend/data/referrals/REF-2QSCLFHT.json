@@ -1,0 +1,14 @@
+{
+  "referralId": "REF-2QSCLFHT",
+  "patientId": "PAT-JMBA17ZC",
+  "caseId": "CASE-P4UEK4ZP",
+  "doctorId": "DOC-3N8E4ZJQ",
+  "doctorName": "saif anwar",
+  "assistantId": "AST-26MXJMP8",
+  "riskLevel": "amber",
+  "reason": "Fever and cough requiring physician assessment",
+  "aiSummary": null,
+  "status": "NEW",
+  "createdAt": "2026-08-13T00:03:59.292Z",
+  "acceptedAt": null
+}

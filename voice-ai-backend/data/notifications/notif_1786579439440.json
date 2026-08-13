@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786579439440",
+  "recipientRole": "doctor",
+  "recipientId": "DOC-3N8E4ZJQ",
+  "patientId": "PAT-JMBA17ZC",
+  "caseId": "CASE-P4UEK4ZP",
+  "type": "NEW REFERRAL",
+  "title": "🚨 NEW Referral Received",
+  "message": "Patient PAT-JMBA17ZC referred for Fever and cough requiring physician assessment",
+  "createdAt": "2026-08-13T00:03:59.292Z",
+  "read": false,
+  "priority": "MEDIUM"
+}

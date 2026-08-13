@@ -1,0 +1,13 @@
+{
+  "notificationId": "notif_1786580157513",
+  "recipientRole": "assistant",
+  "recipientId": "AST-2AHBKQUG",
+  "patientId": "PAT-JQ3D2P36",
+  "caseId": "CASE-JL260ZEB",
+  "type": "BED_ASSIGNED",
+  "title": "🛏️ Bed Assigned",
+  "message": "Patient assigned to Emergency Ward, Room 12, Bed B",
+  "createdAt": "2026-08-13T00:15:57.513Z",
+  "read": false,
+  "priority": "HIGH"
+}

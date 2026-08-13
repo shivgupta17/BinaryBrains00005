@@ -1,0 +1,22 @@
+[
+  {
+    "eventId": "evt_1786579715228_upup",
+    "timestamp": "2026-08-13T00:08:35.228Z",
+    "type": "REFERRED_TO_DOCTOR",
+    "title": "Referred to Doctor",
+    "description": "Case referred to saif anwar (Risk Level: MEDIUM)",
+    "actor": "AST_usr_anchal123gmailcom",
+    "actorRole": "assistant",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786580196503_ln76",
+    "timestamp": "2026-08-13T00:16:36.503Z",
+    "type": "DOCTOR_ACCEPTED",
+    "title": "Doctor Accepted Referral",
+    "description": "Referral accepted by saif anwar. Consultation initiated.",
+    "actor": "saif anwar",
+    "actorRole": "doctor",
+    "data": {}
+  }
+]

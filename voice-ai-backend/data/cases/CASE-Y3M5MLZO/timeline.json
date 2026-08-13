@@ -1,0 +1,72 @@
+[
+  {
+    "eventId": "evt_1786580807743_w3i3",
+    "timestamp": "2026-08-13T00:26:47.743Z",
+    "type": "PATIENT_REGISTERED",
+    "title": "Encounter Case Created",
+    "description": "New clinical encounter CASE-Y3M5MLZO created for patient PAT-15DOGL9H",
+    "actor": "Clinic Assistant",
+    "actorRole": "assistant",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786580807919_3vdb",
+    "timestamp": "2026-08-13T00:26:47.919Z",
+    "type": "REFERRED_TO_DOCTOR",
+    "title": "Referred to Doctor",
+    "description": "Case referred to Dr. Saif Anwar Audit (Risk Level: AMBER)",
+    "actor": "AST-PMBWTTWZ",
+    "actorRole": "assistant",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786580808229_yi83",
+    "timestamp": "2026-08-13T00:26:48.229Z",
+    "type": "DOCTOR_ACCEPTED",
+    "title": "Doctor Accepted Referral",
+    "description": "Referral accepted by Dr. Saif Anwar Audit. Consultation initiated.",
+    "actor": "Dr. Saif Anwar Audit",
+    "actorRole": "doctor",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786580808395_vipd",
+    "timestamp": "2026-08-13T00:26:48.395Z",
+    "type": "BED_ASSIGNED",
+    "title": "Patient Bed Assigned",
+    "description": "Special Care Unit · Room 201 · Bed A2",
+    "actor": "DOC-JD1912T1",
+    "actorRole": "doctor",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786580808465_fsyt",
+    "timestamp": "2026-08-13T00:26:48.465Z",
+    "type": "MEDICATION_APPROVED",
+    "title": "Doctor Approved Prescription",
+    "description": "Medications approved: Azithromycin 500mg",
+    "actor": "DOC-JD1912T1",
+    "actorRole": "doctor",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786580808530_jdv6",
+    "timestamp": "2026-08-13T00:26:48.530Z",
+    "type": "MEDICATION_SCHEDULED",
+    "title": "Medication Schedule Created",
+    "description": "Azithromycin 500mg (500mg) scheduled at 09:00, 21:00",
+    "actor": "DOC-JD1912T1",
+    "actorRole": "doctor",
+    "data": {}
+  },
+  {
+    "eventId": "evt_1786580808707_dls4",
+    "timestamp": "2026-08-13T00:26:48.707Z",
+    "type": "DOCTOR_INSTRUCTION_SENT",
+    "title": "Doctor Instruction Sent",
+    "description": "Instruction: \"Monitor SPO2 every 2 hours and inform immediately if SPO2 drops below 94%.\"",
+    "actor": "DOC-JD1912T1",
+    "actorRole": "doctor",
+    "data": {}
+  }
+]

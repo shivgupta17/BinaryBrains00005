@@ -45,24 +45,28 @@ async function getDoctorById(req, res) {
     let doctor = null;
     if (isDbConnected()) {
       const db = getDb();
-      doctor = await db.collection('doctors').findOne({
-        $or: [
-          { doctorId: cleanId },
-          { userId: cleanId }
-        ]
-      });
+      const escapeRegex = (str) => str.replace(/[-[\]{}()*+?.:\\^$|#\s]/g, '\\$&');
+      const searchRegex = new RegExp(`^${escapeRegex(cleanId)}$`, 'i');
+
+      const queryOr = [
+        { doctorId: searchRegex },
+        { doctorId: cleanId.toUpperCase() },
+        { userId: searchRegex },
+        { email: searchRegex },
+        { email: cleanId.toLowerCase() }
+      ];
+
+      doctor = await db.collection('doctors').findOne({ $or: queryOr });
       if (!doctor) {
         const user = await db.collection('users').findOne({
           role: 'doctor',
-          $or: [
-            { doctorId: cleanId },
-            { userId: cleanId }
-          ]
+          $or: queryOr
         });
         if (user) {
           doctor = {
-            doctorId: user.doctorId || cleanId,
+            doctorId: user.doctorId || cleanId.toUpperCase(),
             name: user.name,
+            email: user.email,
             specialty: user.specialty || 'General Medicine',
             onlineStatus: user.onlineStatus || 'ONLINE'
           };
@@ -71,11 +75,11 @@ async function getDoctorById(req, res) {
     }
 
     if (!doctor) {
-      doctor = fileUtils.getDoctor(cleanId);
+      doctor = fileUtils.getDoctor(cleanId) || fileUtils.getDoctor(cleanId.toUpperCase());
     }
 
     if (!doctor) {
-      return res.status(404).json({ success: false, error: `Doctor not found: ${cleanId}` });
+      return res.status(404).json({ success: false, error: `Doctor not found for ID: ${cleanId}` });
     }
 
     return res.status(200).json({
@@ -189,20 +193,33 @@ async function approveMedication(req, res) {
 async function assignBed(req, res) {
   try {
     const { caseId } = req.params;
-    const { ward, room, bed, doctorId, notes } = req.body;
+    const { ward, room, bed, floor, department, doctorId, notes } = req.body;
 
-    const caseData = fileUtils.getCase(caseId);
+    if (!ward || !ward.trim() || !room || !room.trim() || !bed || !bed.trim()) {
+      return res.status(400).json({ success: false, error: 'Ward, Room, and Bed are required for hospital bed assignment.' });
+    }
+
+    let caseData = null;
+    if (isDbConnected()) {
+      const db = getDb();
+      caseData = await db.collection('cases').findOne({ caseId });
+    }
+    if (!caseData) caseData = fileUtils.getCase(caseId);
     if (!caseData) {
       return res.status(404).json({ success: false, error: `Case not found: ${caseId}` });
     }
 
+    const docId = doctorId || req.user?.doctorId || req.user?.userId || 'Doctor';
     const bedAssignment = {
-      ward: ward || 'Emergency Ward',
-      room: room || 'Room 12',
-      bed: bed || 'Bed B',
-      assignedBy: doctorId || 'DOC_01',
+      bedAssignmentId: `bed_${Date.now()}`,
+      ward: ward.trim(),
+      room: room.trim(),
+      bed: bed.trim(),
+      floor: floor ? floor.trim() : '',
+      department: department ? department.trim() : 'General Medicine',
+      assignedBy: docId,
       assignedAt: new Date().toISOString(),
-      notes: notes || 'Admitted for observation'
+      notes: notes ? notes.trim() : ''
     };
 
     caseData.bedAssignment = bedAssignment;
@@ -211,7 +228,7 @@ async function assignBed(req, res) {
     if (isDbConnected()) {
       const db = getDb();
       await db.collection('cases').updateOne({ caseId }, { $set: { bedAssignment } });
-      await db.collection('bedAssignments').insertOne({ caseId, patientId: caseData.patientId, ...bedAssignment });
+      await db.collection('bedAssignments').insertOne({ caseId, patientId: caseData.patientId, doctorId: docId, assistantId: caseData.assistantId, ...bedAssignment });
     }
 
     fileUtils.addCaseTimelineEvent(caseId, {
@@ -370,6 +387,82 @@ async function setFollowUp(req, res) {
   }
 }
 
+async function sendInstruction(req, res) {
+  try {
+    const { caseId } = req.params;
+    const { message, doctorId } = req.body;
+
+    if (!message || !message.trim()) {
+      return res.status(400).json({ success: false, error: 'Instruction message is required.' });
+    }
+
+    let caseData = null;
+    if (isDbConnected()) {
+      const db = getDb();
+      caseData = await db.collection('cases').findOne({ caseId });
+    }
+    if (!caseData) caseData = fileUtils.getCase(caseId);
+    if (!caseData) {
+      return res.status(404).json({ success: false, error: `Case not found: ${caseId}` });
+    }
+
+    const docId = doctorId || req.user?.doctorId || req.user?.userId || 'Doctor';
+    const messageId = `msg_${Date.now()}`;
+    const instructionObj = {
+      messageId,
+      caseId,
+      patientId: caseData.patientId,
+      doctorId: docId,
+      assistantId: caseData.assistantId || 'ASSISTANT_DEFAULT',
+      message: message.trim(),
+      createdAt: new Date().toISOString(),
+      status: 'SENT'
+    };
+
+    if (!caseData.doctorInstructions) caseData.doctorInstructions = [];
+    caseData.doctorInstructions.push(instructionObj);
+    fileUtils.saveCase(caseId, caseData);
+
+    if (isDbConnected()) {
+      const db = getDb();
+      await db.collection('cases').updateOne(
+        { caseId },
+        { $push: { doctorInstructions: instructionObj } }
+      );
+      await db.collection('doctorInstructions').insertOne(instructionObj);
+    }
+
+    fileUtils.addCaseTimelineEvent(caseId, {
+      type: 'DOCTOR_INSTRUCTION_SENT',
+      title: 'Doctor Instruction Sent',
+      description: `Instruction: "${instructionObj.message}"`,
+      actor: docId,
+      actorRole: 'doctor'
+    });
+
+    fileUtils.saveNotification({
+      notificationId: `notif_${Date.now()}`,
+      recipientRole: 'assistant',
+      recipientId: caseData.assistantId || 'ASSISTANT_DEFAULT',
+      patientId: caseData.patientId,
+      caseId,
+      type: 'DOCTOR_INSTRUCTION',
+      title: '📝 New Doctor Instruction',
+      message: instructionObj.message,
+      createdAt: new Date().toISOString(),
+      read: false,
+      priority: 'HIGH'
+    });
+
+    return res.status(200).json({
+      success: true,
+      data: instructionObj
+    });
+  } catch (err) {
+    return res.status(500).json({ success: false, error: err.message });
+  }
+}
+
 module.exports = {
   getAvailableDoctors,
   getDoctorById,
@@ -377,5 +470,6 @@ module.exports = {
   approveMedication,
   assignBed,
   scheduleMedicationTimes,
-  setFollowUp
+  setFollowUp,
+  sendInstruction
 };

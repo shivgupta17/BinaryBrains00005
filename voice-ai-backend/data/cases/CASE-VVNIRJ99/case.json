@@ -1,0 +1,25 @@
+{
+  "_id": "6a7d12666c1ede1d0ef6b8fe",
+  "caseId": "CASE-VVNIRJ99",
+  "patientId": "PAT-Q2K2FZWO",
+  "caseType": "General Clinical Encounter",
+  "status": "REFERRED",
+  "createdAt": "2026-08-13T00:40:06.955Z",
+  "vitals": {
+    "temp": "98.6°F",
+    "bp": "120/80 mmHg",
+    "pulse": "72 bpm",
+    "spo2": "98%"
+  },
+  "aiSummary": {
+    "mainProblem": {
+      "summary": "Patient presenting with fever and mild headache."
+    },
+    "triage": {
+      "level": "amber",
+      "score": 65,
+      "rationale": "Requires physician consultation."
+    }
+  },
+  "assignedDoctorId": "DOC-IN4Y25LP"
+}

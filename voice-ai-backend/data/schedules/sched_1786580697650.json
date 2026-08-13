@@ -1,0 +1,15 @@
+{
+  "scheduleId": "sched_1786580697650",
+  "caseId": "CASE-PNRDMCZH",
+  "patientId": "PAT-G9POXH0H",
+  "medicationName": "Amoxicillin 500mg",
+  "dose": "500mg",
+  "times": [
+    "08:00",
+    "14:00",
+    "20:00"
+  ],
+  "status": "ACTIVE",
+  "createdBy": "DOC-IN4Y25LP",
+  "createdAt": "2026-08-13T00:24:57.650Z"
+}

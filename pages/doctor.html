@@ -127,10 +127,11 @@
             <textarea class="form-textarea" id="doc-diagnosis-textarea" placeholder="Enter clinical assessment based on real patient findings..."></textarea>
           </div>
 
-          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
-            <button class="btn btn-forest btn-lg" style="flex:2;" onclick="doctorApproveCurrentCase()">✓ Approve &amp; Prescribe</button>
-            <button class="btn btn-sky btn-lg" style="flex:1;" onclick="showDoctorAssignBedModal()">🛏️ Assign Bed</button>
-            <button class="btn btn-sky btn-lg" style="flex:1;" onclick="showDoctorScheduleMedModal()">⏰ Schedule Meds</button>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;">
+            <button class="btn btn-sky btn-lg" onclick="openDoctorMedicineModal()">💊 Add / Approve Medicine</button>
+            <button class="btn btn-forest btn-lg" onclick="openDoctorBedModal()">🛏️ Assign Bed &amp; Ward</button>
+            <button class="btn btn-saffron btn-lg" onclick="openDoctorScheduleModal()">⏰ Configure Schedule</button>
+            <button class="btn btn-primary btn-lg" onclick="openDoctorInstructionModal()">📝 Send Instruction</button>
           </div>
         </div>
       </div>

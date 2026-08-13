@@ -1,0 +1,14 @@
+{
+  "referralId": "REF-JM3YCAE3",
+  "patientId": "PAT-Q2K2FZWO",
+  "caseId": "CASE-VVNIRJ99",
+  "doctorId": "DOC-IN4Y25LP",
+  "doctorName": "Dr. Saif Real",
+  "assistantId": "AST-WIUNQP2L",
+  "riskLevel": "high",
+  "reason": "Urgent consultation for persistent fever",
+  "aiSummary": null,
+  "status": "NEW",
+  "createdAt": "2026-08-13T00:42:05.455Z",
+  "acceptedAt": null
+}
